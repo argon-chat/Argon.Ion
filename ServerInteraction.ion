@@ -1,0 +1,126 @@
+#feature "orleans"
+
+
+flags ArgonEntitlement: u8 {
+    None = 0,
+
+    ViewChannel = 1 << 0,
+    ReadHistory = 1 << 1,
+    JoinToVoice = 1 << 2,
+
+    SendMessages      = 1 << 5,
+    SendVoice         = 1 << 6,
+    AttachFiles       = 1 << 7,
+    AddReactions      = 1 << 8,
+    AnyMentions       = 1 << 9,
+    MentionEveryone   = 1 << 10,
+    ExternalEmoji     = 1 << 11,
+    ExternalStickers  = 1 << 12,
+    UseCommands       = 1 << 13,
+    PostEmbeddedLinks = 1 << 14,
+
+    Connect = 1 << 20,
+    Speak   = 1 << 21,
+    Video   = 1 << 22,
+    Stream  = 1 << 23,
+
+    UseASIO           = 1 << 30,
+    AdditionalStreams = 1 << 31,
+
+    DisconnectMember = 1 << 40,
+    MoveMember       = 1 << 41,
+    BanMember        = 1 << 42,
+    MuteMember       = 1 << 43,
+    KickMember       = 1 << 44,
+
+    ManageChannels  = 1 << 50,
+    ManageArchetype = 1 << 51,
+    ManageBots      = 1 << 52,
+    ManageEvents    = 1 << 53,
+    ManageBehaviour = 1 << 54,
+    ManageServer    = 1 << 55,
+
+    Administrator = 1 << 63
+}
+
+service ServerInteraction(serverId: guid)
+{
+    GetMembers(): RealtimeServerMember[];
+    GetMember(userId: guid): RealtimeServerMember;
+
+
+    GetInviteCodes(): InviteCodeEntity[];
+    CreateInviteCode(): InviteCode;
+
+    PrefetchUser(userId: guid): UserDto;
+    PrefetchProfile(userId: guid): UserProfileDto;
+}
+
+msg ArchetypeDtoGroup {
+    archetype: ArchetypeDto;
+    members: guid[];
+}
+
+msg ServerMemberArchetypeDto {
+    serverMemberId: guid;
+    archetypeId: guid;
+}
+
+msg ServerMemberDto {
+    userId: guid;
+    serverId: guid;
+    joinedAt: datetime;
+    memberId: guid;
+    user: UserDto;
+    archetypes: ServerMemberArchetypeDto[];
+}
+
+msg RealtimeServerMember
+{
+    member: ServerMemberDto;
+    status: UserStatus;
+    presence: UserActivityPresence?;
+}
+
+msg InviteCodeEntity {
+    code: InviteCode;
+    serverId: guid;
+    issuerId: guid;
+    expireTime: datetime;
+    used: u8;
+}
+
+msg InviteCode {
+    inviteCode: string;
+}
+
+
+msg UserDto {
+    userId: guid;
+    username: string;
+    displayName: string;
+    avatarFileId: string?;
+}
+
+msg UserProfileDto {
+    userId: guid;
+    customStatus: string?;
+    customStatusIconId: string?;
+    bannerFileID: string?;
+    dateOfBirth: dateonly?;
+    bio: string?;
+    isPremium: bool;
+    badges: string[];
+    archetypes: ServerMemberArchetypeDto[];
+}
+
+enum UserStatus
+{
+    Offline,
+    Online,
+    Away,
+    InGame,
+    Listen,
+    TouchGrass,
+    DoNotDisturb
+}

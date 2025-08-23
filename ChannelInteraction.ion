@@ -1,0 +1,108 @@
+enum ChannelType: u2
+{
+    Text,
+    Voice,
+    Announcement
+}
+
+enum JoinToChannelError: u2 {
+    NONE,
+    CHANNEL_IS_NOT_VOICE
+}
+
+msg CreateChannelRequest {
+    serverId: guid;
+    name: string;
+    kind: ChannelType;
+    desc: string;
+}
+
+msg RealtimeChannel {
+    channel: Channel;
+    users: RealtimeChannelUser[];
+}
+
+msg Channel {
+    type: ChannelType;
+    serverId: guid;
+    channelId: guid;
+    name: string;
+    description: string?;
+    categoryId: guid;
+}
+
+flags ChannelMemberState
+{
+    NONE                       = 0,
+    MUTED                      = 1 << 1,
+    MUTED_BY_SERVER            = 1 << 2,
+    MUTED_HEADPHONES           = 1 << 3,
+    MUTED_HEADPHONES_BY_SERVER = 1 << 4,
+    STREAMING                  = 1 << 5
+}
+
+msg MessageEntity {}
+
+msg ArgonMessageDto {
+    messageId: u8;
+    replyId: u8?;
+    channelId: guid;
+    serverId: guid;
+    text: string;
+    entities: MessageEntity[];
+    timeSent: datetime;
+    sender: guid;
+}
+
+msg RealtimeChannelUser {
+    userId: guid;
+    state: ChannelMemberState;
+}
+
+service ChannelInteraction(serverId: guid, channelId: guid) {
+    CreateChannel(request: CreateChannelRequest): void;
+    DeleteChannel();
+    GetChannels(): RealtimeChannel[];
+
+    
+    QueryMessages(from: u8?, limit: i4): ArgonMessageDto[];
+    SendMessage(text: string, entities: MessageEntity, replyTo: u8?): ArgonMessageDto;
+
+
+    @deprecated()
+    GetMessages(count: i4, offset: i4): ArgonMessageDto[];
+}
+service EventBus() {
+    stream ForServer(serverId: guid): ArgonEvent;
+    stream ForSelf(): ArgonEvent;
+}
+
+union ArgonEvent(serverId: guid, channelId: guid) {
+    ArchetypeChanged(data: ArchetypeDto),
+    ArchetypeCreated(data: ArchetypeDto),
+    ChannelCreated(data: Channel),
+    ChannelModified(bag: string[]),
+    ChannelRemoved(),
+    IAmTypingEvent(),
+    IAmStopTypingEvent(),
+    UserTypingEvent(userId: guid),
+    UserStopTypingEvent(userId: guid),
+    JoinedToChannelUser(userId: guid),
+    JoinToServerUser(userId: guid)
+}
+
+msg UserActivityPresence
+{
+    kind: ActivityPresenceKind;
+    startTimestampSeconds: u8;
+    titleName: string;
+}
+
+enum ActivityPresenceKind
+{
+    GAME,
+    SOFTWARE,
+    STREAMING,
+    LISTEN
+}
+

@@ -1,0 +1,6 @@
+#feature "orleans"
+
+service VoiceInteraction(serverId: guid, channelId: guid) {
+    DisconnectFromVoiceChannel(): bool;
+    KickMemberFromChannel(memberId: guid);
+}

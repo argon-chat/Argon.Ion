@@ -1,0 +1,11 @@
+{
+    "name": "ArgonContracts",
+    "features": [
+        "orleans",
+        "std"
+    ],
+    "generators": [
+        { "type": "server", "platform": "dotnet", "output": "@/server" },
+        { "type": "client", "platform": "dotnet", "output": "@/client" }
+    ]
+}
