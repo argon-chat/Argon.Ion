@@ -1,0 +1,103 @@
+
+
+service UserInteraction() {
+    GetMe(): ArgonUser;
+    CreateSpace(request: CreateServerRequest): ArgonSpace;
+    GetSpaces(): ArgonSpace[];
+
+
+    Authorize(data: UserCredentialsInput): AuthorizeResult;
+    Registration(data: NewUserCredentialsInput): RegistrationResult;
+
+    BeginResetPassword(email: string): bool;
+    ResetPassword(email: string, otpCode: string, newPassword: string): AuthorizeResult;
+
+    JoinToSpace(inviteCode: InviteCode): JoinToSpaceResult;
+
+    BroadcastPresence(presence: UserActivityPresence);
+
+    RemoveBroadcastPresence();
+
+
+    GetMyFeatures(): FeatureFlag[]; 
+}
+
+msg FeatureFlag {
+    key: string;
+    enabled: bool;
+    variant: string?;
+    parameters: FeatureFlagParameter[];
+}
+
+msg FeatureFlagParameter {
+    key: string;
+    value: string;
+}
+
+msg CreateServerRequest {
+    name: string;
+    description: string;
+    avatarFieldId: string;
+}
+
+msg UserCredentialsInput {
+    email: string;
+    username: string?;
+    password: string;
+    otpCode: string?;
+    captchaToken: string?;
+}
+
+msg NewUserCredentialsInput {
+    email: string;
+    username: string;
+    password: string;
+    displayName: string;
+    argreeTos: bool;
+    argreeOptionalEmails: bool;
+    captchaToken: string?;
+}
+
+union AuthorizeResult {
+    SuccessAuthorize(token: string, refreshToken: string?),
+    FailedAuthorize(error: AuthorizationError)
+}
+
+union RegistrationResult {
+    SuccessRegistration(token: string, refreshToken: string?),
+    FailedRegistration(error: RegistrationError, field: string?, message: string?)
+}
+
+union JoinToSpaceResult {
+    SuccessJoin(space: ArgonSpace),
+    FailedJoin(error: AcceptInviteError)
+}
+
+enum AcceptInviteError
+{
+    NONE,
+    NOT_FOUND,
+    EXPIRED,
+    YOU_ARE_BANNED
+}
+
+
+enum AuthorizationError
+{
+    NONE,
+    BAD_CREDENTIALS,
+    REQUIRED_OTP,
+    BAD_OTP
+}
+
+enum RegistrationError
+{
+    USERNAME_ALREADY_TAKEN,
+    USERNAME_RESERVED,
+    EMAIL_ALREADY_REGISTERED,
+    REGION_BANNED,
+    EMAIL_BANNED,
+    SSO_EMAILS_NOT_ALLOWED,
+    INTERNAL_ERROR,
+    VALIDATION_FAILED
+}
