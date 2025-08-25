@@ -11,20 +11,20 @@ enum JoinToChannelError: u2 {
 }
 
 msg CreateChannelRequest {
-    serverId: guid;
+    spaceId: guid;
     name: string;
     kind: ChannelType;
     desc: string;
 }
 
 msg RealtimeChannel {
-    channel: Channel;
+    channel: ArgonChannel;
     users: RealtimeChannelUser[];
 }
 
-msg Channel {
+msg ArgonChannel {
     type: ChannelType;
-    serverId: guid;
+    spaceId: guid;
     channelId: guid;
     name: string;
     description: string?;
@@ -41,13 +41,38 @@ flags ChannelMemberState
     STREAMING                  = 1 << 5
 }
 
-msg MessageEntity {}
+union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
+    MessageEntityMention(userId: guid),
+    MessageEntityEmail(email: string),
+    MessageEntityHashTag(hashtag: string),
+    MessageEntityQuote(quotedUserId: guid),
+    MessageEntityUnderline(colour: i4),
+    MessageEntityUrl(domain: string, path: string)
+}
 
-msg ArgonMessageDto {
+enum EntityType : u2
+{
+    Hashtag,
+    Mention,
+    Email,
+    Url,
+    Monospace,
+    Quote,
+    Spoiler,
+    Strikethrough,
+    Bold,
+    Italic,
+    Underline,
+    Fraction,
+    Ordinal,
+    Capitalized
+}
+
+msg ArgonMessage {
     messageId: u8;
     replyId: u8?;
     channelId: guid;
-    serverId: guid;
+    spaceId: guid;
     text: string;
     entities: MessageEntity[];
     timeSent: datetime;
@@ -59,36 +84,61 @@ msg RealtimeChannelUser {
     state: ChannelMemberState;
 }
 
-service ChannelInteraction(serverId: guid, channelId: guid) {
+service ChannelInteraction(spaceId: guid, channelId: guid) {
     CreateChannel(request: CreateChannelRequest): void;
     DeleteChannel();
     GetChannels(): RealtimeChannel[];
 
     
-    QueryMessages(from: u8?, limit: i4): ArgonMessageDto[];
-    SendMessage(text: string, entities: MessageEntity, replyTo: u8?): ArgonMessageDto;
+    QueryMessages(from: u8?, limit: i4): ArgonMessage[];
+    SendMessage(text: string, entities: MessageEntity[], replyTo: u8?): ArgonMessage;
 
 
     @deprecated()
-    GetMessages(count: i4, offset: i4): ArgonMessageDto[];
+    GetMessages(count: i4, offset: u8): ArgonMessage[];
+
+
+    DisconnectFromVoiceChannel();
+    JoinToVoiceChannel(): JoinToVoiceResult;
+
+    KickMemberFromChannel(memberId: guid): bool;
 }
+
+
 service EventBus() {
-    stream ForServer(serverId: guid): ArgonEvent;
+    stream ForServer(spaceId: guid): ArgonEvent;
     stream ForSelf(): ArgonEvent;
 }
 
-union ArgonEvent(serverId: guid, channelId: guid) {
-    ArchetypeChanged(data: ArchetypeDto),
-    ArchetypeCreated(data: ArchetypeDto),
-    ChannelCreated(data: Channel),
-    ChannelModified(bag: string[]),
-    ChannelRemoved(),
-    IAmTypingEvent(),
-    IAmStopTypingEvent(),
-    UserTypingEvent(userId: guid),
-    UserStopTypingEvent(userId: guid),
-    JoinedToChannelUser(userId: guid),
-    JoinToServerUser(userId: guid)
+union JoinToVoiceResult() {
+    SuccessJoinVoice(token: string),
+    FailedJoinVoice(error: JoinToChannelError)
+}
+
+enum JoinToChannelError
+{
+    NONE,
+    CHANNEL_IS_NOT_VOICE
+}
+
+union ArgonEvent(spaceId: guid) {
+    ArchetypeChanged(data: Archetype),
+    ArchetypeCreated(data: Archetype),
+    ChannelCreated(data: ArgonChannel),
+    ChannelModified(channelId: guid, bag: string[]),
+    ChannelRemoved(channelId: guid),
+    IAmTypingEvent(channelId: guid),
+    IAmStopTypingEvent(channelId: guid),
+    UserTypingEvent(channelId: guid, userId: guid),
+    UserStopTypingEvent(channelId: guid, userId: guid),
+    JoinedToChannelUser(channelId: guid, userId: guid),
+    JoinToServerUser(userId: guid),
+    LeavedFromChannelUser(channelId: guid, userId: guid),
+    UserUpdated(dto: ArgonUser),
+    OnUserPresenceActivityChanged(userId: guid, presence: UserActivityPresence),
+    OnUserPresenceActivityRemoved(userId: guid),
+    UserChangedStatus(userId: guid, status: UserStatus, bag: string[]),
+    MessageSent(message: ArgonMessage)
 }
 
 msg UserActivityPresence
