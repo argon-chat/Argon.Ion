@@ -115,12 +115,6 @@ union JoinToVoiceResult() {
     FailedJoinVoice(error: JoinToChannelError)
 }
 
-enum JoinToChannelError
-{
-    NONE,
-    CHANNEL_IS_NOT_VOICE
-}
-
 union ArgonEvent(spaceId: guid) {
     ArchetypeChanged(data: Archetype),
     ArchetypeCreated(data: Archetype),
