@@ -43,7 +43,7 @@ flags ArgonEntitlement: u8 {
     Administrator = 1 << 63
 }
 
-service ServerInteraction(serverId: guid)
+service ServerInteraction(spaceId: guid)
 {
     GetMembers(): RealtimeServerMember[];
     GetMember(userId: guid): RealtimeServerMember;
@@ -52,39 +52,55 @@ service ServerInteraction(serverId: guid)
     GetInviteCodes(): InviteCodeEntity[];
     CreateInviteCode(): InviteCode;
 
-    PrefetchUser(userId: guid): UserDto;
-    PrefetchProfile(userId: guid): UserProfileDto;
+    PrefetchUser(userId: guid): ArgonUser;
+    PrefetchProfile(userId: guid): ArgonUserProfile;
+
+    GetChannels(): RealtimeChannel[];
+
+    GetServerArchetypes(): Archetype[];
+    GetDetailedServerArchetypes(): ArchetypeGroup[];
 }
 
-msg ArchetypeDtoGroup {
-    archetype: ArchetypeDto;
+msg ArgonSpace {
+    spaceId: guid;
+    name: string;
+    description: string;
+    avatarFieldId: string?;
+    topBannerFileId: string?;
+    channels: ArgonChannel[];
+    members: SpaceMember[];
+    archetypes: Archetype[];
+}
+
+msg ArchetypeGroup {
+    archetype: Archetype;
     members: guid[];
 }
 
-msg ServerMemberArchetypeDto {
+msg SpaceMemberArchetype {
     serverMemberId: guid;
     archetypeId: guid;
 }
 
-msg ServerMemberDto {
+msg SpaceMember {
     userId: guid;
-    serverId: guid;
+    spaceId: guid;
     joinedAt: datetime;
     memberId: guid;
-    user: UserDto;
-    archetypes: ServerMemberArchetypeDto[];
+    user: ArgonUser;
+    archetypes: SpaceMemberArchetype[];
 }
 
 msg RealtimeServerMember
 {
-    member: ServerMemberDto;
+    member: SpaceMember;
     status: UserStatus;
     presence: UserActivityPresence?;
 }
 
 msg InviteCodeEntity {
     code: InviteCode;
-    serverId: guid;
+    spaceId: guid;
     issuerId: guid;
     expireTime: datetime;
     used: u8;
@@ -95,14 +111,14 @@ msg InviteCode {
 }
 
 
-msg UserDto {
+msg ArgonUser {
     userId: guid;
     username: string;
     displayName: string;
     avatarFileId: string?;
 }
 
-msg UserProfileDto {
+msg ArgonUserProfile {
     userId: guid;
     customStatus: string?;
     customStatusIconId: string?;
@@ -111,7 +127,7 @@ msg UserProfileDto {
     bio: string?;
     isPremium: bool;
     badges: string[];
-    archetypes: ServerMemberArchetypeDto[];
+    archetypes: SpaceMemberArchetype[];
 }
 
 enum UserStatus
