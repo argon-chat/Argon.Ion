@@ -1,12 +1,12 @@
 #feature "orleans"
 
 
-service ArchetypeInteraction(serverId: guid) {
-    GetServerArchetypes(): ArchetypeDto[];
-    CreateArchetype(name: string): ArchetypeDto;
-    UpdateArchetype(data: ArchetypeDto): ArchetypeDto;
+service ArchetypeInteraction(spaceId: guid) {
+    GetServerArchetypes(): Archetype[];
+    CreateArchetype(name: string): Archetype;
+    UpdateArchetype(data: Archetype): Archetype;
     SetArchetypeToMember(memberId: guid, archetypeId: guid, isGrant: bool): bool;
-    GetDetailedServerArchetypes(): ArchetypeDtoGroup[];
+    GetDetailedServerArchetypes(): ArchetypeGroup[];
     UpsertArchetypeEntitlementForChannel(channelId: guid, archetypeId: guid,
             deny: ArgonEntitlement, allow: ArgonEntitlement): ChannelEntitlementOverwrite?;
 }
@@ -23,21 +23,21 @@ msg ChannelEntitlementOverwrite {
     id: guid;
 }
 
-msg ArchetypeDto
+msg Archetype
 {
-    Id: guid;
-    ServerId: guid;
-    Name: string;
-    Description: string;
+    id: guid;
+    spaceId: guid;
+    name: string;
+    description: string;
 
-    IsMentionable: bool;
-    Colour: i4;
-    IsHidden: bool;
-    IsLocked: bool;
-    IsGroup: bool;
-    IsDefault: bool;
+    isMentionable: bool;
+    colour: i4;
+    isHidden: bool;
+    isLocked: bool;
+    isGroup: bool;
+    isDefault: bool;
 
-    IconFileId: string?;
+    iconFileId: string?;
 
-    Entitlement: string;
+    entitlement: string;
 }
