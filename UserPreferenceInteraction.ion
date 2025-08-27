@@ -1,0 +1,6 @@
+
+
+service PreferenceInteraction() {
+    SetPreference(scope: string, value: string);
+    GetPreference(scope: string, value: string);
+}

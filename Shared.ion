@@ -1,0 +1,4 @@
+
+
+attribute @AllowAnonymous();
+attribute @MachineIdOptional();

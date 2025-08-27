@@ -5,11 +5,16 @@ service UserInteraction() {
     CreateSpace(request: CreateServerRequest): ArgonSpace;
     GetSpaces(): ArgonSpace[];
 
+    UpdateMe(request: UserEditInput): ArgonUser;
 
+    @AllowAnonymous()
     Authorize(data: UserCredentialsInput): AuthorizeResult;
+    @AllowAnonymous()
     Registration(data: NewUserCredentialsInput): RegistrationResult;
 
+    @AllowAnonymous()
     BeginResetPassword(email: string): bool;
+    @AllowAnonymous()
     ResetPassword(email: string, otpCode: string, newPassword: string): AuthorizeResult;
 
     JoinToSpace(inviteCode: InviteCode): JoinToSpaceResult;
@@ -20,6 +25,11 @@ service UserInteraction() {
 
 
     GetMyFeatures(): FeatureFlag[]; 
+}
+
+msg UserEditInput {
+    displayName: string?;
+    avatarId: string?;
 }
 
 msg FeatureFlag {
@@ -100,4 +110,17 @@ enum RegistrationError
     SSO_EMAILS_NOT_ALLOWED,
     INTERNAL_ERROR,
     VALIDATION_FAILED
+}
+
+enum LockdownReason
+{
+    NONE,
+    SPAM_SCAM_ACCOUNT,
+    INCITING_MOMENT,
+    NON_BINARY_PERSON,
+    TOS_VIOLATION,
+    LGBT_AGITATION,
+    DRUG_VIOLATION,
+    TERRORISM_AGITATION,
+    CHILD_ABUSE
 }

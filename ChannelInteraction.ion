@@ -132,7 +132,8 @@ union ArgonEvent(spaceId: guid) {
     OnUserPresenceActivityChanged(userId: guid, presence: UserActivityPresence),
     OnUserPresenceActivityRemoved(userId: guid),
     UserChangedStatus(userId: guid, status: UserStatus, bag: string[]),
-    MessageSent(message: ArgonMessage)
+    MessageSent(message: ArgonMessage),
+    ServerModified(bag: string[])
 }
 
 msg UserActivityPresence
