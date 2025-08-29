@@ -2,8 +2,8 @@
 
 service UserInteraction() {
     GetMe(): ArgonUser;
-    CreateSpace(request: CreateServerRequest): ArgonSpace;
-    GetSpaces(): ArgonSpace[];
+    CreateSpace(request: CreateServerRequest): ArgonSpaceBase;
+    GetSpaces(): ArgonSpaceBase[];
 
     UpdateMe(request: UserEditInput): ArgonUser;
 

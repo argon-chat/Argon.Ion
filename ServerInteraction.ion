@@ -61,6 +61,14 @@ service ServerInteraction(spaceId: guid)
     GetDetailedServerArchetypes(): ArchetypeGroup[];
 }
 
+msg ArgonSpaceBase {
+    spaceId: guid;
+    name: string;
+    description: string;
+    avatarFieldId: string?;
+    topBannerFileId: string?;
+}
+
 msg ArgonSpace {
     spaceId: guid;
     name: string;

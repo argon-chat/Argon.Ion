@@ -91,7 +91,7 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     
     QueryMessages(from: u8?, limit: i4): ArgonMessage[];
-    SendMessage(text: string, entities: MessageEntity[], replyTo: u8?): ArgonMessage;
+    SendMessage(text: string, entities: MessageEntity[], replyTo: u8?): u8;
 
 
     @deprecated()
