@@ -38,9 +38,7 @@ flags ArgonEntitlement: u8 {
     ManageBots      = 1 << 52,
     ManageEvents    = 1 << 53,
     ManageBehaviour = 1 << 54,
-    ManageServer    = 1 << 55,
-
-    Administrator = 1 << 63
+    ManageServer    = 1 << 55
 }
 
 service ServerInteraction(spaceId: guid)

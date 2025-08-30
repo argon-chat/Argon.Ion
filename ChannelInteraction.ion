@@ -108,6 +108,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 service EventBus() {
     stream ForServer(spaceId: guid): ArgonEvent;
     stream ForSelf(): ArgonEvent;
+
+    Dispatch(ev: ArgonClientEvent): void;
 }
 
 union JoinToVoiceResult() {
@@ -121,8 +123,6 @@ union ArgonEvent(spaceId: guid) {
     ChannelCreated(data: ArgonChannel),
     ChannelModified(channelId: guid, bag: string[]),
     ChannelRemoved(channelId: guid),
-    IAmTypingEvent(channelId: guid),
-    IAmStopTypingEvent(channelId: guid),
     UserTypingEvent(channelId: guid, userId: guid),
     UserStopTypingEvent(channelId: guid, userId: guid),
     JoinedToChannelUser(channelId: guid, userId: guid),
@@ -134,6 +134,12 @@ union ArgonEvent(spaceId: guid) {
     UserChangedStatus(userId: guid, status: UserStatus, bag: string[]),
     MessageSent(message: ArgonMessage),
     ServerModified(bag: string[])
+}
+
+union ArgonClientEvent() {
+    IAmTypingEvent(channelId: guid),
+    IAmStopTypingEvent(channelId: guid),
+    HeartBeatEvent(status: UserStatus)
 }
 
 msg UserActivityPresence
