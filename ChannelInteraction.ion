@@ -107,7 +107,6 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
 service EventBus() {
     stream ForServer(spaceId: guid): ArgonEvent;
-    stream ForSelf(): ArgonEvent;
 
     Dispatch(ev: ArgonClientEvent): void;
 }
