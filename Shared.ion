@@ -2,3 +2,15 @@
 
 attribute @AllowAnonymous();
 attribute @MachineIdOptional();
+
+msg ArgonIonTicket {
+    userId: guid;
+    ip: string;
+    ray: string;
+    clientName: string;
+    hostName: string;
+    appId: string;
+    sessionId: guid;
+    machineId: string;
+    region: string;
+}

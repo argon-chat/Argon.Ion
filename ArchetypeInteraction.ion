@@ -39,5 +39,5 @@ msg Archetype
 
     iconFileId: string?;
 
-    entitlement: string;
+    entitlement: ArgonEntitlement;
 }
