@@ -25,6 +25,8 @@ service UserInteraction() {
 
 
     GetMyFeatures(): FeatureFlag[]; 
+
+    GetMyProfile(): ArgonUserProfile;
 }
 
 msg UserEditInput {
