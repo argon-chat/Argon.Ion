@@ -27,6 +27,13 @@ service UserInteraction() {
     GetMyFeatures(): FeatureFlag[]; 
 
     GetMyProfile(): ArgonUserProfile;
+
+    GetMyInventoryItems(): InventoryItem[];
+}
+
+msg InventoryItem {
+    id: string;
+    grantedDate: datetime;
 }
 
 msg UserEditInput {
