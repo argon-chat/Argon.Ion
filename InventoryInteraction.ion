@@ -1,0 +1,45 @@
+msg InventoryItem {
+    id: string;
+    instanceId: guid;
+    grantedDate: datetime;
+    usable: bool;
+    giftable: bool;
+    usableVector: ItemUseVector?;
+    receivedFrom: guid?;
+    ttl: duration?;
+}
+
+msg InventoryNotification {
+    inventoryItemId: guid;
+    id: string;
+    createdAt: datetime;
+}
+
+enum ItemUseVector {
+    RedeemCode,
+    SpacePremium,
+    UserPremium
+}
+
+service InventoryInteraction() {
+    GetMyInventoryItems(): InventoryItem[];
+
+    MarkSeen(itemIds: guid[]): void;
+    
+    GetNotifications(): InventoryNotification[];
+
+    RedeemCode(code: string): RedeemResult;
+}
+
+union RedeemResult() {
+    SuccessRedeem(),
+    FailedRedeem(error: RedeemError)
+}
+
+enum RedeemError {
+    NOT_FOUND,
+    INACTIVE,
+    EXPIRED,
+    LIMIT_REACHED,
+    ALREADY
+}
