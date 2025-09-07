@@ -17,8 +17,9 @@ msg InventoryNotification {
 
 enum ItemUseVector {
     RedeemCode,
-    SpacePremium,
-    UserPremium
+    Premium,
+    Box,
+    QualifierBox
 }
 
 service InventoryInteraction() {
@@ -29,6 +30,8 @@ service InventoryInteraction() {
     GetNotifications(): InventoryNotification[];
 
     RedeemCode(code: string): RedeemResult;
+
+    UseItem(itemId: guid): bool;
 }
 
 union RedeemResult() {
