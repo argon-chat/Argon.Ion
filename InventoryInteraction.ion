@@ -9,6 +9,11 @@ msg InventoryItem {
     ttl: duration?;
 }
 
+msg DetailedInventoryItem {
+    item: InventoryItem;
+    containedItem: InventoryItem?;
+}
+
 msg InventoryNotification {
     inventoryItemId: guid;
     id: string;
