@@ -7,16 +7,6 @@ service UserInteraction() {
 
     UpdateMe(request: UserEditInput): ArgonUser;
 
-    @AllowAnonymous()
-    Authorize(data: UserCredentialsInput): AuthorizeResult;
-    @AllowAnonymous()
-    Registration(data: NewUserCredentialsInput): RegistrationResult;
-
-    @AllowAnonymous()
-    BeginResetPassword(email: string): bool;
-    @AllowAnonymous()
-    ResetPassword(email: string, otpCode: string, newPassword: string): AuthorizeResult;
-
     JoinToSpace(inviteCode: InviteCode): JoinToSpaceResult;
 
     BroadcastPresence(presence: UserActivityPresence);
@@ -53,9 +43,10 @@ msg CreateServerRequest {
 }
 
 msg UserCredentialsInput {
-    email: string;
+    email: string?;
+    phone: string?;
     username: string?;
-    password: string;
+    password: string?;
     otpCode: string?;
     captchaToken: string?;
 }

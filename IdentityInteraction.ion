@@ -1,0 +1,14 @@
+service IdentityInteraction() {
+    @AllowAnonymous()
+    Authorize(data: UserCredentialsInput): AuthorizeResult;
+    @AllowAnonymous()
+    Registration(data: NewUserCredentialsInput): RegistrationResult;
+
+    @AllowAnonymous()
+    BeginResetPassword(email: string): bool;
+    @AllowAnonymous()
+    ResetPassword(email: string, otpCode: string, newPassword: string): AuthorizeResult;
+
+    @AllowAnonymous()
+    GetAuthorizationScenario(): string;
+}
