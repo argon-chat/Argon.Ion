@@ -57,6 +57,7 @@ msg NewUserCredentialsInput {
     password: string;
     displayName: string;
     argreeTos: bool;
+    birthDate: dateonly;
     argreeOptionalEmails: bool;
     captchaToken: string?;
 }
