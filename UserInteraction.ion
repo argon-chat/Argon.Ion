@@ -2,7 +2,7 @@
 
 service UserInteraction() {
     GetMe(): ArgonUser;
-    CreateSpace(request: CreateServerRequest): ArgonSpaceBase;
+    CreateSpace(request: CreateServerRequest): CreateSpaceResult;
     GetSpaces(): ArgonSpaceBase[];
 
     UpdateMe(request: UserEditInput): ArgonUser;
@@ -17,6 +17,16 @@ service UserInteraction() {
     GetMyFeatures(): FeatureFlag[]; 
 
     GetMyProfile(): ArgonUserProfile;
+}
+
+union CreateSpaceResult {
+    SuccessCreateSpace(space: ArgonSpaceBase),
+    FailedCreateSpace(error: CreateSpaceError)
+}
+
+enum CreateSpaceError {
+    UNKNOWN,
+    LIMIT_REACHED
 }
 
 msg UserEditInput {
