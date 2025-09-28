@@ -99,7 +99,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
 
     DisconnectFromVoiceChannel();
-    JoinToVoiceChannel(): JoinToVoiceResult;
+
+    Interlink(): InterlinkResult;
 
     KickMemberFromChannel(memberId: guid): bool;
 }
@@ -111,8 +112,8 @@ service EventBus() {
     Dispatch(ev: ArgonClientEvent): void;
 }
 
-union JoinToVoiceResult() {
-    SuccessJoinVoice(token: string),
+union InterlinkResult() {
+    SuccessJoinVoice(rtc: RtcEndpoint, token: string),
     FailedJoinVoice(error: JoinToChannelError)
 }
 
