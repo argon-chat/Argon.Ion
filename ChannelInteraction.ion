@@ -142,7 +142,8 @@ union ArgonEvent(spaceId: guid) {
 union ArgonClientEvent() {
     IAmTypingEvent(channelId: guid),
     IAmStopTypingEvent(channelId: guid),
-    HeartBeatEvent(status: UserStatus)
+    HeartBeatEvent(status: UserStatus),
+    SubscribeToMySpaces()
 }
 
 msg UserActivityPresence
