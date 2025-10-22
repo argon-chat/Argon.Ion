@@ -79,6 +79,12 @@ msg UserCredentialsInput {
     captchaToken: string?;
 }
 
+msg UserLoginInput {
+    email: string?;
+    phone: string?;
+    username: string?;
+}
+
 msg NewUserCredentialsInput {
     email: string;
     username: string;

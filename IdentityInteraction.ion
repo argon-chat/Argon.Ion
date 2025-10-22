@@ -11,4 +11,7 @@ service IdentityInteraction() {
 
     @AllowAnonymous()
     GetAuthorizationScenario(): string;
+
+    @AllowAnonymous()
+    GetAuthorizationScenarioFor(data: UserLoginInput): string;
 }
