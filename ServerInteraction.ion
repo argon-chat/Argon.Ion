@@ -57,6 +57,12 @@ service ServerInteraction(spaceId: guid)
 
     GetServerArchetypes(): Archetype[];
     GetDetailedServerArchetypes(): ArchetypeGroup[];
+
+    BeginUploadSpaceProfileHeader(): guid;
+    CompleteUploadSpaceProfileHeader(blobId: guid);
+
+    BeginUploadSpaceAvatar(): guid;
+    CompleteUploadSpaceAvatar(blobId: guid);
 }
 
 msg ArgonSpaceBase {

@@ -17,6 +17,24 @@ service UserInteraction() {
     GetMyFeatures(): FeatureFlag[]; 
 
     GetMyProfile(): ArgonUserProfile;
+
+
+    BeginUploadAvatar(): UploadFileResult;
+    CompleteUploadAvatar(blobId: guid);
+
+    BeginUploadProfileHeader(): UploadFileResult;
+    CompleteUploadProfileHeader(blobId: guid);
+}
+
+enum UploadFileError {
+    NONE,
+    NOT_AUTHORIZED,
+    INTERNAL_ERROR
+}
+
+union UploadFileResult {
+    SuccessUploadFile(blobId: guid),
+    FailedUploadFile(error: UploadFileError)
 }
 
 union CreateSpaceResult {
