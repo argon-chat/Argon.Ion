@@ -69,8 +69,8 @@ enum EntityType : u2
 }
 
 msg ArgonMessage {
-    messageId: u8;
-    replyId: u8?;
+    messageId: i8;
+    replyId: i8?;
     channelId: guid;
     spaceId: guid;
     text: string;
@@ -90,13 +90,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     GetChannels(): RealtimeChannel[];
 
     
-    QueryMessages(from: u8?, limit: i4): ArgonMessage[];
-    SendMessage(text: string, entities: MessageEntity[], replyTo: u8?): u8;
-
-
-    @deprecated()
-    GetMessages(count: i4, offset: u8): ArgonMessage[];
-
+    QueryMessages(from: i8?, limit: i4): ArgonMessage[];
+    SendMessage(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
 
     DisconnectFromVoiceChannel();
 
