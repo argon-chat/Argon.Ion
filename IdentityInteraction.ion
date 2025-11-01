@@ -14,4 +14,19 @@ service IdentityInteraction() {
 
     @AllowAnonymous()
     GetAuthorizationScenarioFor(data: UserLoginInput): string;
+
+    @AllowAnonymous()
+    GetMyAuthorization(token: string, refreshToken: string?): MyAuthStatus;
+}
+
+union MyAuthStatus {
+    GoodAuthStatus(token: string),
+    BadAuthStatus(error: BadAuthKind),
+    LockedAuthStatus(lockdownReason: LockdownReason?, lockDownExpiration: datetime?, isAppealable: bool, severity: LockdownSeverity)
+}
+
+enum BadAuthKind {
+    SESSION_EXPIRED,
+    REQUIRED_RELOGIN,
+    BAD_TOKEN
 }

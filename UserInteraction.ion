@@ -143,6 +143,12 @@ enum RegistrationError
 enum LockdownReason
 {
     NONE,
+    UNDER_INVESTIGATION,
+    COMPROMISED_ACCOUNT,
+    PAYMENT_FRAUD,
+    MULTI_ACCOUNT_ABUSE,
+    DOXXING,
+    CSAM,
     SPAM_SCAM_ACCOUNT,
     INCITING_MOMENT,
     NON_BINARY_PERSON,
@@ -150,5 +156,13 @@ enum LockdownReason
     LGBT_AGITATION,
     DRUG_VIOLATION,
     TERRORISM_AGITATION,
+    TERRORISM_CONTENT,
+    SELF_HARM_PROMOTION,
     CHILD_ABUSE
+}
+
+enum LockdownSeverity {
+    Low,
+    Middle,
+    Critical
 }
