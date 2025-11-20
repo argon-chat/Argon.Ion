@@ -4,3 +4,14 @@ service VoiceInteraction(spaceId: guid, channelId: guid) {
     DisconnectFromVoiceChannel(): bool;
     KickMemberFromChannel(memberId: guid);
 }
+
+
+msg RtcEndpoint {
+    endpoint: string;
+    ices: IceEndpoint[];
+}
+msg IceEndpoint {
+    endpoint: string;
+    username: string;
+    password: string;
+}
