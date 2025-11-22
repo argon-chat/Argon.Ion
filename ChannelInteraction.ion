@@ -104,10 +104,6 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     StopRecord(): bool;
 }
 
-msg EgressId {
-    id: string;
-}
-
 service EventBus() {
     stream ForServer(spaceId: guid): ArgonEvent;
 
