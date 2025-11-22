@@ -100,8 +100,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     KickMemberFromChannel(memberId: guid): bool;
 
 
-    BeginRecord(): EgressId;
-    StopRecord(id: EgressId): bool;
+    BeginRecord(): bool;
+    StopRecord(): bool;
 }
 
 msg EgressId {
@@ -138,7 +138,9 @@ union ArgonEvent(spaceId: guid) {
     OnUserPresenceActivityRemoved(userId: guid),
     UserChangedStatus(userId: guid, status: UserStatus, bag: string[]),
     MessageSent(message: ArgonMessage),
-    ServerModified(bag: string[])
+    ServerModified(bag: string[]),
+    RecordStarted(channelId: guid, byUserId: guid),
+    RecordEnded(channelId: guid)
 }
 
 union ArgonClientEvent() {
