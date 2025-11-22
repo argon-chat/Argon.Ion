@@ -98,8 +98,15 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     Interlink(): InterlinkResult;
 
     KickMemberFromChannel(memberId: guid): bool;
+
+
+    BeginRecord(): EgressId;
+    StopRecord(id: EgressId): bool;
 }
 
+msg EgressId {
+    id: string;
+}
 
 service EventBus() {
     stream ForServer(spaceId: guid): ArgonEvent;
