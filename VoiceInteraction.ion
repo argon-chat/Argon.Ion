@@ -16,3 +16,25 @@ msg IceEndpoint {
     password: string;
 }
 
+enum CallFailedError {
+    None,
+    CalleeOffline
+}
+
+
+union BeginCallResult() {
+    SuccessDingDong(token: string, callId: guid),
+    FailedDingDong(error: CallFailedError)
+}
+
+union PickUpCallResult() {
+    SuccessPickUp(token: string, callId: guid),
+    FailedPickUp(error: string)
+}
+
+service CallInteraction() {
+    DingDongCreep(creepId: guid): BeginCallResult;
+    PickUpCall(callId: guid): PickUpCallResult;
+    RejectCall(callId: guid);
+    HangupCall(callId: guid);
+}
