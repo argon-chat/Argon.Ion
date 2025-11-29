@@ -118,25 +118,30 @@ union InterlinkResult() {
     FailedJoinVoice(error: JoinToChannelError)
 }
 
-union ArgonEvent(spaceId: guid) {
-    ArchetypeChanged(data: Archetype),
-    ArchetypeCreated(data: Archetype),
-    ChannelCreated(data: ArgonChannel),
-    ChannelModified(channelId: guid, bag: string[]),
-    ChannelRemoved(channelId: guid),
-    UserTypingEvent(channelId: guid, userId: guid),
-    UserStopTypingEvent(channelId: guid, userId: guid),
-    JoinedToChannelUser(channelId: guid, userId: guid),
-    JoinToServerUser(userId: guid),
-    LeavedFromChannelUser(channelId: guid, userId: guid),
-    UserUpdated(dto: ArgonUser),
-    OnUserPresenceActivityChanged(userId: guid, presence: UserActivityPresence),
-    OnUserPresenceActivityRemoved(userId: guid),
-    UserChangedStatus(userId: guid, status: UserStatus, bag: string[]),
-    MessageSent(message: ArgonMessage),
-    ServerModified(bag: string[]),
-    RecordStarted(channelId: guid, byUserId: guid),
-    RecordEnded(channelId: guid)
+union ArgonEvent() {
+    ArchetypeChanged(spaceId: guid, data: Archetype),
+    ArchetypeCreated(spaceId: guid, data: Archetype),
+    ChannelCreated(spaceId: guid, data: ArgonChannel),
+    ChannelModified(spaceId: guid, channelId: guid, bag: string[]),
+    ChannelRemoved(spaceId: guid, channelId: guid),
+    UserTypingEvent(spaceId: guid, channelId: guid, userId: guid),
+    UserStopTypingEvent(spaceId: guid, channelId: guid, userId: guid),
+    JoinedToChannelUser(spaceId: guid, channelId: guid, userId: guid),
+    JoinToServerUser(spaceId: guid, userId: guid),
+    LeavedFromChannelUser(spaceId: guid, channelId: guid, userId: guid),
+    UserUpdated(spaceId: guid, dto: ArgonUser),
+    OnUserPresenceActivityChanged(spaceId: guid, userId: guid, presence: UserActivityPresence),
+    OnUserPresenceActivityRemoved(spaceId: guid, userId: guid),
+    UserChangedStatus(spaceId: guid, userId: guid, status: UserStatus, bag: string[]),
+    MessageSent(spaceId: guid, message: ArgonMessage),
+    ServerModified(spaceId: guid, bag: string[]),
+    RecordStarted(spaceId: guid, channelId: guid, byUserId: guid),
+    RecordEnded(spaceId: guid, channelId: guid),
+
+    CallIncoming(userId: guid, callId: guid, fromId: guid),
+    CallFinished(userId: guid, callId: guid),
+    CallAccepted(userId: guid, callId: guid, fromId: guid),
+    CallRejected(userId: guid, callId: guid, fromId: guid)
 }
 
 union ArgonClientEvent() {
@@ -145,6 +150,7 @@ union ArgonClientEvent() {
     HeartBeatEvent(status: UserStatus),
     SubscribeToMySpaces()
 }
+
 
 msg UserActivityPresence
 {
