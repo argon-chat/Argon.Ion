@@ -1,20 +1,44 @@
 service FriendsInteraction() {
+    GetBlockList(limit: i4, offset: i4): UserBlock[];
+    GetMyFriendPendingList(limit: i4, offset: i4): FriendRequest[];
+    GetMyFriendOutgoingList(limit: i4, offset: i4): FriendRequest[];
+    GetMyFriendships(limit: i4, offset: i4): Friendship[];
 
+    SendFriendRequest(username: string): SendFriendStatus;
+    RemoveFriend(userId: guid);
+    AcceptFriendRequest(fromUserId: guid);
+    DeclineFriendRequest(fromUserId: guid);
+    CancelFriendRequest(toUserId: guid);
+
+    BlockUser(userId: guid);
+    UnblockUser(userId: guid);
 }
 
+enum SendFriendStatus {
+    TargetNotFound,
+    CannotFriendYourself,
+    Blocked,
+    AlreadyFriends,
+    AutoAccepted,
+    AlreadySent,
+    SuccessSent,
+    FailedSent
+}
+
+msg UserBlock {
+    userId: guid;
+    blockedId: guid;
+    blockedAt: datetime;
+}
 
 msg FriendRequest {
-    requestId: guid;
-    fromUser: guid;
-    toUser: guid;
-    requestTime: datetime;
+    requesterId: guid;
+    targetId: guid;
+    requestedAt: datetime;
 }
 
-enum FriendRequestStatus {
-    Pending = 0,
-    Accepted = 1,
-    Declined = 2,
-    Cancelled = 3,
-    Expired = 4,
-    Blocked = 5
+msg Friendship {
+    userId: guid;
+    friendId: guid;
+    friendAt: datetime;
 }
