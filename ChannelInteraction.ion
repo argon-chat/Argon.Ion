@@ -151,7 +151,13 @@ union ArgonEvent() {
     FriendRequestCanceledEvent(requesterId: guid),
     FriendshipRemovedEvent(userId: guid),
     UserBlockedEvent(blockId: guid),
-    UserUnblockedEvent(blockId: guid)
+    UserUnblockedEvent(blockId: guid),
+
+
+    RecentChatUpdatedEvent(peerId: guid, lastMessage: string?, lastMessageAt: datetime),
+    ChatPinnedEvent(peerId: guid, pinnedAt: datetime),
+    ChatUnpinnedEvent(peerId: guid),
+    ChatReadEvent(peerId: guid)
 }
 
 union ArgonClientEvent() {

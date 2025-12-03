@@ -42,3 +42,19 @@ msg Friendship {
     friendId: guid;
     friendAt: datetime;
 }
+
+msg UserChat {
+    peerId: guid;
+    isPinned: bool;
+    lastMsg: string?;
+    lastMessageAt: datetime;
+    pinnedAt: datetime?;
+    unreadCount: i4;
+}
+
+service UserChatInteractions() {
+    GetRecentChats(limit: i4, offset: i4): UserChat[];
+    PinChat(peerId: guid);
+    UnpinChat(peerId: guid);
+    MarkChatRead(peerId: guid);
+}
