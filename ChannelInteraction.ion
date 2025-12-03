@@ -141,7 +141,17 @@ union ArgonEvent() {
     CallIncoming(userId: guid, callId: guid, fromId: guid),
     CallFinished(userId: guid, callId: guid),
     CallAccepted(userId: guid, callId: guid, fromId: guid),
-    CallRejected(userId: guid, callId: guid, fromId: guid)
+    CallRejected(userId: guid, callId: guid, fromId: guid),
+
+
+    FriendRequestReceivedEvent(requesterId: guid, requestDate: datetime),
+    FriendRequestSentEvent(targetId: guid, requestDate: datetime),
+    FriendRequestAcceptedEvent(userId: guid, friendAt: datetime),
+    FriendRequestDeclinedEvent(targetId: guid),
+    FriendRequestCanceledEvent(requesterId: guid),
+    FriendshipRemovedEvent(userId: guid),
+    UserBlockedEvent(blockId: guid),
+    UserUnblockedEvent(blockId: guid)
 }
 
 union ArgonClientEvent() {
