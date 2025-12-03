@@ -46,6 +46,7 @@ msg Friendship {
 msg UserChat {
     peerId: guid;
     isPinned: bool;
+    userId: guid;
     lastMsg: string?;
     lastMessageAt: datetime;
     pinnedAt: datetime?;
