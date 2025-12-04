@@ -37,4 +37,10 @@ service CallInteraction() {
     PickUpCall(callId: guid): PickUpCallResult;
     RejectCall(callId: guid);
     HangupCall(callId: guid);
+    UssdExecute(ussd: string, corlId: guid): ServiceUssdResult;
+}
+
+msg ServiceUssdResult {
+    success: bool;
+    message: string;
 }
