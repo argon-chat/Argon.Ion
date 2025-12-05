@@ -23,12 +23,12 @@ enum CallFailedError {
 
 
 union BeginCallResult() {
-    SuccessDingDong(token: string, callId: guid),
+    SuccessDingDong(token: string, callId: guid, rtc: RtcEndpoint),
     FailedDingDong(error: CallFailedError)
 }
 
 union PickUpCallResult() {
-    SuccessPickUp(token: string, callId: guid),
+    SuccessPickUp(token: string, callId: guid, rtc: RtcEndpoint),
     FailedPickUp(error: string)
 }
 
@@ -38,6 +38,22 @@ service CallInteraction() {
     RejectCall(callId: guid);
     HangupCall(callId: guid);
     UssdExecute(ussd: string, corlId: guid): ServiceUssdResult;
+    BeginDialCheck(phoneId: guid): DialCheckResult;
+    DialUp(phoneId: guid, corlId: guid): BeginCallResult;
+}
+
+union DialCheckResult() {
+    SuccessDialCheck(priceMin: i4, corelId: guid, corlId: guid),
+    FailedDialCheck(reason: DialCheckFailReason, priceMin: i4)
+}
+
+enum DialCheckFailReason {
+    COUNTRY_NOT_SUPPORT,
+    INVALID_NUMBER_COUNTRY,
+    INSUFFICIENT_BALANCE,
+    NUMBER_NOT_AVAILABLE,
+    INSUFFICIENT_POOL,
+    UNKNOWN_ERROR
 }
 
 msg ServiceUssdResult {
