@@ -17,8 +17,11 @@ msg IceEndpoint {
 }
 
 enum CallFailedError {
-    None,
-    CalleeOffline
+    NONE,
+    CALLEE_OFFLINE,
+    INSUFFICIENT_BALANCE,
+    VERIFICATION_FAILED,
+    POOL_EMPTY_TRY_LATE
 }
 
 
