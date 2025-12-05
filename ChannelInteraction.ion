@@ -154,7 +154,7 @@ union ArgonEvent() {
     UserUnblockedEvent(blockId: guid),
 
 
-    RecentChatUpdatedEvent(peerId: guid, lastMessage: string?, lastMessageAt: datetime),
+    RecentChatUpdatedEvent(peerId: guid, userId: guid, lastMessage: string?, lastMessageAt: datetime),
     ChatPinnedEvent(peerId: guid, pinnedAt: datetime),
     ChatUnpinnedEvent(peerId: guid),
     ChatReadEvent(peerId: guid)
