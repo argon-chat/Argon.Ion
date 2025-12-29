@@ -126,7 +126,7 @@ union InterlinkStreamResult() {
 
 enum StartStreamError: u2 {
     NONE,
-    BAD_PARAPETERS,
+    BAD_PARAMS,
     INTERNAL_ERROR
 }
 
