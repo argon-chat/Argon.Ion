@@ -96,6 +96,7 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     DisconnectFromVoiceChannel();
 
     Interlink(): InterlinkResult;
+    InterlinkStream(density: i4): InterlinkStreamResult;
 
     KickMemberFromChannel(memberId: guid): bool;
 
@@ -116,6 +117,17 @@ service EventBus() {
 union InterlinkResult() {
     SuccessJoinVoice(rtc: RtcEndpoint, token: string),
     FailedJoinVoice(error: JoinToChannelError)
+}
+
+union InterlinkStreamResult() {
+    SuccessStartStream(rtc: RtcEndpoint, token: string, whipEndpoint: string),
+    FailedStartStream(error: StartStreamError)
+}
+
+enum StartStreamError: u2 {
+    NONE,
+    BAD_PARAPETERS,
+    INTERNAL_ERROR
 }
 
 union ArgonEvent() {
