@@ -15,6 +15,7 @@ msg CreateChannelRequest {
     name: string;
     kind: ChannelType;
     desc: string;
+    groupId: guid?;
 }
 
 msg RealtimeChannel {
@@ -28,7 +29,8 @@ msg ArgonChannel {
     channelId: guid;
     name: string;
     description: string?;
-    categoryId: guid;
+    groupId: guid?;
+    fractionalIndex: string?;
 }
 
 flags ChannelMemberState
@@ -86,6 +88,10 @@ msg RealtimeChannelUser {
 
 service ChannelInteraction(spaceId: guid, channelId: guid) {
     CreateChannel(request: CreateChannelRequest): void;
+    MoveChannel(targetGroupId: guid?, afterChannelId: guid?, beforeChannelId: guid?);
+    DeleteChannelGroup(groupId: guid, deleteChannels: bool);
+    CreateChannelGroup(name: string, desk: string?);
+    MoveChannelGroup(afterGroupId: guid?, beforeGroupId: guid?);
     DeleteChannel();
     GetChannels(): RealtimeChannel[];
 
@@ -195,3 +201,11 @@ enum ActivityPresenceKind
     LISTEN
 }
 
+msg ChannelGroup {
+    spaceId: guid;
+    groupId: guid;
+    name: string;
+    desc: string?;
+    isCollapsed: bool;
+    fractionalIndex: string?;
+}

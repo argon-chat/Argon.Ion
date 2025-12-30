@@ -63,6 +63,8 @@ service ServerInteraction(spaceId: guid)
 
     BeginUploadSpaceAvatar(): guid;
     CompleteUploadSpaceAvatar(blobId: guid);
+
+    GetChannelGroups(): ChannelGroup[];
 }
 
 msg ArgonSpaceBase {
