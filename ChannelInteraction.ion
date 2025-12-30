@@ -94,6 +94,7 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     MoveChannelGroup(afterGroupId: guid?, beforeGroupId: guid?);
     DeleteChannel();
     GetChannels(): RealtimeChannel[];
+    UpdateChannelGroup(groupId: guid, name: string?, description: string?);
 
     
     QueryMessages(from: i8?, limit: i4): ArgonMessage[];
@@ -178,7 +179,7 @@ union ArgonEvent() {
     ChatReadEvent(peerId: guid),
 
     ChannelGroupCreated(spaceId: guid, data: ChannelGroup),
-    ChannelGroupModified(spaceId: guid, groupId: guid, bag: string[]),
+    ChannelGroupModified(spaceId: guid, groupId: guid, data: ChannelGroup),
     ChannelGroupRemoved(spaceId: guid, groupId: guid),
     ChannelGroupReordered(spaceId: guid, groupId: guid, fractionalIndex: string),
     ChannelReordered(spaceId: guid, channelId: guid, targetGroupId: guid?, fractionalIndex: string)
