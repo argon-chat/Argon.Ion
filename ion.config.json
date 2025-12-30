@@ -14,7 +14,7 @@
             "outputs": "./../Argon.CodeGen"
         },
         "browser": {
-            "outputFile": "./../frontend/src/lib/glue/argonChat.ts"
+            "outputFile": "argonChat.ts"
         }
     }
 }   
