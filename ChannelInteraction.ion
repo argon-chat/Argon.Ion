@@ -175,7 +175,13 @@ union ArgonEvent() {
     RecentChatUpdatedEvent(peerId: guid, userId: guid, lastMessage: string?, lastMessageAt: datetime),
     ChatPinnedEvent(peerId: guid, pinnedAt: datetime),
     ChatUnpinnedEvent(peerId: guid),
-    ChatReadEvent(peerId: guid)
+    ChatReadEvent(peerId: guid),
+
+    ChannelGroupCreated(spaceId: guid, data: ChannelGroup),
+    ChannelGroupModified(spaceId: guid, groupId: guid, bag: string[]),
+    ChannelGroupRemoved(spaceId: guid, groupId: guid),
+    ChannelGroupReordered(spaceId: guid, groupId: guid, fractionalIndex: string),
+    ChannelReordered(spaceId: guid, channelId: guid, targetGroupId: guid?, fractionalIndex: string)
 }
 
 union ArgonClientEvent() {
