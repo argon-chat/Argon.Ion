@@ -22,7 +22,8 @@ service IdentityInteraction() {
 union MyAuthStatus {
     GoodAuthStatus(token: string),
     BadAuthStatus(error: BadAuthKind),
-    LockedAuthStatus(lockdownReason: LockdownReason?, lockDownExpiration: datetime?, isAppealable: bool, severity: LockdownSeverity)
+    LockedAuthStatus(lockdownReason: LockdownReason?, lockDownExpiration: datetime?, isAppealable: bool, severity: LockdownSeverity),
+    CertificateErrorAuthStatus(message: string)
 }
 
 enum BadAuthKind {

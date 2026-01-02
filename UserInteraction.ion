@@ -158,7 +158,8 @@ enum LockdownReason
     TERRORISM_AGITATION,
     TERRORISM_CONTENT,
     SELF_HARM_PROMOTION,
-    CHILD_ABUSE
+    CHILD_ABUSE,
+    BAD_CLIENT
 }
 
 enum LockdownSeverity {
