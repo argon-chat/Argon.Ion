@@ -2,6 +2,7 @@
 
 attribute @AllowAnonymous();
 attribute @MachineIdOptional();
+attribute @DoNotRequireSessionContext();
 
 msg ArgonIonTicket {
     userId: guid;

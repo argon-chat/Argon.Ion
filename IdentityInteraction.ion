@@ -16,6 +16,7 @@ service IdentityInteraction() {
     GetAuthorizationScenarioFor(data: UserLoginInput): string;
 
     @AllowAnonymous()
+    @DoNotRequireSessionContext()
     GetMyAuthorization(token: string, refreshToken: string?): MyAuthStatus;
 }
 
