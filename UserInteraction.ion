@@ -24,6 +24,25 @@ service UserInteraction() {
 
     BeginUploadProfileHeader(): UploadFileResult;
     CompleteUploadProfileHeader(blobId: guid);
+
+
+    GetTodayStats(): TodayStats;
+    GetMyLevel(): MyLevelDetails;
+    ClaimLevelCoin(): bool;
+}
+
+msg TodayStats {
+    timeInVoice: i4;
+    callsMade: i4;
+    messagesSent: i4;
+}
+
+msg MyLevelDetails {
+    totalXp: i4;
+    currentLevel: i4;
+    xpForNextLevel: i4;
+    xpForCurrentLevel: i4;
+    readyToClaimCoin: bool;
 }
 
 enum UploadFileError {
