@@ -44,6 +44,14 @@ flags ChannelMemberState
 }
 
 union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
+    MessageEntityBold(),
+    MessageEntityItalic(),
+    MessageEntityStrikethrough(),
+    MessageEntitySpoiler(),
+    MessageEntityMonospace(),
+    MessageEntityFraction(numerator: i4, denominator: i4),
+    MessageEntityOrdinal(),
+    MessageEntityCapitalized(),
     MessageEntityMention(userId: guid),
     MessageEntityEmail(email: string),
     MessageEntityHashTag(hashtag: string),
