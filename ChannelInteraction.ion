@@ -57,7 +57,12 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     MessageEntityHashTag(hashtag: string),
     MessageEntityQuote(quotedUserId: guid),
     MessageEntityUnderline(colour: i4),
-    MessageEntityUrl(domain: string, path: string)
+    MessageEntityUrl(domain: string, path: string),
+
+    MessageEntitySystemCallStarted(callerId: guid, callId: guid),
+    MessageEntitySystemCallEnded(callerId: guid, callId: guid, durationSeconds: i4),
+    MessageEntitySystemCallTimeout(callerId: guid, callId: guid),
+    MessageEntitySystemUserJoined(userId: guid, inviterId: guid?)
 }
 
 enum EntityType : u2
@@ -75,7 +80,13 @@ enum EntityType : u2
     Underline,
     Fraction,
     Ordinal,
-    Capitalized
+    Capitalized,
+
+
+    SystemCallStarted,
+    SystemCallEnded,
+    SystemCallTimeout,
+    SystemUserJoined
 }
 
 msg ArgonMessage {
@@ -190,7 +201,10 @@ union ArgonEvent() {
     ChannelGroupModified(spaceId: guid, groupId: guid, data: ChannelGroup),
     ChannelGroupRemoved(spaceId: guid, groupId: guid),
     ChannelGroupReordered(spaceId: guid, groupId: guid, fractionalIndex: string),
-    ChannelReordered(spaceId: guid, channelId: guid, targetGroupId: guid?, fractionalIndex: string)
+    ChannelReordered(spaceId: guid, channelId: guid, targetGroupId: guid?, fractionalIndex: string),
+
+
+    DirectMessageSent(senderId: guid, receiverId: guid, message: DirectMessage)
 }
 
 union ArgonClientEvent() {

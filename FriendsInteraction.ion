@@ -53,9 +53,21 @@ msg UserChat {
     unreadCount: i4;
 }
 
+msg DirectMessage {
+    messageId: i8;
+    senderId: guid;
+    receiverId: guid;
+    text: string;
+    entities: MessageEntity[];
+    createdAt: datetime;
+    replyTo: i8?;
+}
+
 service UserChatInteractions() {
     GetRecentChats(limit: i4, offset: i4): UserChat[];
     PinChat(peerId: guid);
     UnpinChat(peerId: guid);
     MarkChatRead(peerId: guid);
+    SendDirectMessage(receiverId: guid, text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
+    QueryDirectMessages(peerId: guid, from: i8?, limit: i4): DirectMessage[];
 }
