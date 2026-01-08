@@ -205,7 +205,10 @@ union ArgonEvent() {
 
 
     DirectMessageSent(senderId: guid, receiverId: guid, message: DirectMessage),
-    UpdatedNotificationCounters(userId: guid, counters: NotificationCounterKv[])
+    UpdatedNotificationCounters(userId: guid, counters: NotificationCounterKv[]),
+
+
+    UserSecurityDetailsUpdated(userId: guid, details: SecurityDetails)
 }
 
 msg NotificationCounterKv {

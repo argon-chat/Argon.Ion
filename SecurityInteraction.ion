@@ -21,7 +21,19 @@ service SecurityInteraction() {
 
     SetAutoDeletePeriod(months: i4?): SetAutoDeleteResult;
     GetAutoDeletePeriod(): AutoDeletePeriod;
+
+
+    GetSecurityDetails(): SecurityDetails;
 }
+
+msg SecurityDetails {
+    otpEnabled: bool;
+    passkeys: Passkey[];
+    email: string?;
+    phone: string?;
+    autoDeletePeriod: AutoDeletePeriod;
+}
+
 
 union RequestEmailChangeResult {
     SuccessRequestEmailChange(),
