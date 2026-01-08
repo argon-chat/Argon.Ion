@@ -208,7 +208,9 @@ union ArgonEvent() {
     UpdatedNotificationCounters(userId: guid, counters: NotificationCounterKv[]),
 
 
-    UserSecurityDetailsUpdated(userId: guid, details: SecurityDetails)
+    UserSecurityDetailsUpdated(userId: guid, details: SecurityDetails),
+
+    SpaceDetailsUpdated(spaceId: guid, details: ArgonSpaceBase)
 }
 
 msg NotificationCounterKv {
