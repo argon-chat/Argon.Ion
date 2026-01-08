@@ -31,6 +31,27 @@ service UserInteraction() {
     ClaimLevelCoin(): bool;
 
     GetNotificationCounters(): NotificationCounterKv[];
+
+    RequestEmailChange(newEmail: string, password: string): RequestEmailChangeResult;
+    ConfirmEmailChange(verificationCode: string): ConfirmEmailChangeResult;
+
+    RequestPhoneChange(newPhone: string, password: string): RequestPhoneChangeResult;
+    ConfirmPhoneChange(verificationCode: string): ConfirmPhoneChangeResult;
+    RemovePhone(password: string): RemovePhoneResult;
+
+    ChangePassword(currentPassword: string, newPassword: string): ChangePasswordResult;
+
+    EnableOTP(): EnableOTPResult;
+    VerifyAndEnableOTP(code: string): VerifyOTPResult;
+    DisableOTP(code: string): DisableOTPResult;
+
+    GetPasskeys(): Passkey[];
+    BeginAddPasskey(name: string): BeginPasskeyResult;
+    CompleteAddPasskey(passkeyId: guid, publicKey: string): CompletePasskeyResult;
+    RemovePasskey(passkeyId: guid): RemovePasskeyResult;
+
+    SetAutoDeletePeriod(months: i4?): SetAutoDeleteResult;
+    GetAutoDeletePeriod(): AutoDeletePeriod;
 }
 
 msg TodayStats {
@@ -187,4 +208,137 @@ enum LockdownSeverity {
     Low,
     Middle,
     Critical
+}
+
+union RequestEmailChangeResult {
+    SuccessRequestEmailChange(),
+    FailedRequestEmailChange(error: EmailChangeError)
+}
+
+union ConfirmEmailChangeResult {
+    SuccessConfirmEmailChange(),
+    FailedConfirmEmailChange(error: EmailChangeError)
+}
+
+enum EmailChangeError {
+    NONE,
+    INVALID_EMAIL,
+    EMAIL_ALREADY_USED,
+    INVALID_PASSWORD,
+    INVALID_VERIFICATION_CODE,
+    VERIFICATION_CODE_EXPIRED,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}
+
+union RequestPhoneChangeResult {
+    SuccessRequestPhoneChange(),
+    FailedRequestPhoneChange(error: PhoneChangeError)
+}
+
+union ConfirmPhoneChangeResult {
+    SuccessConfirmPhoneChange(),
+    FailedConfirmPhoneChange(error: PhoneChangeError)
+}
+
+union RemovePhoneResult {
+    SuccessRemovePhone(),
+    FailedRemovePhone(error: PhoneChangeError)
+}
+
+enum PhoneChangeError {
+    NONE,
+    INVALID_PHONE,
+    PHONE_ALREADY_USED,
+    INVALID_PASSWORD,
+    INVALID_VERIFICATION_CODE,
+    VERIFICATION_CODE_EXPIRED,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}
+
+union ChangePasswordResult {
+    SuccessChangePassword(),
+    FailedChangePassword(error: PasswordChangeError)
+}
+
+enum PasswordChangeError {
+    NONE,
+    INVALID_CURRENT_PASSWORD,
+    PASSWORD_TOO_WEAK,
+    PASSWORD_TOO_SHORT,
+    PASSWORD_SAME_AS_CURRENT,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}
+
+union EnableOTPResult {
+    SuccessEnableOTP(secret: string, qrCodeUrl: string),
+    FailedEnableOTP(error: OTPError)
+}
+
+union VerifyOTPResult {
+    SuccessVerifyOTP(),
+    FailedVerifyOTP(error: OTPError)
+}
+
+union DisableOTPResult {
+    SuccessDisableOTP(),
+    FailedDisableOTP(error: OTPError)
+}
+
+enum OTPError {
+    NONE,
+    ALREADY_ENABLED,
+    NOT_ENABLED,
+    INVALID_CODE,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}
+
+msg Passkey {
+    id: guid;
+    name: string;
+    createdAt: datetime;
+    lastUsedAt: datetime?;
+}
+
+union BeginPasskeyResult {
+    SuccessBeginPasskey(passkeyId: guid, challenge: string),
+    FailedBeginPasskey(error: PasskeyError)
+}
+
+union CompletePasskeyResult {
+    SuccessCompletePasskey(passkey: Passkey),
+    FailedCompletePasskey(error: PasskeyError)
+}
+
+union RemovePasskeyResult {
+    SuccessRemovePasskey(),
+    FailedRemovePasskey(error: PasskeyError)
+}
+
+enum PasskeyError {
+    NONE,
+    NOT_FOUND,
+    LIMIT_REACHED,
+    INVALID_PUBLIC_KEY,
+    INTERNAL_ERROR
+}
+
+union SetAutoDeleteResult {
+    SuccessSetAutoDelete(),
+    FailedSetAutoDelete(error: AutoDeleteError)
+}
+
+msg AutoDeletePeriod {
+    months: i4?;
+    enabled: bool;
+}
+
+enum AutoDeleteError {
+    NONE,
+    PREMIUM_REQUIRED,
+    INVALID_PERIOD,
+    INTERNAL_ERROR
 }
