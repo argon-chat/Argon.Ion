@@ -29,6 +29,8 @@ service UserInteraction() {
     GetTodayStats(): TodayStats;
     GetMyLevel(): MyLevelDetails;
     ClaimLevelCoin(): bool;
+
+    GetNotificationCounters(): NotificationCounterKv[];
 }
 
 msg TodayStats {

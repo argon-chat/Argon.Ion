@@ -204,7 +204,13 @@ union ArgonEvent() {
     ChannelReordered(spaceId: guid, channelId: guid, targetGroupId: guid?, fractionalIndex: string),
 
 
-    DirectMessageSent(senderId: guid, receiverId: guid, message: DirectMessage)
+    DirectMessageSent(senderId: guid, receiverId: guid, message: DirectMessage),
+    UpdatedNotificationCounters(userId: guid, counters: NotificationCounterKv[])
+}
+
+msg NotificationCounterKv {
+    counterType: string;
+    count: i8;
 }
 
 union ArgonClientEvent() {
