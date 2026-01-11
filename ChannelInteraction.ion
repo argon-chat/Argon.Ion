@@ -21,6 +21,14 @@ msg CreateChannelRequest {
 msg RealtimeChannel {
     channel: ArgonChannel;
     users: RealtimeChannelUser[];
+    meetInfo: LinkedMeetingInfo?;
+}
+
+msg LinkedMeetingInfo {
+    meetingId: guid;
+    meetingUrl: string;
+    meetingCode: string;
+    startDate: datetime;
 }
 
 msg ArgonChannel {
@@ -210,7 +218,10 @@ union ArgonEvent() {
 
     UserSecurityDetailsUpdated(userId: guid, details: SecurityDetails),
 
-    SpaceDetailsUpdated(spaceId: guid, details: ArgonSpaceBase)
+    SpaceDetailsUpdated(spaceId: guid, details: ArgonSpaceBase),
+
+    MeetingCreatedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo),
+    MeetingDeletedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo)
 }
 
 msg NotificationCounterKv {
