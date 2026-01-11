@@ -137,6 +137,10 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     BeginRecord(): bool;
     StopRecord(): bool;
+
+
+    CreateLinkedMeeting(): LinkedMeetingInfo;
+    EndLinkedMeeting(): void;
 }
 
 service EventBus() {
