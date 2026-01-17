@@ -24,6 +24,10 @@ service SecurityInteraction() {
 
 
     GetSecurityDetails(): SecurityDetails;
+
+
+    BeginValidatePasskey(): BeginPasskeyResult;
+    CompleteValidatePasskey(credentialId: string, signature: string, authenticatorData: string, clientDataJSON: string): CompletePasskeyResult;
 }
 
 msg SecurityDetails {
