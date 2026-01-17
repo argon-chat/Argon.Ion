@@ -26,7 +26,7 @@ service SecurityInteraction() {
     GetSecurityDetails(): SecurityDetails;
 
 
-    BeginValidatePasskey(): BeginPasskeyResult;
+    BeginValidatePasskey(): BeginPasskeyValidateResult;
     CompleteValidatePasskey(credentialId: string, signature: string, authenticatorData: string, clientDataJSON: string): CompletePasskeyResult;
 }
 
@@ -146,6 +146,17 @@ union RemovePasskeyResult {
     SuccessRemovePasskey(),
     FailedRemovePasskey(error: PasskeyError)
 }
+
+union BeginPasskeyValidateResult {
+    SuccessBeginValidatePasskey(challenge: string, allowedCredentials: PasskeyCredentialDescriptor[]),
+    FailedBeginValidatePasskey(error: PasskeyError)
+}
+
+msg PasskeyCredentialDescriptor {
+    id: string;
+    type: string;
+}
+
 
 enum PasskeyError {
     NONE,
