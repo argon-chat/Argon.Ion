@@ -150,6 +150,9 @@ service EventBus() {
 
 
     stream Pipe(stream ev: ArgonClientEvent): ArgonEvent;
+
+
+    PickTicket(): string;
 }
 
 union InterlinkResult() {
