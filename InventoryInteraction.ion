@@ -11,7 +11,7 @@ msg InventoryItem {
 
 msg DetailedInventoryItem {
     item: InventoryItem;
-    containedItem: InventoryItem?;
+    containedItems: InventoryItem[];
 }
 
 msg InventoryNotification {
