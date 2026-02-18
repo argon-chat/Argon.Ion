@@ -1,0 +1,11 @@
+service FeatureFlagInteractions() {
+    GetMyFeatureFlags(): FeatureFlagData[];
+}
+
+
+msg FeatureFlagData {
+    flagId: string;
+    isEnabled: bool;
+    variant: string?;
+    scope: i4;
+}
