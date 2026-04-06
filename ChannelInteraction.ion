@@ -137,6 +137,7 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     
     QueryMessages(from: i8?, limit: i4): ArgonMessage[];
     SendMessage(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
+    SendMessageWithReadback(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): ArgonMessage;
 
     DisconnectFromVoiceChannel();
 
