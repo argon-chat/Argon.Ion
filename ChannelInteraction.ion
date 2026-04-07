@@ -39,6 +39,7 @@ msg ArgonChannel {
     description: string?;
     groupId: guid?;
     fractionalIndex: string?;
+    lastMessageId: i8;
 }
 
 flags ChannelMemberState
