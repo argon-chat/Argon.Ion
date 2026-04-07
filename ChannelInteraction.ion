@@ -61,6 +61,8 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     MessageEntityOrdinal(),
     MessageEntityCapitalized(),
     MessageEntityMention(userId: guid),
+    MessageEntityMentionEveryone(),
+    MessageEntityMentionRole(archetypeId: guid),
     MessageEntityEmail(email: string),
     MessageEntityHashTag(hashtag: string),
     MessageEntityQuote(quotedUserId: guid),
@@ -79,6 +81,8 @@ enum EntityType : u2
 {
     Hashtag,
     Mention,
+    MentionEveryone,
+    MentionRole,
     Email,
     Url,
     Monospace,
@@ -243,7 +247,11 @@ union ArgonEvent() {
 
 
     DirectMessageSent(senderId: guid, receiverId: guid, message: DirectMessage),
-    UpdatedNotificationCounters(userId: guid, counters: NotificationCounterKv[]),
+
+    ReadStateUpdated(userId: guid, channelId: guid, spaceId: guid?, lastReadMessageId: i8, mentionCount: i4),
+    SystemNotificationReceived(userId: guid, notification: SystemNotificationDto),
+    MuteSettingsChanged(userId: guid, targetId: guid, muteLevel: MuteLevelType),
+    BatchMentionOccurred(spaceId: guid, channelId: guid, mentionType: MentionTargetType),
 
 
     UserSecurityDetailsUpdated(userId: guid, details: SecurityDetails),
@@ -254,9 +262,65 @@ union ArgonEvent() {
     MeetingDeletedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo)
 }
 
-msg NotificationCounterKv {
-    counterType: string;
-    count: i8;
+msg ChannelReadState {
+    channelId: guid;
+    spaceId: guid?;
+    lastReadMessageId: i8;
+    mentionCount: i4;
+}
+
+enum MuteLevelType : u2 {
+    None,
+    OnlyMentions,
+    All
+}
+
+enum MuteTargetKind : u2 {
+    Space,
+    Channel
+}
+
+enum MentionTargetType : u2 {
+    Everyone,
+    Role
+}
+
+msg MuteSettingsDto {
+    targetId: guid;
+    targetType: MuteTargetKind;
+    muteLevel: MuteLevelType;
+    suppressEveryone: bool;
+    expiresAt: datetime?;
+}
+
+msg SystemNotificationDto {
+    id: guid;
+    type: string;
+    referenceId: guid?;
+    title: string;
+    body: string?;
+    isRead: bool;
+    createdAt: datetime;
+}
+
+msg SpaceBadge {
+    spaceId: guid;
+    unreadChannelCount: i4;
+    totalMentions: i4;
+}
+
+msg NotificationBadges {
+    friendRequests: i4;
+    inventory: i4;
+    system: i4;
+}
+
+msg GlobalBadges {
+    unreadDmCount: i4;
+    spaces: SpaceBadge[];
+    notifications: NotificationBadges;
+    readStates: ChannelReadState[];
+    muteSettings: MuteSettingsDto[];
 }
 
 union ArgonClientEvent() {

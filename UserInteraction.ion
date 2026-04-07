@@ -30,7 +30,13 @@ service UserInteraction() {
     GetMyLevel(): MyLevelDetails;
     ClaimLevelCoin(): bool;
 
-    GetNotificationCounters(): NotificationCounterKv[];
+    GetGlobalBadges(): GlobalBadges;
+    AckChannel(channelId: guid, lastReadMessageId: i8);
+    MuteTarget(targetId: guid, targetType: MuteTargetKind, muteLevel: MuteLevelType, suppressEveryone: bool, expiresAt: datetime?);
+    UnmuteTarget(targetId: guid);
+    GetNotificationFeed(limit: i4, before: datetime?): SystemNotificationDto[];
+    MarkNotificationRead(notificationId: guid);
+    MarkAllNotificationsRead(type: string?);
 }
 
 msg TodayStats {
