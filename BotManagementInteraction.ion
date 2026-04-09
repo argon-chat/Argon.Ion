@@ -1,0 +1,67 @@
+
+service BotManagementInteraction(spaceId: guid)
+{
+    SearchBots(query: string): BotSearchResult[];
+    GetBotDetails(botAppId: guid): BotDetails;
+    GetInstalledBots(): InstalledBotInfo[];
+    InstallBot(botAppId: guid): InstallBotResult;
+    UninstallBot(botAppId: guid): UninstallBotResult;
+}
+
+msg BotSearchResult {
+    appId: guid;
+    name: string;
+    username: string;
+    description: string?;
+    avatarFileId: string?;
+    isVerified: bool;
+    requiredScopes: string[];
+}
+
+msg BotDetails {
+    appId: guid;
+    name: string;
+    username: string;
+    description: string?;
+    avatarFileId: string?;
+    isVerified: bool;
+    isPublic: bool;
+    requiredScopes: string[];
+    maxSpaces: i4;
+    teamName: string;
+}
+
+msg InstalledBotInfo {
+    appId: guid;
+    name: string;
+    username: string;
+    avatarFileId: string?;
+    isVerified: bool;
+    botUserId: guid;
+}
+
+union InstallBotResult {
+    SuccessInstallBot(bot: InstalledBotInfo),
+    FailedInstallBot(error: InstallBotError)
+}
+
+enum InstallBotError {
+    NONE,
+    NOT_FOUND,
+    ALREADY_INSTALLED,
+    INSUFFICIENT_PERMISSIONS,
+    BOT_SPACE_LIMIT,
+    BOT_RESTRICTED
+}
+
+union UninstallBotResult {
+    SuccessUninstallBot(),
+    FailedUninstallBot(error: UninstallBotError)
+}
+
+enum UninstallBotError {
+    NONE,
+    NOT_FOUND,
+    NOT_INSTALLED,
+    INSUFFICIENT_PERMISSIONS
+}
