@@ -162,6 +162,121 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     BeginUploadAttachment(): UploadFileResult;
     CompleteUploadAttachment(blobId: guid): AttachmentInfo;
+
+    InvokeSlashCommand(commandId: guid, options: SlashCommandOption[]): InvokeSlashCommandResult;
+
+    InteractWithControl(messageId: i8, controlId: string): InteractWithControlResult;
+
+    InteractWithSelect(messageId: i8, customId: string, values: string[]): InteractWithSelectResult;
+
+    SubmitModal(interactionId: guid, values: ModalSubmitValue[]): SubmitModalResult;
+}
+
+msg SlashCommandOption {
+    name: string;
+    value: string;
+}
+
+union InvokeSlashCommandResult() {
+    SuccessInvokeSlashCommand(),
+    FailedInvokeSlashCommand(error: InvokeSlashCommandError)
+}
+
+enum InvokeSlashCommandError: u2 {
+    NONE,
+    COMMAND_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    BOT_NOT_CONNECTED
+}
+
+union InteractWithControlResult() {
+    SuccessInteractWithControl(interactionId: guid),
+    FailedInteractWithControl(error: InteractWithControlError)
+}
+
+enum InteractWithControlError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    CONTROL_NOT_FOUND,
+    CONTROL_DISABLED,
+    BOT_NOT_CONNECTED,
+    ARCHETYPE_REQUIRED
+}
+
+union InteractWithSelectResult() {
+    SuccessInteractWithSelect(interactionId: guid),
+    FailedInteractWithSelect(error: InteractWithSelectError)
+}
+
+enum InteractWithSelectError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    CONTROL_NOT_FOUND,
+    CONTROL_DISABLED,
+    NOT_A_SELECT,
+    INVALID_VALUES,
+    BOT_NOT_CONNECTED,
+    ARCHETYPE_REQUIRED
+}
+
+msg ModalSubmitValue {
+    customId: string;
+    value: string;
+}
+
+union SubmitModalResult() {
+    SuccessSubmitModal(),
+    FailedSubmitModal(error: SubmitModalError)
+}
+
+enum SubmitModalError: u2 {
+    NONE,
+    INTERACTION_NOT_FOUND,
+    INTERACTION_EXPIRED
+}
+
+enum IonTextInputStyle: u2 {
+    Short,
+    Paragraph
+}
+
+enum IonModalComponentType: u2 {
+    TextInput,
+    StringSelect,
+    UserSelect,
+    ArchetypeSelect,
+    ChannelSelect,
+    Checkbox
+}
+
+msg IonModalSelectOption {
+    label: string;
+    value: string;
+    description: string?;
+    emoji: string?;
+}
+
+msg IonModalComponent {
+    type: IonModalComponentType;
+    customId: string;
+    label: string;
+    style: IonTextInputStyle?;
+    placeholder: string?;
+    minLength: i4?;
+    maxLength: i4?;
+    required: bool?;
+    value: string?;
+    options: IonModalSelectOption[]?;
+    minValues: i4?;
+    maxValues: i4?;
+    defaultChecked: bool?;
+    description: string?;
+}
+
+msg IonModalDefinition {
+    customId: string;
+    title: string;
+    components: IonModalComponent[];
 }
 
 msg SendMessageReadback {
@@ -199,13 +314,20 @@ enum StartStreamError: u2 {
     INTERNAL_ERROR
 }
 
+enum TypingKind {
+    TYPING,
+    THINKING,
+    UPLOADING,
+    SEARCHING
+}
+
 union ArgonEvent() {
     ArchetypeChanged(spaceId: guid, data: Archetype),
     ArchetypeCreated(spaceId: guid, data: Archetype),
     ChannelCreated(spaceId: guid, data: ArgonChannel),
     ChannelModified(spaceId: guid, channelId: guid, bag: string[]),
     ChannelRemoved(spaceId: guid, channelId: guid),
-    UserTypingEvent(spaceId: guid, channelId: guid, userId: guid),
+    UserTypingEvent(spaceId: guid, channelId: guid, userId: guid, kind: TypingKind?),
     UserStopTypingEvent(spaceId: guid, channelId: guid, userId: guid),
     JoinedToChannelUser(spaceId: guid, channelId: guid, userId: guid),
     JoinToServerUser(spaceId: guid, userId: guid),
@@ -215,6 +337,7 @@ union ArgonEvent() {
     OnUserPresenceActivityRemoved(spaceId: guid, userId: guid),
     UserChangedStatus(spaceId: guid, userId: guid, status: UserStatus, bag: string[]),
     MessageSent(spaceId: guid, message: ArgonMessage),
+    MessageEdited(spaceId: guid, channelId: guid, messageId: i8, text: string?, updatedAt: datetime),
     ServerModified(spaceId: guid, bag: string[]),
     RecordStarted(spaceId: guid, channelId: guid, byUserId: guid),
     RecordEnded(spaceId: guid, channelId: guid),
@@ -260,7 +383,12 @@ union ArgonEvent() {
     SpaceDetailsUpdated(spaceId: guid, details: ArgonSpaceBase),
 
     MeetingCreatedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo),
-    MeetingDeletedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo)
+    MeetingDeletedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo),
+    LeavedFromServerUser(spaceId: guid, userId: guid),
+
+    InteractionAcked(interactionId: guid),
+    InteractionDeferred(interactionId: guid),
+    ShowModal(interactionId: guid, modal: IonModalDefinition)
 }
 
 msg ChannelReadState {
