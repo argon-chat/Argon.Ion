@@ -266,11 +266,15 @@ msg IonModalComponent {
     maxLength: i4?;
     required: bool?;
     value: string?;
-    options: IonModalSelectOption[]?;
+    options: MultipleModalSelectOption?;
     minValues: i4?;
     maxValues: i4?;
     defaultChecked: bool?;
     description: string?;
+}
+
+msg MultipleModalSelectOption {
+    options: IonModalSelectOption[];
 }
 
 msg IonModalDefinition {
