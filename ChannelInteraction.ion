@@ -106,6 +106,13 @@ enum EntityType : u2
     Attachment
 }
 
+msg ReactionInfo {
+    emoji: string;
+    customEmojiId: guid?;
+    count: i4;
+    userIds: guid[];
+}
+
 msg ArgonMessage {
     messageId: i8;
     replyId: i8?;
@@ -115,6 +122,7 @@ msg ArgonMessage {
     entities: MessageEntity[];
     timeSent: datetime;
     sender: guid;
+    reactions: ReactionInfo[];
 }
 
 msg RealtimeChannelUser {
@@ -170,6 +178,9 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     InteractWithSelect(messageId: i8, customId: string, values: string[]): InteractWithSelectResult;
 
     SubmitModal(interactionId: guid, values: ModalSubmitValue[]): SubmitModalResult;
+
+    AddReaction(messageId: i8, emoji: string): AddReactionResult;
+    RemoveReaction(messageId: i8, emoji: string): RemoveReactionResult;
 }
 
 msg SlashCommandOption {
@@ -227,6 +238,30 @@ msg ModalSubmitValue {
 union SubmitModalResult() {
     SuccessSubmitModal(),
     FailedSubmitModal(error: SubmitModalError)
+}
+
+enum AddReactionError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    REACTION_LIMIT_REACHED,
+    ALREADY_REACTED,
+    INSUFFICIENT_PERMISSIONS
+}
+
+enum RemoveReactionError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    REACTION_NOT_FOUND
+}
+
+union AddReactionResult() {
+    SuccessAddReaction(),
+    FailedAddReaction(error: AddReactionError)
+}
+
+union RemoveReactionResult() {
+    SuccessRemoveReaction(),
+    FailedRemoveReaction(error: RemoveReactionError)
 }
 
 enum SubmitModalError: u2 {
@@ -392,7 +427,10 @@ union ArgonEvent() {
 
     InteractionAcked(interactionId: guid),
     InteractionDeferred(interactionId: guid),
-    ShowModal(interactionId: guid, modal: IonModalDefinition)
+    ShowModal(interactionId: guid, modal: IonModalDefinition),
+
+    ReactionAdded(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string, customEmojiId: guid?),
+    ReactionRemoved(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string)
 }
 
 msg ChannelReadState {
