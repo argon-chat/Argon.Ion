@@ -181,6 +181,13 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     AddReaction(messageId: i8, emoji: string): AddReactionResult;
     RemoveReaction(messageId: i8, emoji: string): RemoveReactionResult;
+
+    BatchGetReactions(messageIds: i8[]): MessageReactionsEntry[];
+}
+
+msg MessageReactionsEntry {
+    messageId: i8;
+    reactions: ReactionInfo[];
 }
 
 msg SlashCommandOption {
