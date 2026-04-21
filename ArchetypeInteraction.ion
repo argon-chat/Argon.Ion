@@ -9,6 +9,8 @@ service ArchetypeInteraction(spaceId: guid) {
     GetDetailedServerArchetypes(): ArchetypeGroup[];
     UpsertArchetypeEntitlementForChannel(channelId: guid, archetypeId: guid,
             deny: ArgonEntitlement, allow: ArgonEntitlement): ChannelEntitlementOverwrite?;
+    GetChannelEntitlementOverwrites(channelId: guid): ChannelEntitlementOverwrite[];
+    DeleteEntitlementForChannel(channelId: guid, entitlementOverwriteId: guid): bool;
 }
 
 msg ChannelEntitlementOverwrite {
