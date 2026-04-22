@@ -123,6 +123,7 @@ msg ArgonMessage {
     timeSent: datetime;
     sender: guid;
     reactions: ReactionInfo[];
+    controls: ControlRow[]?;
 }
 
 msg RealtimeChannelUser {
@@ -193,6 +194,52 @@ msg MessageReactionsEntry {
 msg SlashCommandOption {
     name: string;
     value: string;
+}
+
+enum ControlType: u2 {
+    Button,
+    StringSelect,
+    UserSelect,
+    ArchetypeSelect,
+    ChannelSelect
+}
+
+enum ButtonVariant: u2 {
+    Callback,
+    Link
+}
+
+msg OklchColor {
+    l: f4;
+    c: f4;
+    h: f4;
+}
+
+msg SelectOption {
+    label: string;
+    value: string;
+    description: string?;
+    isDefault: bool?;
+}
+
+msg BotControl {
+    type: ControlType;
+    variant: ButtonVariant?;
+    label: string?;
+    id: string?;
+    url: string?;
+    colour: OklchColor?;
+    disabled: bool?;
+    customId: string?;
+    placeholder: string?;
+    minValues: i4?;
+    maxValues: i4?;
+    options: SelectOption[]?;
+    requiredArchetypeId: guid?;
+}
+
+msg ControlRow {
+    controls: BotControl[];
 }
 
 union InvokeSlashCommandResult() {

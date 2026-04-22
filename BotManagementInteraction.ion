@@ -6,6 +6,7 @@ service BotManagementInteraction(spaceId: guid)
     GetInstalledBots(): InstalledBotInfo[];
     InstallBot(botAppId: guid): InstallBotResult;
     UninstallBot(botAppId: guid): UninstallBotResult;
+    GetSpaceCommands(): SpaceCommand[];
 }
 
 msg BotSearchResult {
@@ -64,4 +65,29 @@ enum UninstallBotError {
     NOT_FOUND,
     NOT_INSTALLED,
     INSUFFICIENT_PERMISSIONS
+}
+
+enum CommandOptionType: u2 {
+    String,
+    Integer,
+    Boolean,
+    User,
+    Channel,
+    Role,
+    Number
+}
+
+msg SpaceCommandOption {
+    name: string;
+    description: string;
+    type: CommandOptionType;
+    required: bool;
+}
+
+msg SpaceCommand {
+    commandId: guid;
+    appId: guid;
+    name: string;
+    description: string;
+    options: SpaceCommandOption[];
 }
