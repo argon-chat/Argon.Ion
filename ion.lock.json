@@ -1,0 +1,5594 @@
+{
+  "version": 1,
+  "module": "ArgonContracts",
+  "definitions": {
+    "ChannelEntitlementOverwrite": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "archetypeId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "serverMemberId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "allow",
+          "type": "ArgonEntitlement"
+        },
+        {
+          "index": 4,
+          "name": "deny",
+          "type": "ArgonEntitlement"
+        },
+        {
+          "index": 5,
+          "name": "creatorId",
+          "type": "guid"
+        },
+        {
+          "index": 6,
+          "name": "id",
+          "type": "guid"
+        }
+      ]
+    },
+    "Archetype": {
+      "kind": "Msg",
+      "nextIndex": 12,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "isMentionable",
+          "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "colour",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "isHidden",
+          "type": "bool"
+        },
+        {
+          "index": 7,
+          "name": "isLocked",
+          "type": "bool"
+        },
+        {
+          "index": 8,
+          "name": "isGroup",
+          "type": "bool"
+        },
+        {
+          "index": 9,
+          "name": "isDefault",
+          "type": "bool"
+        },
+        {
+          "index": 10,
+          "name": "iconFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 11,
+          "name": "entitlement",
+          "type": "ArgonEntitlement"
+        }
+      ]
+    },
+    "ArchetypeInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetServerArchetypes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CArchetype\u003E",
+          "modifiers": []
+        },
+        "CreateArchetype": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "Archetype",
+          "modifiers": []
+        },
+        "UpdateArchetype": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "Archetype"
+            }
+          ],
+          "returns": "Archetype",
+          "modifiers": []
+        },
+        "SetArchetypeToMember": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "memberId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "archetypeId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "isGrant",
+              "type": "bool"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "GetDetailedServerArchetypes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CArchetypeGroup\u003E",
+          "modifiers": []
+        },
+        "UpsertArchetypeEntitlementForChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "archetypeId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "deny",
+              "type": "ArgonEntitlement"
+            },
+            {
+              "index": 4,
+              "name": "allow",
+              "type": "ArgonEntitlement"
+            }
+          ],
+          "returns": "Maybe\u003CChannelEntitlementOverwrite\u003E",
+          "modifiers": []
+        },
+        "GetChannelEntitlementOverwrites": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CChannelEntitlementOverwrite\u003E",
+          "modifiers": []
+        },
+        "DeleteEntitlementForChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "entitlementOverwriteId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
+    "BotSearchResult": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "appId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 6,
+          "name": "requiredScopes",
+          "type": "Array\u003Cstring\u003E"
+        }
+      ]
+    },
+    "BotDetails": {
+      "kind": "Msg",
+      "nextIndex": 10,
+      "fields": [
+        {
+          "index": 0,
+          "name": "appId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 6,
+          "name": "isPublic",
+          "type": "bool"
+        },
+        {
+          "index": 7,
+          "name": "requiredScopes",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 8,
+          "name": "maxSpaces",
+          "type": "i4"
+        },
+        {
+          "index": 9,
+          "name": "teamName",
+          "type": "string"
+        }
+      ]
+    },
+    "InstalledBotInfo": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "appId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "botUserId",
+          "type": "guid"
+        }
+      ]
+    },
+    "SpaceCommandOption": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "type",
+          "type": "CommandOptionType"
+        },
+        {
+          "index": 3,
+          "name": "required",
+          "type": "bool"
+        }
+      ]
+    },
+    "SpaceCommand": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "commandId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "appId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "options",
+          "type": "Array\u003CSpaceCommandOption\u003E"
+        }
+      ]
+    },
+    "InstallBotError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "ALREADY_INSTALLED": "2",
+        "INSUFFICIENT_PERMISSIONS": "3",
+        "BOT_SPACE_LIMIT": "4",
+        "BOT_RESTRICTED": "5"
+      },
+      "baseType": "u4"
+    },
+    "UninstallBotError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "NOT_INSTALLED": "2",
+        "INSUFFICIENT_PERMISSIONS": "3"
+      },
+      "baseType": "u4"
+    },
+    "CommandOptionType": {
+      "kind": "Enum",
+      "members": {
+        "String": "0",
+        "Integer": "1",
+        "Boolean": "2",
+        "User": "3",
+        "Channel": "4",
+        "Role": "5",
+        "Number": "6"
+      },
+      "baseType": "u2"
+    },
+    "InstallBotResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessInstallBot"
+        },
+        {
+          "index": 1,
+          "name": "FailedInstallBot"
+        }
+      ]
+    },
+    "UninstallBotResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUninstallBot"
+        },
+        {
+          "index": 1,
+          "name": "FailedUninstallBot"
+        }
+      ]
+    },
+    "BotManagementInteraction": {
+      "kind": "Service",
+      "methods": {
+        "SearchBots": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "query",
+              "type": "string"
+            }
+          ],
+          "returns": "Array\u003CBotSearchResult\u003E",
+          "modifiers": []
+        },
+        "GetBotDetails": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "botAppId",
+              "type": "guid"
+            }
+          ],
+          "returns": "BotDetails",
+          "modifiers": []
+        },
+        "GetInstalledBots": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CInstalledBotInfo\u003E",
+          "modifiers": []
+        },
+        "InstallBot": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "botAppId",
+              "type": "guid"
+            }
+          ],
+          "returns": "InstallBotResult",
+          "modifiers": []
+        },
+        "UninstallBot": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "botAppId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UninstallBotResult",
+          "modifiers": []
+        },
+        "GetSpaceCommands": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CSpaceCommand\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "CreateChannelRequest": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "kind",
+          "type": "ChannelType"
+        },
+        {
+          "index": 3,
+          "name": "desc",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "groupId",
+          "type": "Maybe\u003Cguid\u003E"
+        }
+      ]
+    },
+    "RealtimeChannel": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "channel",
+          "type": "ArgonChannel"
+        },
+        {
+          "index": 1,
+          "name": "users",
+          "type": "Array\u003CRealtimeChannelUser\u003E"
+        },
+        {
+          "index": 2,
+          "name": "meetInfo",
+          "type": "Maybe\u003CLinkedMeetingInfo\u003E"
+        }
+      ]
+    },
+    "LinkedMeetingInfo": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "meetingId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "meetingUrl",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "meetingCode",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "startDate",
+          "type": "datetime"
+        }
+      ]
+    },
+    "ArgonChannel": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "type",
+          "type": "ChannelType"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "groupId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 6,
+          "name": "fractionalIndex",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 7,
+          "name": "lastMessageId",
+          "type": "i8"
+        }
+      ]
+    },
+    "ReactionInfo": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "emoji",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "customEmojiId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "count",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "userIds",
+          "type": "Array\u003Cguid\u003E"
+        }
+      ]
+    },
+    "ArgonMessage": {
+      "kind": "Msg",
+      "nextIndex": 10,
+      "fields": [
+        {
+          "index": 0,
+          "name": "messageId",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "replyId",
+          "type": "Maybe\u003Ci8\u003E"
+        },
+        {
+          "index": 2,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 4,
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "entities",
+          "type": "Array\u003CMessageEntity\u003E"
+        },
+        {
+          "index": 6,
+          "name": "timeSent",
+          "type": "datetime"
+        },
+        {
+          "index": 7,
+          "name": "sender",
+          "type": "guid"
+        },
+        {
+          "index": 8,
+          "name": "reactions",
+          "type": "Array\u003CReactionInfo\u003E"
+        },
+        {
+          "index": 9,
+          "name": "controls",
+          "type": "Maybe\u003CArray\u003CControlRow\u003E\u003E"
+        }
+      ]
+    },
+    "RealtimeChannelUser": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "state",
+          "type": "ChannelMemberState"
+        }
+      ]
+    },
+    "AttachmentInfo": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "fileName",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "fileSize",
+          "type": "i8"
+        },
+        {
+          "index": 3,
+          "name": "contentType",
+          "type": "string"
+        }
+      ]
+    },
+    "MessageReactionsEntry": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "messageId",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "reactions",
+          "type": "Array\u003CReactionInfo\u003E"
+        }
+      ]
+    },
+    "SlashCommandOption": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
+    "OklchColor": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "l",
+          "type": "f4"
+        },
+        {
+          "index": 1,
+          "name": "c",
+          "type": "f4"
+        },
+        {
+          "index": 2,
+          "name": "h",
+          "type": "f4"
+        }
+      ]
+    },
+    "SelectOption": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "isDefault",
+          "type": "Maybe\u003Cbool\u003E"
+        }
+      ]
+    },
+    "BotControl": {
+      "kind": "Msg",
+      "nextIndex": 13,
+      "fields": [
+        {
+          "index": 0,
+          "name": "type",
+          "type": "ControlType"
+        },
+        {
+          "index": 1,
+          "name": "variant",
+          "type": "Maybe\u003CButtonVariant\u003E"
+        },
+        {
+          "index": 2,
+          "name": "label",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "id",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "url",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "colour",
+          "type": "Maybe\u003COklchColor\u003E"
+        },
+        {
+          "index": 6,
+          "name": "disabled",
+          "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 7,
+          "name": "customId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 8,
+          "name": "placeholder",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "minValues",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 10,
+          "name": "maxValues",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 11,
+          "name": "options",
+          "type": "Maybe\u003CArray\u003CSelectOption\u003E\u003E"
+        },
+        {
+          "index": 12,
+          "name": "requiredArchetypeId",
+          "type": "Maybe\u003Cguid\u003E"
+        }
+      ]
+    },
+    "ControlRow": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "controls",
+          "type": "Array\u003CBotControl\u003E"
+        }
+      ]
+    },
+    "ModalSubmitValue": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "customId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
+    "IonModalSelectOption": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "emoji",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "IonModalComponent": {
+      "kind": "Msg",
+      "nextIndex": 14,
+      "fields": [
+        {
+          "index": 0,
+          "name": "type",
+          "type": "IonModalComponentType"
+        },
+        {
+          "index": 1,
+          "name": "customId",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "style",
+          "type": "Maybe\u003CIonTextInputStyle\u003E"
+        },
+        {
+          "index": 4,
+          "name": "placeholder",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "minLength",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 6,
+          "name": "maxLength",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 7,
+          "name": "required",
+          "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 8,
+          "name": "value",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "options",
+          "type": "Maybe\u003CMultipleModalSelectOption\u003E"
+        },
+        {
+          "index": 10,
+          "name": "minValues",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 11,
+          "name": "maxValues",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 12,
+          "name": "defaultChecked",
+          "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 13,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "MultipleModalSelectOption": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "options",
+          "type": "Array\u003CIonModalSelectOption\u003E"
+        }
+      ]
+    },
+    "IonModalDefinition": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "customId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "components",
+          "type": "Array\u003CIonModalComponent\u003E"
+        }
+      ]
+    },
+    "SendMessageReadback": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "messageId",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "randomId",
+          "type": "i8"
+        }
+      ]
+    },
+    "ChannelReadState": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "lastReadMessageId",
+          "type": "i8"
+        },
+        {
+          "index": 3,
+          "name": "mentionCount",
+          "type": "i4"
+        }
+      ]
+    },
+    "MuteSettingsDto": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "targetId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "targetType",
+          "type": "MuteTargetKind"
+        },
+        {
+          "index": 2,
+          "name": "muteLevel",
+          "type": "MuteLevelType"
+        },
+        {
+          "index": 3,
+          "name": "suppressEveryone",
+          "type": "bool"
+        },
+        {
+          "index": 4,
+          "name": "expiresAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        }
+      ]
+    },
+    "SystemNotificationDto": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "referenceId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "body",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "isRead",
+          "type": "bool"
+        },
+        {
+          "index": 6,
+          "name": "createdAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "SpaceBadge": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "unreadChannelCount",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "totalMentions",
+          "type": "i4"
+        }
+      ]
+    },
+    "NotificationBadges": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "friendRequests",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "inventory",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "system",
+          "type": "i4"
+        }
+      ]
+    },
+    "GlobalBadges": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "unreadDmCount",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "spaces",
+          "type": "Array\u003CSpaceBadge\u003E"
+        },
+        {
+          "index": 2,
+          "name": "notifications",
+          "type": "NotificationBadges"
+        },
+        {
+          "index": 3,
+          "name": "readStates",
+          "type": "Array\u003CChannelReadState\u003E"
+        },
+        {
+          "index": 4,
+          "name": "muteSettings",
+          "type": "Array\u003CMuteSettingsDto\u003E"
+        }
+      ]
+    },
+    "UserActivityPresence": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kind",
+          "type": "ActivityPresenceKind"
+        },
+        {
+          "index": 1,
+          "name": "startTimestampSeconds",
+          "type": "u8"
+        },
+        {
+          "index": 2,
+          "name": "titleName",
+          "type": "string"
+        }
+      ]
+    },
+    "ChannelGroup": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "groupId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "desc",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "isCollapsed",
+          "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "fractionalIndex",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "ChannelType": {
+      "kind": "Enum",
+      "members": {
+        "Text": "0",
+        "Voice": "1",
+        "Announcement": "2"
+      },
+      "baseType": "u2"
+    },
+    "JoinToChannelError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_IS_NOT_VOICE": "1"
+      },
+      "baseType": "u2"
+    },
+    "EntityType": {
+      "kind": "Enum",
+      "members": {
+        "Hashtag": "0",
+        "Mention": "1",
+        "MentionEveryone": "2",
+        "MentionRole": "3",
+        "Email": "4",
+        "Url": "5",
+        "Monospace": "6",
+        "Quote": "7",
+        "Spoiler": "8",
+        "Strikethrough": "9",
+        "Bold": "10",
+        "Italic": "11",
+        "Underline": "12",
+        "Fraction": "13",
+        "Ordinal": "14",
+        "Capitalized": "15",
+        "SystemCallStarted": "16",
+        "SystemCallEnded": "17",
+        "SystemCallTimeout": "18",
+        "SystemUserJoined": "19",
+        "Attachment": "20"
+      },
+      "baseType": "u2"
+    },
+    "ControlType": {
+      "kind": "Enum",
+      "members": {
+        "Button": "0",
+        "StringSelect": "1",
+        "UserSelect": "2",
+        "ArchetypeSelect": "3",
+        "ChannelSelect": "4"
+      },
+      "baseType": "u2"
+    },
+    "ButtonVariant": {
+      "kind": "Enum",
+      "members": {
+        "Callback": "0",
+        "Link": "1"
+      },
+      "baseType": "u2"
+    },
+    "InvokeSlashCommandError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "COMMAND_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "BOT_NOT_CONNECTED": "3"
+      },
+      "baseType": "u2"
+    },
+    "InteractWithControlError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "CONTROL_NOT_FOUND": "2",
+        "CONTROL_DISABLED": "3",
+        "BOT_NOT_CONNECTED": "4",
+        "ARCHETYPE_REQUIRED": "5"
+      },
+      "baseType": "u2"
+    },
+    "InteractWithSelectError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "CONTROL_NOT_FOUND": "2",
+        "CONTROL_DISABLED": "3",
+        "NOT_A_SELECT": "4",
+        "INVALID_VALUES": "5",
+        "BOT_NOT_CONNECTED": "6",
+        "ARCHETYPE_REQUIRED": "7"
+      },
+      "baseType": "u2"
+    },
+    "AddReactionError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "REACTION_LIMIT_REACHED": "2",
+        "ALREADY_REACTED": "3",
+        "INSUFFICIENT_PERMISSIONS": "4"
+      },
+      "baseType": "u2"
+    },
+    "RemoveReactionError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "REACTION_NOT_FOUND": "2"
+      },
+      "baseType": "u2"
+    },
+    "SubmitModalError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INTERACTION_NOT_FOUND": "1",
+        "INTERACTION_EXPIRED": "2"
+      },
+      "baseType": "u2"
+    },
+    "IonTextInputStyle": {
+      "kind": "Enum",
+      "members": {
+        "Short": "0",
+        "Paragraph": "1"
+      },
+      "baseType": "u2"
+    },
+    "IonModalComponentType": {
+      "kind": "Enum",
+      "members": {
+        "TextInput": "0",
+        "StringSelect": "1",
+        "UserSelect": "2",
+        "ArchetypeSelect": "3",
+        "ChannelSelect": "4",
+        "Checkbox": "5"
+      },
+      "baseType": "u2"
+    },
+    "StartStreamError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "BAD_PARAMS": "1",
+        "INTERNAL_ERROR": "2"
+      },
+      "baseType": "u2"
+    },
+    "TypingKind": {
+      "kind": "Enum",
+      "members": {
+        "TYPING": "0",
+        "THINKING": "1",
+        "UPLOADING": "2",
+        "SEARCHING": "3"
+      },
+      "baseType": "u4"
+    },
+    "MuteLevelType": {
+      "kind": "Enum",
+      "members": {
+        "None": "0",
+        "OnlyMentions": "1",
+        "All": "2"
+      },
+      "baseType": "u2"
+    },
+    "MuteTargetKind": {
+      "kind": "Enum",
+      "members": {
+        "Space": "0",
+        "Channel": "1"
+      },
+      "baseType": "u2"
+    },
+    "MentionTargetType": {
+      "kind": "Enum",
+      "members": {
+        "Everyone": "0",
+        "Role": "1"
+      },
+      "baseType": "u2"
+    },
+    "ActivityPresenceKind": {
+      "kind": "Enum",
+      "members": {
+        "GAME": "0",
+        "SOFTWARE": "1",
+        "STREAMING": "2",
+        "LISTEN": "3"
+      },
+      "baseType": "u4"
+    },
+    "ChannelMemberState": {
+      "kind": "Flags",
+      "members": {
+        "NONE": "0",
+        "MUTED": "2",
+        "MUTED_BY_SERVER": "4",
+        "MUTED_HEADPHONES": "8",
+        "MUTED_HEADPHONES_BY_SERVER": "16",
+        "STREAMING": "32"
+      },
+      "baseType": "u4"
+    },
+    "MessageEntity": {
+      "kind": "Union",
+      "nextIndex": 21,
+      "cases": [
+        {
+          "index": 0,
+          "name": "MessageEntityBold"
+        },
+        {
+          "index": 1,
+          "name": "MessageEntityItalic"
+        },
+        {
+          "index": 2,
+          "name": "MessageEntityStrikethrough"
+        },
+        {
+          "index": 3,
+          "name": "MessageEntitySpoiler"
+        },
+        {
+          "index": 4,
+          "name": "MessageEntityMonospace"
+        },
+        {
+          "index": 5,
+          "name": "MessageEntityFraction"
+        },
+        {
+          "index": 6,
+          "name": "MessageEntityOrdinal"
+        },
+        {
+          "index": 7,
+          "name": "MessageEntityCapitalized"
+        },
+        {
+          "index": 8,
+          "name": "MessageEntityMention"
+        },
+        {
+          "index": 9,
+          "name": "MessageEntityMentionEveryone"
+        },
+        {
+          "index": 10,
+          "name": "MessageEntityMentionRole"
+        },
+        {
+          "index": 11,
+          "name": "MessageEntityEmail"
+        },
+        {
+          "index": 12,
+          "name": "MessageEntityHashTag"
+        },
+        {
+          "index": 13,
+          "name": "MessageEntityQuote"
+        },
+        {
+          "index": 14,
+          "name": "MessageEntityUnderline"
+        },
+        {
+          "index": 15,
+          "name": "MessageEntityUrl"
+        },
+        {
+          "index": 16,
+          "name": "MessageEntitySystemCallStarted"
+        },
+        {
+          "index": 17,
+          "name": "MessageEntitySystemCallEnded"
+        },
+        {
+          "index": 18,
+          "name": "MessageEntitySystemCallTimeout"
+        },
+        {
+          "index": 19,
+          "name": "MessageEntitySystemUserJoined"
+        },
+        {
+          "index": 20,
+          "name": "MessageEntityAttachment"
+        }
+      ],
+      "sharedFields": [
+        {
+          "index": 0,
+          "name": "type",
+          "type": "EntityType"
+        },
+        {
+          "index": 1,
+          "name": "offset",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "length",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "version",
+          "type": "i4"
+        }
+      ]
+    },
+    "InvokeSlashCommandResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessInvokeSlashCommand"
+        },
+        {
+          "index": 1,
+          "name": "FailedInvokeSlashCommand"
+        }
+      ]
+    },
+    "InteractWithControlResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessInteractWithControl"
+        },
+        {
+          "index": 1,
+          "name": "FailedInteractWithControl"
+        }
+      ]
+    },
+    "InteractWithSelectResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessInteractWithSelect"
+        },
+        {
+          "index": 1,
+          "name": "FailedInteractWithSelect"
+        }
+      ]
+    },
+    "SubmitModalResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSubmitModal"
+        },
+        {
+          "index": 1,
+          "name": "FailedSubmitModal"
+        }
+      ]
+    },
+    "AddReactionResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessAddReaction"
+        },
+        {
+          "index": 1,
+          "name": "FailedAddReaction"
+        }
+      ]
+    },
+    "RemoveReactionResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRemoveReaction"
+        },
+        {
+          "index": 1,
+          "name": "FailedRemoveReaction"
+        }
+      ]
+    },
+    "InterlinkResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessJoinVoice"
+        },
+        {
+          "index": 1,
+          "name": "FailedJoinVoice"
+        }
+      ]
+    },
+    "InterlinkStreamResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessStartStream"
+        },
+        {
+          "index": 1,
+          "name": "FailedStartStream"
+        }
+      ]
+    },
+    "ArgonEvent": {
+      "kind": "Union",
+      "nextIndex": 55,
+      "cases": [
+        {
+          "index": 0,
+          "name": "ArchetypeChanged"
+        },
+        {
+          "index": 1,
+          "name": "ArchetypeCreated"
+        },
+        {
+          "index": 2,
+          "name": "ChannelCreated"
+        },
+        {
+          "index": 3,
+          "name": "ChannelModified"
+        },
+        {
+          "index": 4,
+          "name": "ChannelRemoved"
+        },
+        {
+          "index": 5,
+          "name": "UserTypingEvent"
+        },
+        {
+          "index": 6,
+          "name": "UserStopTypingEvent"
+        },
+        {
+          "index": 7,
+          "name": "JoinedToChannelUser"
+        },
+        {
+          "index": 8,
+          "name": "JoinToServerUser"
+        },
+        {
+          "index": 9,
+          "name": "LeavedFromChannelUser"
+        },
+        {
+          "index": 10,
+          "name": "UserUpdated"
+        },
+        {
+          "index": 11,
+          "name": "OnUserPresenceActivityChanged"
+        },
+        {
+          "index": 12,
+          "name": "OnUserPresenceActivityRemoved"
+        },
+        {
+          "index": 13,
+          "name": "UserChangedStatus"
+        },
+        {
+          "index": 14,
+          "name": "MessageSent"
+        },
+        {
+          "index": 15,
+          "name": "MessageEdited"
+        },
+        {
+          "index": 16,
+          "name": "ServerModified"
+        },
+        {
+          "index": 17,
+          "name": "RecordStarted"
+        },
+        {
+          "index": 18,
+          "name": "RecordEnded"
+        },
+        {
+          "index": 19,
+          "name": "CallIncoming"
+        },
+        {
+          "index": 20,
+          "name": "CallFinished"
+        },
+        {
+          "index": 21,
+          "name": "CallAccepted"
+        },
+        {
+          "index": 22,
+          "name": "CallRejected"
+        },
+        {
+          "index": 23,
+          "name": "FriendRequestReceivedEvent"
+        },
+        {
+          "index": 24,
+          "name": "FriendRequestSentEvent"
+        },
+        {
+          "index": 25,
+          "name": "FriendRequestAcceptedEvent"
+        },
+        {
+          "index": 26,
+          "name": "FriendRequestDeclinedEvent"
+        },
+        {
+          "index": 27,
+          "name": "FriendRequestCanceledEvent"
+        },
+        {
+          "index": 28,
+          "name": "FriendshipRemovedEvent"
+        },
+        {
+          "index": 29,
+          "name": "UserBlockedEvent"
+        },
+        {
+          "index": 30,
+          "name": "UserUnblockedEvent"
+        },
+        {
+          "index": 31,
+          "name": "RecentChatUpdatedEvent"
+        },
+        {
+          "index": 32,
+          "name": "ChatPinnedEvent"
+        },
+        {
+          "index": 33,
+          "name": "ChatUnpinnedEvent"
+        },
+        {
+          "index": 34,
+          "name": "ChatReadEvent"
+        },
+        {
+          "index": 35,
+          "name": "ChannelGroupCreated"
+        },
+        {
+          "index": 36,
+          "name": "ChannelGroupModified"
+        },
+        {
+          "index": 37,
+          "name": "ChannelGroupRemoved"
+        },
+        {
+          "index": 38,
+          "name": "ChannelGroupReordered"
+        },
+        {
+          "index": 39,
+          "name": "ChannelReordered"
+        },
+        {
+          "index": 40,
+          "name": "DirectMessageSent"
+        },
+        {
+          "index": 41,
+          "name": "ReadStateUpdated"
+        },
+        {
+          "index": 42,
+          "name": "SystemNotificationReceived"
+        },
+        {
+          "index": 43,
+          "name": "MuteSettingsChanged"
+        },
+        {
+          "index": 44,
+          "name": "BatchMentionOccurred"
+        },
+        {
+          "index": 45,
+          "name": "UserSecurityDetailsUpdated"
+        },
+        {
+          "index": 46,
+          "name": "SpaceDetailsUpdated"
+        },
+        {
+          "index": 47,
+          "name": "MeetingCreatedFor"
+        },
+        {
+          "index": 48,
+          "name": "MeetingDeletedFor"
+        },
+        {
+          "index": 49,
+          "name": "LeavedFromServerUser"
+        },
+        {
+          "index": 50,
+          "name": "InteractionAcked"
+        },
+        {
+          "index": 51,
+          "name": "InteractionDeferred"
+        },
+        {
+          "index": 52,
+          "name": "ShowModal"
+        },
+        {
+          "index": 53,
+          "name": "ReactionAdded"
+        },
+        {
+          "index": 54,
+          "name": "ReactionRemoved"
+        }
+      ]
+    },
+    "ArgonClientEvent": {
+      "kind": "Union",
+      "nextIndex": 4,
+      "cases": [
+        {
+          "index": 0,
+          "name": "IAmTypingEvent"
+        },
+        {
+          "index": 1,
+          "name": "IAmStopTypingEvent"
+        },
+        {
+          "index": 2,
+          "name": "HeartBeatEvent"
+        },
+        {
+          "index": 3,
+          "name": "SubscribeToMySpaces"
+        }
+      ]
+    },
+    "ChannelInteraction": {
+      "kind": "Service",
+      "methods": {
+        "CreateChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "request",
+              "type": "CreateChannelRequest"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "MoveChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "targetGroupId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "afterChannelId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 4,
+              "name": "beforeChannelId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "DeleteChannelGroup": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "groupId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "deleteChannels",
+              "type": "bool"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "CreateChannelGroup": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "desk",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "MoveChannelGroup": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "afterGroupId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "beforeGroupId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "DeleteChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetChannels": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CRealtimeChannel\u003E",
+          "modifiers": []
+        },
+        "UpdateChannelGroup": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "groupId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "name",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 4,
+              "name": "description",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "QueryMessages": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "from",
+              "type": "Maybe\u003Ci8\u003E"
+            },
+            {
+              "index": 3,
+              "name": "limit",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CArgonMessage\u003E",
+          "modifiers": []
+        },
+        "SendMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "entities",
+              "type": "Array\u003CMessageEntity\u003E"
+            },
+            {
+              "index": 4,
+              "name": "randomId",
+              "type": "i8"
+            },
+            {
+              "index": 5,
+              "name": "replyTo",
+              "type": "Maybe\u003Ci8\u003E"
+            }
+          ],
+          "returns": "i8",
+          "modifiers": []
+        },
+        "SendMessageWithReadback": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "entities",
+              "type": "Array\u003CMessageEntity\u003E"
+            },
+            {
+              "index": 4,
+              "name": "randomId",
+              "type": "i8"
+            },
+            {
+              "index": 5,
+              "name": "replyTo",
+              "type": "Maybe\u003Ci8\u003E"
+            }
+          ],
+          "returns": "SendMessageReadback",
+          "modifiers": []
+        },
+        "DisconnectFromVoiceChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "Interlink": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "InterlinkResult",
+          "modifiers": []
+        },
+        "InterlinkStream": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "density",
+              "type": "i4"
+            }
+          ],
+          "returns": "InterlinkStreamResult",
+          "modifiers": []
+        },
+        "KickMemberFromChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "memberId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "BeginRecord": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "StopRecord": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "CreateLinkedMeeting": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LinkedMeetingInfo",
+          "modifiers": []
+        },
+        "EndLinkedMeeting": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "BeginUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "AttachmentInfo",
+          "modifiers": []
+        },
+        "InvokeSlashCommand": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "commandId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "options",
+              "type": "Array\u003CSlashCommandOption\u003E"
+            }
+          ],
+          "returns": "InvokeSlashCommandResult",
+          "modifiers": []
+        },
+        "InteractWithControl": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "controlId",
+              "type": "string"
+            }
+          ],
+          "returns": "InteractWithControlResult",
+          "modifiers": []
+        },
+        "InteractWithSelect": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "customId",
+              "type": "string"
+            },
+            {
+              "index": 4,
+              "name": "values",
+              "type": "Array\u003Cstring\u003E"
+            }
+          ],
+          "returns": "InteractWithSelectResult",
+          "modifiers": []
+        },
+        "SubmitModal": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "interactionId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "values",
+              "type": "Array\u003CModalSubmitValue\u003E"
+            }
+          ],
+          "returns": "SubmitModalResult",
+          "modifiers": []
+        },
+        "AddReaction": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "emoji",
+              "type": "string"
+            }
+          ],
+          "returns": "AddReactionResult",
+          "modifiers": []
+        },
+        "RemoveReaction": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "emoji",
+              "type": "string"
+            }
+          ],
+          "returns": "RemoveReactionResult",
+          "modifiers": []
+        },
+        "BatchGetReactions": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageIds",
+              "type": "Array\u003Ci8\u003E"
+            }
+          ],
+          "returns": "Array\u003CMessageReactionsEntry\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "EventBus": {
+      "kind": "Service",
+      "methods": {
+        "ForServer": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ArgonEvent",
+          "modifiers": [
+            "stream"
+          ]
+        },
+        "Dispatch": {
+          "args": [
+            {
+              "index": 0,
+              "name": "ev",
+              "type": "ArgonClientEvent"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "Pipe": {
+          "args": [
+            {
+              "index": 0,
+              "name": "ev",
+              "type": "ArgonClientEvent",
+              "modifier": "stream"
+            }
+          ],
+          "returns": "ArgonEvent",
+          "modifiers": [
+            "stream"
+          ]
+        },
+        "PickTicket": {
+          "args": [],
+          "returns": "string",
+          "modifiers": []
+        }
+      }
+    },
+    "FeatureFlagData": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "flagId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "isEnabled",
+          "type": "bool"
+        },
+        {
+          "index": 2,
+          "name": "variant",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "scope",
+          "type": "i4"
+        }
+      ]
+    },
+    "FeatureFlagInteractions": {
+      "kind": "Service",
+      "methods": {
+        "GetMyFeatureFlags": {
+          "args": [],
+          "returns": "Array\u003CFeatureFlagData\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "UserBlock": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "blockedId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "blockedAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "FriendRequest": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "requesterId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "targetId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "requestedAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "Friendship": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "friendId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "friendAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "UserChat": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "peerId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "isPinned",
+          "type": "bool"
+        },
+        {
+          "index": 2,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "lastMsg",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "lastMessageAt",
+          "type": "datetime"
+        },
+        {
+          "index": 5,
+          "name": "pinnedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 6,
+          "name": "unreadCount",
+          "type": "i4"
+        }
+      ]
+    },
+    "DirectMessage": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "messageId",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "senderId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "receiverId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "entities",
+          "type": "Array\u003CMessageEntity\u003E"
+        },
+        {
+          "index": 5,
+          "name": "createdAt",
+          "type": "datetime"
+        },
+        {
+          "index": 6,
+          "name": "replyTo",
+          "type": "Maybe\u003Ci8\u003E"
+        }
+      ]
+    },
+    "SendFriendStatus": {
+      "kind": "Enum",
+      "members": {
+        "TargetNotFound": "0",
+        "CannotFriendYourself": "1",
+        "Blocked": "2",
+        "AlreadyFriends": "3",
+        "AutoAccepted": "4",
+        "AlreadySent": "5",
+        "SuccessSent": "6",
+        "FailedSent": "7"
+      },
+      "baseType": "u4"
+    },
+    "FriendsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetBlockList": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CUserBlock\u003E",
+          "modifiers": []
+        },
+        "GetMyFriendPendingList": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CFriendRequest\u003E",
+          "modifiers": []
+        },
+        "GetMyFriendOutgoingList": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CFriendRequest\u003E",
+          "modifiers": []
+        },
+        "GetMyFriendships": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CFriendship\u003E",
+          "modifiers": []
+        },
+        "SendFriendRequest": {
+          "args": [
+            {
+              "index": 0,
+              "name": "username",
+              "type": "string"
+            }
+          ],
+          "returns": "SendFriendStatus",
+          "modifiers": []
+        },
+        "RemoveFriend": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "AcceptFriendRequest": {
+          "args": [
+            {
+              "index": 0,
+              "name": "fromUserId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "DeclineFriendRequest": {
+          "args": [
+            {
+              "index": 0,
+              "name": "fromUserId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "CancelFriendRequest": {
+          "args": [
+            {
+              "index": 0,
+              "name": "toUserId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "BlockUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UnblockUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        }
+      }
+    },
+    "UserChatInteractions": {
+      "kind": "Service",
+      "methods": {
+        "GetRecentChats": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CUserChat\u003E",
+          "modifiers": []
+        },
+        "PinChat": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UnpinChat": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "MarkChatRead": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "SendDirectMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "receiverId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "entities",
+              "type": "Array\u003CMessageEntity\u003E"
+            },
+            {
+              "index": 3,
+              "name": "randomId",
+              "type": "i8"
+            },
+            {
+              "index": 4,
+              "name": "replyTo",
+              "type": "Maybe\u003Ci8\u003E"
+            }
+          ],
+          "returns": "i8",
+          "modifiers": []
+        },
+        "QueryDirectMessages": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "from",
+              "type": "Maybe\u003Ci8\u003E"
+            },
+            {
+              "index": 2,
+              "name": "limit",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CDirectMessage\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "BadAuthKind": {
+      "kind": "Enum",
+      "members": {
+        "SESSION_EXPIRED": "0",
+        "REQUIRED_RELOGIN": "1",
+        "BAD_TOKEN": "2"
+      },
+      "baseType": "u4"
+    },
+    "MyAuthStatus": {
+      "kind": "Union",
+      "nextIndex": 4,
+      "cases": [
+        {
+          "index": 0,
+          "name": "GoodAuthStatus"
+        },
+        {
+          "index": 1,
+          "name": "BadAuthStatus"
+        },
+        {
+          "index": 2,
+          "name": "LockedAuthStatus"
+        },
+        {
+          "index": 3,
+          "name": "CertificateErrorAuthStatus"
+        }
+      ]
+    },
+    "IdentityInteraction": {
+      "kind": "Service",
+      "methods": {
+        "Authorize": {
+          "args": [
+            {
+              "index": 0,
+              "name": "data",
+              "type": "UserCredentialsInput"
+            }
+          ],
+          "returns": "AuthorizeResult",
+          "modifiers": []
+        },
+        "Registration": {
+          "args": [
+            {
+              "index": 0,
+              "name": "data",
+              "type": "NewUserCredentialsInput"
+            }
+          ],
+          "returns": "RegistrationResult",
+          "modifiers": []
+        },
+        "BeginResetPassword": {
+          "args": [
+            {
+              "index": 0,
+              "name": "email",
+              "type": "string"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "ResetPassword": {
+          "args": [
+            {
+              "index": 0,
+              "name": "email",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "otpCode",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "newPassword",
+              "type": "string"
+            }
+          ],
+          "returns": "AuthorizeResult",
+          "modifiers": []
+        },
+        "GetAuthorizationScenario": {
+          "args": [],
+          "returns": "string",
+          "modifiers": []
+        },
+        "GetAuthorizationScenarioFor": {
+          "args": [
+            {
+              "index": 0,
+              "name": "data",
+              "type": "UserLoginInput"
+            }
+          ],
+          "returns": "string",
+          "modifiers": []
+        },
+        "GetMyAuthorization": {
+          "args": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "refreshToken",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "MyAuthStatus",
+          "modifiers": []
+        }
+      }
+    },
+    "InventoryItem": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "instanceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "grantedDate",
+          "type": "datetime"
+        },
+        {
+          "index": 3,
+          "name": "usable",
+          "type": "bool"
+        },
+        {
+          "index": 4,
+          "name": "giftable",
+          "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "usableVector",
+          "type": "Maybe\u003CItemUseVector\u003E"
+        },
+        {
+          "index": 6,
+          "name": "receivedFrom",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 7,
+          "name": "ttl",
+          "type": "Maybe\u003Cduration\u003E"
+        }
+      ]
+    },
+    "DetailedInventoryItem": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "item",
+          "type": "InventoryItem"
+        },
+        {
+          "index": 1,
+          "name": "containedItems",
+          "type": "Array\u003CInventoryItem\u003E"
+        }
+      ]
+    },
+    "InventoryNotification": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "inventoryItemId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "createdAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "ItemUseVector": {
+      "kind": "Enum",
+      "members": {
+        "RedeemCode": "0",
+        "Premium": "1",
+        "Box": "2",
+        "QualifierBox": "3"
+      },
+      "baseType": "u4"
+    },
+    "RedeemError": {
+      "kind": "Enum",
+      "members": {
+        "NOT_FOUND": "0",
+        "INACTIVE": "1",
+        "EXPIRED": "2",
+        "LIMIT_REACHED": "3",
+        "ALREADY": "4"
+      },
+      "baseType": "u4"
+    },
+    "RedeemResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRedeem"
+        },
+        {
+          "index": 1,
+          "name": "FailedRedeem"
+        }
+      ]
+    },
+    "InventoryInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetMyInventoryItems": {
+          "args": [],
+          "returns": "Array\u003CInventoryItem\u003E",
+          "modifiers": []
+        },
+        "MarkSeen": {
+          "args": [
+            {
+              "index": 0,
+              "name": "itemIds",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetNotifications": {
+          "args": [],
+          "returns": "Array\u003CInventoryNotification\u003E",
+          "modifiers": []
+        },
+        "RedeemCode": {
+          "args": [
+            {
+              "index": 0,
+              "name": "code",
+              "type": "string"
+            }
+          ],
+          "returns": "RedeemResult",
+          "modifiers": []
+        },
+        "UseItem": {
+          "args": [
+            {
+              "index": 0,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
+    "SecurityDetails": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "otpEnabled",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "passkeys",
+          "type": "Array\u003CPasskey\u003E"
+        },
+        {
+          "index": 2,
+          "name": "email",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "phone",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "autoDeletePeriod",
+          "type": "AutoDeletePeriod"
+        }
+      ]
+    },
+    "Passkey": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "createdAt",
+          "type": "datetime"
+        },
+        {
+          "index": 3,
+          "name": "lastUsedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        }
+      ]
+    },
+    "PasskeyCredentialDescriptor": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "type",
+          "type": "string"
+        }
+      ]
+    },
+    "AutoDeletePeriod": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "months",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 1,
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    "EmailChangeError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_EMAIL": "1",
+        "EMAIL_ALREADY_USED": "2",
+        "INVALID_PASSWORD": "3",
+        "INVALID_VERIFICATION_CODE": "4",
+        "VERIFICATION_CODE_EXPIRED": "5",
+        "RATE_LIMITED": "6",
+        "INTERNAL_ERROR": "7"
+      },
+      "baseType": "u4"
+    },
+    "PhoneChangeError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_PHONE": "1",
+        "PHONE_ALREADY_USED": "2",
+        "INVALID_PASSWORD": "3",
+        "INVALID_VERIFICATION_CODE": "4",
+        "VERIFICATION_CODE_EXPIRED": "5",
+        "RATE_LIMITED": "6",
+        "INTERNAL_ERROR": "7"
+      },
+      "baseType": "u4"
+    },
+    "PasswordChangeError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_CURRENT_PASSWORD": "1",
+        "PASSWORD_TOO_WEAK": "2",
+        "PASSWORD_TOO_SHORT": "3",
+        "PASSWORD_SAME_AS_CURRENT": "4",
+        "RATE_LIMITED": "5",
+        "INTERNAL_ERROR": "6"
+      },
+      "baseType": "u4"
+    },
+    "OTPError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "ALREADY_ENABLED": "1",
+        "NOT_ENABLED": "2",
+        "INVALID_CODE": "3",
+        "RATE_LIMITED": "4",
+        "INTERNAL_ERROR": "5"
+      },
+      "baseType": "u4"
+    },
+    "PasskeyError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "LIMIT_REACHED": "2",
+        "INVALID_PUBLIC_KEY": "3",
+        "INTERNAL_ERROR": "4"
+      },
+      "baseType": "u4"
+    },
+    "AutoDeleteError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "PREMIUM_REQUIRED": "1",
+        "INVALID_PERIOD": "2",
+        "INTERNAL_ERROR": "3"
+      },
+      "baseType": "u4"
+    },
+    "RequestEmailChangeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRequestEmailChange"
+        },
+        {
+          "index": 1,
+          "name": "FailedRequestEmailChange"
+        }
+      ]
+    },
+    "ConfirmEmailChangeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessConfirmEmailChange"
+        },
+        {
+          "index": 1,
+          "name": "FailedConfirmEmailChange"
+        }
+      ]
+    },
+    "RequestPhoneChangeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRequestPhoneChange"
+        },
+        {
+          "index": 1,
+          "name": "FailedRequestPhoneChange"
+        }
+      ]
+    },
+    "ConfirmPhoneChangeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessConfirmPhoneChange"
+        },
+        {
+          "index": 1,
+          "name": "FailedConfirmPhoneChange"
+        }
+      ]
+    },
+    "RemovePhoneResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRemovePhone"
+        },
+        {
+          "index": 1,
+          "name": "FailedRemovePhone"
+        }
+      ]
+    },
+    "ChangePasswordResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessChangePassword"
+        },
+        {
+          "index": 1,
+          "name": "FailedChangePassword"
+        }
+      ]
+    },
+    "EnableOTPResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessEnableOTP"
+        },
+        {
+          "index": 1,
+          "name": "FailedEnableOTP"
+        }
+      ]
+    },
+    "VerifyOTPResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessVerifyOTP"
+        },
+        {
+          "index": 1,
+          "name": "FailedVerifyOTP"
+        }
+      ]
+    },
+    "DisableOTPResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDisableOTP"
+        },
+        {
+          "index": 1,
+          "name": "FailedDisableOTP"
+        }
+      ]
+    },
+    "BeginPasskeyResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessBeginPasskey"
+        },
+        {
+          "index": 1,
+          "name": "FailedBeginPasskey"
+        }
+      ]
+    },
+    "CompletePasskeyResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCompletePasskey"
+        },
+        {
+          "index": 1,
+          "name": "FailedCompletePasskey"
+        }
+      ]
+    },
+    "RemovePasskeyResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRemovePasskey"
+        },
+        {
+          "index": 1,
+          "name": "FailedRemovePasskey"
+        }
+      ]
+    },
+    "BeginPasskeyValidateResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessBeginValidatePasskey"
+        },
+        {
+          "index": 1,
+          "name": "FailedBeginValidatePasskey"
+        }
+      ]
+    },
+    "SetAutoDeleteResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSetAutoDelete"
+        },
+        {
+          "index": 1,
+          "name": "FailedSetAutoDelete"
+        }
+      ]
+    },
+    "SecurityInteraction": {
+      "kind": "Service",
+      "methods": {
+        "RequestEmailChange": {
+          "args": [
+            {
+              "index": 0,
+              "name": "newEmail",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "password",
+              "type": "string"
+            }
+          ],
+          "returns": "RequestEmailChangeResult",
+          "modifiers": []
+        },
+        "ConfirmEmailChange": {
+          "args": [
+            {
+              "index": 0,
+              "name": "verificationCode",
+              "type": "string"
+            }
+          ],
+          "returns": "ConfirmEmailChangeResult",
+          "modifiers": []
+        },
+        "RequestPhoneChange": {
+          "args": [
+            {
+              "index": 0,
+              "name": "newPhone",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "password",
+              "type": "string"
+            }
+          ],
+          "returns": "RequestPhoneChangeResult",
+          "modifiers": []
+        },
+        "ConfirmPhoneChange": {
+          "args": [
+            {
+              "index": 0,
+              "name": "verificationCode",
+              "type": "string"
+            }
+          ],
+          "returns": "ConfirmPhoneChangeResult",
+          "modifiers": []
+        },
+        "RemovePhone": {
+          "args": [
+            {
+              "index": 0,
+              "name": "password",
+              "type": "string"
+            }
+          ],
+          "returns": "RemovePhoneResult",
+          "modifiers": []
+        },
+        "ChangePassword": {
+          "args": [
+            {
+              "index": 0,
+              "name": "currentPassword",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "newPassword",
+              "type": "string"
+            }
+          ],
+          "returns": "ChangePasswordResult",
+          "modifiers": []
+        },
+        "EnableOTP": {
+          "args": [],
+          "returns": "EnableOTPResult",
+          "modifiers": []
+        },
+        "VerifyAndEnableOTP": {
+          "args": [
+            {
+              "index": 0,
+              "name": "code",
+              "type": "string"
+            }
+          ],
+          "returns": "VerifyOTPResult",
+          "modifiers": []
+        },
+        "DisableOTP": {
+          "args": [
+            {
+              "index": 0,
+              "name": "code",
+              "type": "string"
+            }
+          ],
+          "returns": "DisableOTPResult",
+          "modifiers": []
+        },
+        "GetPasskeys": {
+          "args": [],
+          "returns": "Array\u003CPasskey\u003E",
+          "modifiers": []
+        },
+        "BeginAddPasskey": {
+          "args": [
+            {
+              "index": 0,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "BeginPasskeyResult",
+          "modifiers": []
+        },
+        "CompleteAddPasskey": {
+          "args": [
+            {
+              "index": 0,
+              "name": "passkeyId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "publicKey",
+              "type": "string"
+            }
+          ],
+          "returns": "CompletePasskeyResult",
+          "modifiers": []
+        },
+        "RemovePasskey": {
+          "args": [
+            {
+              "index": 0,
+              "name": "passkeyId",
+              "type": "guid"
+            }
+          ],
+          "returns": "RemovePasskeyResult",
+          "modifiers": []
+        },
+        "SetAutoDeletePeriod": {
+          "args": [
+            {
+              "index": 0,
+              "name": "months",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ],
+          "returns": "SetAutoDeleteResult",
+          "modifiers": []
+        },
+        "GetAutoDeletePeriod": {
+          "args": [],
+          "returns": "AutoDeletePeriod",
+          "modifiers": []
+        },
+        "GetSecurityDetails": {
+          "args": [],
+          "returns": "SecurityDetails",
+          "modifiers": []
+        },
+        "BeginValidatePasskey": {
+          "args": [],
+          "returns": "BeginPasskeyValidateResult",
+          "modifiers": []
+        },
+        "CompleteValidatePasskey": {
+          "args": [
+            {
+              "index": 0,
+              "name": "credentialId",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "signature",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "authenticatorData",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "clientDataJSON",
+              "type": "string"
+            }
+          ],
+          "returns": "CompletePasskeyResult",
+          "modifiers": []
+        }
+      }
+    },
+    "ArgonSpaceBase": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "avatarFieldId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "topBannerFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "ArgonSpace": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "avatarFieldId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "topBannerFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "channels",
+          "type": "Array\u003CArgonChannel\u003E"
+        },
+        {
+          "index": 6,
+          "name": "members",
+          "type": "Array\u003CSpaceMember\u003E"
+        },
+        {
+          "index": 7,
+          "name": "archetypes",
+          "type": "Array\u003CArchetype\u003E"
+        }
+      ]
+    },
+    "ArchetypeGroup": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "archetype",
+          "type": "Archetype"
+        },
+        {
+          "index": 1,
+          "name": "members",
+          "type": "Array\u003Cguid\u003E"
+        }
+      ]
+    },
+    "SpaceMemberArchetype": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "serverMemberId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "archetypeId",
+          "type": "guid"
+        }
+      ]
+    },
+    "SpaceMember": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "joinedAt",
+          "type": "datetime"
+        },
+        {
+          "index": 3,
+          "name": "memberId",
+          "type": "guid"
+        },
+        {
+          "index": 4,
+          "name": "user",
+          "type": "ArgonUser"
+        },
+        {
+          "index": 5,
+          "name": "archetypes",
+          "type": "Array\u003CSpaceMemberArchetype\u003E"
+        }
+      ]
+    },
+    "RealtimeServerMember": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "member",
+          "type": "SpaceMember"
+        },
+        {
+          "index": 1,
+          "name": "status",
+          "type": "UserStatus"
+        },
+        {
+          "index": 2,
+          "name": "presence",
+          "type": "Maybe\u003CUserActivityPresence\u003E"
+        }
+      ]
+    },
+    "InviteCodeEntity": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "code",
+          "type": "InviteCode"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "issuerId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "expireTime",
+          "type": "datetime"
+        },
+        {
+          "index": 4,
+          "name": "used",
+          "type": "u8"
+        }
+      ]
+    },
+    "InviteCode": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "inviteCode",
+          "type": "string"
+        }
+      ]
+    },
+    "ArgonUser": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "displayName",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "flags",
+          "type": "UserFlag"
+        }
+      ]
+    },
+    "ArgonUserProfile": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "customStatus",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "customStatusIconId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "bannerFileID",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "dateOfBirth",
+          "type": "Maybe\u003Cdateonly\u003E"
+        },
+        {
+          "index": 5,
+          "name": "bio",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "badges",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 7,
+          "name": "archetypes",
+          "type": "Array\u003CSpaceMemberArchetype\u003E"
+        }
+      ]
+    },
+    "UserStatus": {
+      "kind": "Enum",
+      "members": {
+        "Offline": "0",
+        "Online": "1",
+        "Away": "2",
+        "InGame": "3",
+        "Listen": "4",
+        "TouchGrass": "5",
+        "DoNotDisturb": "6"
+      },
+      "baseType": "u4"
+    },
+    "ArgonEntitlement": {
+      "kind": "Flags",
+      "members": {
+        "None": "0",
+        "ViewChannel": "1",
+        "ReadHistory": "2",
+        "JoinToVoice": "4",
+        "SendMessages": "32",
+        "SendVoice": "64",
+        "AttachFiles": "128",
+        "AddReactions": "256",
+        "AnyMentions": "512",
+        "MentionEveryone": "1024",
+        "ExternalEmoji": "2048",
+        "ExternalStickers": "4096",
+        "UseCommands": "8192",
+        "PostEmbeddedLinks": "16384",
+        "Connect": "1048576",
+        "Speak": "2097152",
+        "Video": "4194304",
+        "Stream": "8388608",
+        "UseASIO": "1073741824",
+        "AdditionalStreams": "2147483648",
+        "DisconnectMember": "1099511627776",
+        "MoveMember": "2199023255552",
+        "BanMember": "4398046511104",
+        "MuteMember": "8796093022208",
+        "KickMember": "17592186044416",
+        "ManageChannels": "1125899906842624",
+        "ManageArchetype": "2251799813685248",
+        "ManageBots": "4503599627370496",
+        "ManageEvents": "9007199254740992",
+        "ManageBehaviour": "18014398509481984",
+        "ManageServer": "36028797018963968"
+      },
+      "baseType": "u8"
+    },
+    "UserFlag": {
+      "kind": "Flags",
+      "members": {
+        "NONE": "0",
+        "BOT": "1",
+        "SYSTEM": "2",
+        "VERIFIED": "4",
+        "PREMIUM": "8",
+        "BANNED": "16",
+        "DELETED": "32"
+      },
+      "baseType": "i4"
+    },
+    "ServerInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetMembers": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CRealtimeServerMember\u003E",
+          "modifiers": []
+        },
+        "GetMember": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "RealtimeServerMember",
+          "modifiers": []
+        },
+        "GetInviteCodes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CInviteCodeEntity\u003E",
+          "modifiers": []
+        },
+        "CreateInviteCode": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "InviteCode",
+          "modifiers": []
+        },
+        "PrefetchUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ArgonUser",
+          "modifiers": []
+        },
+        "PrefetchProfile": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ArgonUserProfile",
+          "modifiers": []
+        },
+        "GetChannels": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CRealtimeChannel\u003E",
+          "modifiers": []
+        },
+        "GetServerArchetypes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CArchetype\u003E",
+          "modifiers": []
+        },
+        "GetDetailedServerArchetypes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CArchetypeGroup\u003E",
+          "modifiers": []
+        },
+        "BeginUploadSpaceProfileHeader": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "guid",
+          "modifiers": []
+        },
+        "CompleteUploadSpaceProfileHeader": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "BeginUploadSpaceAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "guid",
+          "modifiers": []
+        },
+        "CompleteUploadSpaceAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetChannelGroups": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CChannelGroup\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "ArgonIonTicket": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "ip",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "ray",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "clientName",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "hostName",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "appId",
+          "type": "string"
+        },
+        {
+          "index": 6,
+          "name": "sessionId",
+          "type": "guid"
+        },
+        {
+          "index": 7,
+          "name": "machineId",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "region",
+          "type": "string"
+        }
+      ]
+    },
+    "TodayStats": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "timeInVoice",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "callsMade",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "messagesSent",
+          "type": "i4"
+        }
+      ]
+    },
+    "MyLevelDetails": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "totalXp",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "currentLevel",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "xpForNextLevel",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "xpForCurrentLevel",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "readyToClaimCoin",
+          "type": "bool"
+        }
+      ]
+    },
+    "UserEditInput": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "displayName",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "avatarId",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "FeatureFlag": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "enabled",
+          "type": "bool"
+        },
+        {
+          "index": 2,
+          "name": "variant",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "parameters",
+          "type": "Array\u003CFeatureFlagParameter\u003E"
+        }
+      ]
+    },
+    "FeatureFlagParameter": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
+    "CreateServerRequest": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "avatarFieldId",
+          "type": "string"
+        }
+      ]
+    },
+    "UserCredentialsInput": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "email",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "phone",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "username",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "password",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "otpCode",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "captchaToken",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "UserLoginInput": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "email",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "phone",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "username",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "NewUserCredentialsInput": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "password",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "displayName",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "argreeTos",
+          "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "birthDate",
+          "type": "dateonly"
+        },
+        {
+          "index": 6,
+          "name": "argreeOptionalEmails",
+          "type": "bool"
+        },
+        {
+          "index": 7,
+          "name": "captchaToken",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "UploadFileError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_AUTHORIZED": "1",
+        "INTERNAL_ERROR": "2"
+      },
+      "baseType": "u4"
+    },
+    "CreateSpaceError": {
+      "kind": "Enum",
+      "members": {
+        "UNKNOWN": "0",
+        "LIMIT_REACHED": "1"
+      },
+      "baseType": "u4"
+    },
+    "AcceptInviteError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "EXPIRED": "2",
+        "YOU_ARE_BANNED": "3"
+      },
+      "baseType": "u4"
+    },
+    "AuthorizationError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "BAD_CREDENTIALS": "1",
+        "REQUIRED_OTP": "2",
+        "BAD_OTP": "3"
+      },
+      "baseType": "u4"
+    },
+    "RegistrationError": {
+      "kind": "Enum",
+      "members": {
+        "USERNAME_ALREADY_TAKEN": "0",
+        "USERNAME_RESERVED": "1",
+        "EMAIL_ALREADY_REGISTERED": "2",
+        "REGION_BANNED": "3",
+        "EMAIL_BANNED": "4",
+        "SSO_EMAILS_NOT_ALLOWED": "5",
+        "INTERNAL_ERROR": "6",
+        "VALIDATION_FAILED": "7"
+      },
+      "baseType": "u4"
+    },
+    "LockdownReason": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "UNDER_INVESTIGATION": "1",
+        "COMPROMISED_ACCOUNT": "2",
+        "PAYMENT_FRAUD": "3",
+        "MULTI_ACCOUNT_ABUSE": "4",
+        "DOXXING": "5",
+        "CSAM": "6",
+        "SPAM_SCAM_ACCOUNT": "7",
+        "INCITING_MOMENT": "8",
+        "NON_BINARY_PERSON": "9",
+        "TOS_VIOLATION": "10",
+        "LGBT_AGITATION": "11",
+        "DRUG_VIOLATION": "12",
+        "TERRORISM_AGITATION": "13",
+        "TERRORISM_CONTENT": "14",
+        "SELF_HARM_PROMOTION": "15",
+        "CHILD_ABUSE": "16",
+        "BAD_CLIENT": "17"
+      },
+      "baseType": "u4"
+    },
+    "LockdownSeverity": {
+      "kind": "Enum",
+      "members": {
+        "Low": "0",
+        "Middle": "1",
+        "Critical": "2"
+      },
+      "baseType": "u4"
+    },
+    "UploadFileResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUploadFile"
+        },
+        {
+          "index": 1,
+          "name": "FailedUploadFile"
+        }
+      ]
+    },
+    "CreateSpaceResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateSpace"
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateSpace"
+        }
+      ]
+    },
+    "AuthorizeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessAuthorize"
+        },
+        {
+          "index": 1,
+          "name": "FailedAuthorize"
+        }
+      ]
+    },
+    "RegistrationResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRegistration"
+        },
+        {
+          "index": 1,
+          "name": "FailedRegistration"
+        }
+      ]
+    },
+    "JoinToSpaceResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessJoin"
+        },
+        {
+          "index": 1,
+          "name": "FailedJoin"
+        }
+      ]
+    },
+    "UserInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetMe": {
+          "args": [],
+          "returns": "ArgonUser",
+          "modifiers": []
+        },
+        "CreateSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "request",
+              "type": "CreateServerRequest"
+            }
+          ],
+          "returns": "CreateSpaceResult",
+          "modifiers": []
+        },
+        "GetSpaces": {
+          "args": [],
+          "returns": "Array\u003CArgonSpaceBase\u003E",
+          "modifiers": []
+        },
+        "UpdateMe": {
+          "args": [
+            {
+              "index": 0,
+              "name": "request",
+              "type": "UserEditInput"
+            }
+          ],
+          "returns": "ArgonUser",
+          "modifiers": []
+        },
+        "JoinToSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "inviteCode",
+              "type": "InviteCode"
+            }
+          ],
+          "returns": "JoinToSpaceResult",
+          "modifiers": []
+        },
+        "BroadcastPresence": {
+          "args": [
+            {
+              "index": 0,
+              "name": "presence",
+              "type": "UserActivityPresence"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "RemoveBroadcastPresence": {
+          "args": [],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetMyFeatures": {
+          "args": [],
+          "returns": "Array\u003CFeatureFlag\u003E",
+          "modifiers": []
+        },
+        "GetMyProfile": {
+          "args": [],
+          "returns": "ArgonUserProfile",
+          "modifiers": []
+        },
+        "BeginUploadAvatar": {
+          "args": [],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "BeginUploadProfileHeader": {
+          "args": [],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadProfileHeader": {
+          "args": [
+            {
+              "index": 0,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetTodayStats": {
+          "args": [],
+          "returns": "TodayStats",
+          "modifiers": []
+        },
+        "GetMyLevel": {
+          "args": [],
+          "returns": "MyLevelDetails",
+          "modifiers": []
+        },
+        "ClaimLevelCoin": {
+          "args": [],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "GetGlobalBadges": {
+          "args": [],
+          "returns": "GlobalBadges",
+          "modifiers": []
+        },
+        "AckChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "lastReadMessageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "MuteTarget": {
+          "args": [
+            {
+              "index": 0,
+              "name": "targetId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "targetType",
+              "type": "MuteTargetKind"
+            },
+            {
+              "index": 2,
+              "name": "muteLevel",
+              "type": "MuteLevelType"
+            },
+            {
+              "index": 3,
+              "name": "suppressEveryone",
+              "type": "bool"
+            },
+            {
+              "index": 4,
+              "name": "expiresAt",
+              "type": "Maybe\u003Cdatetime\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UnmuteTarget": {
+          "args": [
+            {
+              "index": 0,
+              "name": "targetId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetNotificationFeed": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "before",
+              "type": "Maybe\u003Cdatetime\u003E"
+            }
+          ],
+          "returns": "Array\u003CSystemNotificationDto\u003E",
+          "modifiers": []
+        },
+        "MarkNotificationRead": {
+          "args": [
+            {
+              "index": 0,
+              "name": "notificationId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "MarkAllNotificationsRead": {
+          "args": [
+            {
+              "index": 0,
+              "name": "type",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        }
+      }
+    },
+    "PreferenceInteraction": {
+      "kind": "Service",
+      "methods": {
+        "SetPreference": {
+          "args": [
+            {
+              "index": 0,
+              "name": "scope",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "value",
+              "type": "string"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetPreference": {
+          "args": [
+            {
+              "index": 0,
+              "name": "scope",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "value",
+              "type": "string"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        }
+      }
+    },
+    "RtcEndpoint": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "endpoint",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "ices",
+          "type": "Array\u003CIceEndpoint\u003E"
+        }
+      ]
+    },
+    "IceEndpoint": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "endpoint",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "password",
+          "type": "string"
+        }
+      ]
+    },
+    "ServiceUssdResult": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "success",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "message",
+          "type": "string"
+        }
+      ]
+    },
+    "CallFailedError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CALLEE_OFFLINE": "1",
+        "INSUFFICIENT_BALANCE": "2",
+        "VERIFICATION_FAILED": "3",
+        "POOL_EMPTY_TRY_LATE": "4"
+      },
+      "baseType": "u4"
+    },
+    "DialCheckFailReason": {
+      "kind": "Enum",
+      "members": {
+        "COUNTRY_NOT_SUPPORT": "0",
+        "INVALID_NUMBER_COUNTRY": "1",
+        "INSUFFICIENT_BALANCE": "2",
+        "NUMBER_NOT_AVAILABLE": "3",
+        "INSUFFICIENT_POOL": "4",
+        "UNKNOWN_ERROR": "5"
+      },
+      "baseType": "u4"
+    },
+    "BeginCallResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDingDong"
+        },
+        {
+          "index": 1,
+          "name": "FailedDingDong"
+        }
+      ]
+    },
+    "PickUpCallResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPickUp"
+        },
+        {
+          "index": 1,
+          "name": "FailedPickUp"
+        }
+      ]
+    },
+    "DialCheckResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDialCheck"
+        },
+        {
+          "index": 1,
+          "name": "FailedDialCheck"
+        }
+      ]
+    },
+    "VoiceInteraction": {
+      "kind": "Service",
+      "methods": {
+        "DisconnectFromVoiceChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "KickMemberFromChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "memberId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        }
+      }
+    },
+    "CallInteraction": {
+      "kind": "Service",
+      "methods": {
+        "DingDongCreep": {
+          "args": [
+            {
+              "index": 0,
+              "name": "creepId",
+              "type": "guid"
+            }
+          ],
+          "returns": "BeginCallResult",
+          "modifiers": []
+        },
+        "PickUpCall": {
+          "args": [
+            {
+              "index": 0,
+              "name": "callId",
+              "type": "guid"
+            }
+          ],
+          "returns": "PickUpCallResult",
+          "modifiers": []
+        },
+        "RejectCall": {
+          "args": [
+            {
+              "index": 0,
+              "name": "callId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "HangupCall": {
+          "args": [
+            {
+              "index": 0,
+              "name": "callId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UssdExecute": {
+          "args": [
+            {
+              "index": 0,
+              "name": "ussd",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "corlId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ServiceUssdResult",
+          "modifiers": []
+        },
+        "BeginDialCheck": {
+          "args": [
+            {
+              "index": 0,
+              "name": "phoneId",
+              "type": "guid"
+            }
+          ],
+          "returns": "DialCheckResult",
+          "modifiers": []
+        },
+        "DialUp": {
+          "args": [
+            {
+              "index": 0,
+              "name": "phoneId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "corlId",
+              "type": "guid"
+            }
+          ],
+          "returns": "BeginCallResult",
+          "modifiers": []
+        }
+      }
+    }
+  }
+}
