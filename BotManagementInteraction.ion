@@ -7,6 +7,7 @@ service BotManagementInteraction(spaceId: guid)
     InstallBot(botAppId: guid): InstallBotResult;
     UninstallBot(botAppId: guid): UninstallBotResult;
     GetSpaceCommands(): SpaceCommand[];
+    ApproveBotEntitlements(botAppId: guid): ApproveBotEntitlementsResult;
 }
 
 msg BotSearchResult {
@@ -41,6 +42,9 @@ msg InstalledBotInfo {
     avatarFileId: string?;
     isVerified: bool;
     botUserId: guid;
+    requiredEntitlements: ArgonEntitlement;
+    grantedEntitlements: ArgonEntitlement;
+    pendingApproval: bool;
 }
 
 union InstallBotResult {
@@ -67,6 +71,19 @@ enum UninstallBotError {
     NOT_FOUND,
     NOT_INSTALLED,
     INSUFFICIENT_PERMISSIONS
+}
+
+union ApproveBotEntitlementsResult {
+    SuccessApproval(),
+    FailedApproval(error: ApproveBotEntitlementsError)
+}
+
+enum ApproveBotEntitlementsError {
+    NONE,
+    NOT_FOUND,
+    NOT_INSTALLED,
+    INSUFFICIENT_PERMISSIONS,
+    ALREADY_UP_TO_DATE
 }
 
 enum CommandOptionType: u2 {
