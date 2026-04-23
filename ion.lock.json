@@ -264,7 +264,7 @@
     },
     "BotSearchResult": {
       "kind": "Msg",
-      "nextIndex": 7,
+      "nextIndex": 8,
       "fields": [
         {
           "index": 0,
@@ -300,12 +300,17 @@
           "index": 6,
           "name": "requiredScopes",
           "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 7,
+          "name": "requiredEntitlements",
+          "type": "ArgonEntitlement"
         }
       ]
     },
     "BotDetails": {
       "kind": "Msg",
-      "nextIndex": 10,
+      "nextIndex": 11,
       "fields": [
         {
           "index": 0,
@@ -356,6 +361,11 @@
           "index": 9,
           "name": "teamName",
           "type": "string"
+        },
+        {
+          "index": 10,
+          "name": "requiredEntitlements",
+          "type": "ArgonEntitlement"
         }
       ]
     },

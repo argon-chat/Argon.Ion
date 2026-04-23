@@ -17,6 +17,7 @@ msg BotSearchResult {
     avatarFileId: string?;
     isVerified: bool;
     requiredScopes: string[];
+    requiredEntitlements: ArgonEntitlement;
 }
 
 msg BotDetails {
@@ -30,6 +31,7 @@ msg BotDetails {
     requiredScopes: string[];
     maxSpaces: i4;
     teamName: string;
+    requiredEntitlements: ArgonEntitlement;
 }
 
 msg InstalledBotInfo {
