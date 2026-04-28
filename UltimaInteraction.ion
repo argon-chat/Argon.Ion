@@ -7,6 +7,9 @@ service UltimaInteraction() {
     CreateCheckoutSession(plan: UltimaPlan): CheckoutResult;
     CancelSubscription(): bool;
 
+    // Transaction history
+    GetTransactionHistory(): UltimaTransaction[];
+
     // Boosts
     GetMyBoosts(): UltimaBoost[];
     ApplyBoost(boostId: guid, spaceId: guid): ApplyBoostResult;
@@ -48,6 +51,26 @@ msg UltimaSubscriptionInfo {
     autoRenew: bool;
     totalBoostSlots: i4;
     usedBoostSlots: i4;
+    paymentAccount: PaymentAccountInfo?;
+}
+
+msg PaymentAccountInfo {
+    cardLastFour: string?;
+    cardType: string?;
+    expiryMonth: string?;
+    expiryYear: string?;
+}
+
+msg UltimaTransaction {
+    paymentId: string;
+    date: datetime;
+    amount: string?;
+    currency: string?;
+    planExternalId: string?;
+    boostPackType: string?;
+    boostCount: i4?;
+    recipientId: guid?;
+    transactionType: string?;
 }
 
 msg UltimaBoost {

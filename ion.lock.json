@@ -4829,7 +4829,7 @@
     },
     "UltimaSubscriptionInfo": {
       "kind": "Msg",
-      "nextIndex": 8,
+      "nextIndex": 9,
       "fields": [
         {
           "index": 0,
@@ -4870,6 +4870,88 @@
           "index": 7,
           "name": "usedBoostSlots",
           "type": "i4"
+        },
+        {
+          "index": 8,
+          "name": "paymentAccount",
+          "type": "Maybe\u003CPaymentAccountInfo\u003E"
+        }
+      ]
+    },
+    "PaymentAccountInfo": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cardLastFour",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "cardType",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "expiryMonth",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "expiryYear",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "UltimaTransaction": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "paymentId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "date",
+          "type": "datetime"
+        },
+        {
+          "index": 2,
+          "name": "amount",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "currency",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "planExternalId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "boostPackType",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "boostCount",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 7,
+          "name": "recipientId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 8,
+          "name": "transactionType",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -5132,6 +5214,11 @@
         "CancelSubscription": {
           "args": [],
           "returns": "bool",
+          "modifiers": []
+        },
+        "GetTransactionHistory": {
+          "args": [],
+          "returns": "Array\u003CUltimaTransaction\u003E",
           "modifiers": []
         },
         "GetMyBoosts": {
