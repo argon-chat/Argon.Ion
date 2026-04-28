@@ -73,6 +73,8 @@ msg ArgonSpaceBase {
     description: string;
     avatarFieldId: string?;
     topBannerFileId: string?;
+    boostCount: i4;
+    boostLevel: i4;
 }
 
 msg ArgonSpace {

@@ -1925,7 +1925,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 55,
+      "nextIndex": 57,
       "cases": [
         {
           "index": 0,
@@ -2146,6 +2146,14 @@
         {
           "index": 54,
           "name": "ReactionRemoved"
+        },
+        {
+          "index": 55,
+          "name": "SpaceBoostUpdated"
+        },
+        {
+          "index": 56,
+          "name": "UltimaGiftReceived"
         }
       ]
     },
@@ -4176,7 +4184,7 @@
     },
     "ArgonSpaceBase": {
       "kind": "Msg",
-      "nextIndex": 5,
+      "nextIndex": 7,
       "fields": [
         {
           "index": 0,
@@ -4202,6 +4210,16 @@
           "index": 4,
           "name": "topBannerFileId",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "boostCount",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "boostLevel",
+          "type": "i4"
         }
       ]
     },
@@ -4756,6 +4774,458 @@
           "type": "string"
         }
       ]
+    },
+    "UltimaPricing": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "subscriptionMonthly",
+          "type": "ProductPrice"
+        },
+        {
+          "index": 1,
+          "name": "subscriptionAnnual",
+          "type": "ProductPrice"
+        },
+        {
+          "index": 2,
+          "name": "boostPack1",
+          "type": "ProductPrice"
+        },
+        {
+          "index": 3,
+          "name": "boostPack3",
+          "type": "ProductPrice"
+        },
+        {
+          "index": 4,
+          "name": "boostPack5",
+          "type": "ProductPrice"
+        }
+      ]
+    },
+    "ProductPrice": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "amount",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "amountWithoutDiscount",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "currency",
+          "type": "string"
+        }
+      ]
+    },
+    "UltimaSubscriptionInfo": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "subscriptionId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "tier",
+          "type": "UltimaPlan"
+        },
+        {
+          "index": 2,
+          "name": "status",
+          "type": "UltimaSubscriptionStatus"
+        },
+        {
+          "index": 3,
+          "name": "startsAt",
+          "type": "datetime"
+        },
+        {
+          "index": 4,
+          "name": "expiresAt",
+          "type": "datetime"
+        },
+        {
+          "index": 5,
+          "name": "autoRenew",
+          "type": "bool"
+        },
+        {
+          "index": 6,
+          "name": "totalBoostSlots",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "usedBoostSlots",
+          "type": "i4"
+        }
+      ]
+    },
+    "UltimaBoost": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "boostId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "spaceName",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "appliedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 4,
+          "name": "transferCooldownUntil",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 5,
+          "name": "source",
+          "type": "BoostSource"
+        }
+      ]
+    },
+    "SpaceBoostStatus": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "boostCount",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "boostLevel",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "boosters",
+          "type": "Array\u003CSpaceBooster\u003E"
+        }
+      ]
+    },
+    "SpaceBooster": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "boostCount",
+          "type": "i4"
+        }
+      ]
+    },
+    "UltimaPlan": {
+      "kind": "Enum",
+      "members": {
+        "Monthly": "0",
+        "Annual": "1"
+      },
+      "baseType": "u4"
+    },
+    "UltimaSubscriptionStatus": {
+      "kind": "Enum",
+      "members": {
+        "Active": "0",
+        "Cancelled": "1",
+        "Expired": "2",
+        "GracePeriod": "3"
+      },
+      "baseType": "u4"
+    },
+    "BoostPackType": {
+      "kind": "Enum",
+      "members": {
+        "Pack1": "0",
+        "Pack3": "1",
+        "Pack5": "2"
+      },
+      "baseType": "u4"
+    },
+    "BoostSource": {
+      "kind": "Enum",
+      "members": {
+        "Subscription": "0",
+        "PurchasedPack1": "1",
+        "PurchasedPack3": "2",
+        "PurchasedPack5": "3",
+        "GiftReward": "4"
+      },
+      "baseType": "u4"
+    },
+    "CheckoutError": {
+      "kind": "Enum",
+      "members": {
+        "ALREADY_SUBSCRIBED": "0",
+        "PAYMENT_ERROR": "1",
+        "REGION_UNAVAILABLE": "2"
+      },
+      "baseType": "u4"
+    },
+    "ApplyBoostError": {
+      "kind": "Enum",
+      "members": {
+        "NOT_FOUND": "0",
+        "NO_AVAILABLE_SLOTS": "1",
+        "NOT_A_MEMBER": "2",
+        "ALREADY_APPLIED": "3"
+      },
+      "baseType": "u4"
+    },
+    "TransferBoostError": {
+      "kind": "Enum",
+      "members": {
+        "NOT_FOUND": "0",
+        "ON_COOLDOWN": "1",
+        "NOT_A_MEMBER": "2",
+        "NOT_APPLIED": "3"
+      },
+      "baseType": "u4"
+    },
+    "PurchaseBoostError": {
+      "kind": "Enum",
+      "members": {
+        "PAYMENT_ERROR": "0",
+        "LIMIT_REACHED": "1"
+      },
+      "baseType": "u4"
+    },
+    "SendGiftError": {
+      "kind": "Enum",
+      "members": {
+        "USER_NOT_FOUND": "0",
+        "SELF_GIFT": "1",
+        "PAYMENT_ERROR": "2"
+      },
+      "baseType": "u4"
+    },
+    "CheckoutResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCheckout"
+        },
+        {
+          "index": 1,
+          "name": "FailedCheckout"
+        }
+      ]
+    },
+    "ApplyBoostResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessApplyBoost"
+        },
+        {
+          "index": 1,
+          "name": "FailedApplyBoost"
+        }
+      ]
+    },
+    "TransferBoostResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessTransfer"
+        },
+        {
+          "index": 1,
+          "name": "FailedTransfer"
+        }
+      ]
+    },
+    "PurchaseBoostResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPurchaseBoost"
+        },
+        {
+          "index": 1,
+          "name": "FailedPurchaseBoost"
+        }
+      ]
+    },
+    "SendGiftResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSendGift"
+        },
+        {
+          "index": 1,
+          "name": "FailedSendGift"
+        }
+      ]
+    },
+    "UltimaInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetPricing": {
+          "args": [],
+          "returns": "UltimaPricing",
+          "modifiers": []
+        },
+        "GetMySubscription": {
+          "args": [],
+          "returns": "Maybe\u003CUltimaSubscriptionInfo\u003E",
+          "modifiers": []
+        },
+        "CreateCheckoutSession": {
+          "args": [
+            {
+              "index": 0,
+              "name": "plan",
+              "type": "UltimaPlan"
+            }
+          ],
+          "returns": "CheckoutResult",
+          "modifiers": []
+        },
+        "CancelSubscription": {
+          "args": [],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "GetMyBoosts": {
+          "args": [],
+          "returns": "Array\u003CUltimaBoost\u003E",
+          "modifiers": []
+        },
+        "ApplyBoost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "boostId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ApplyBoostResult",
+          "modifiers": []
+        },
+        "TransferBoost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "boostId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "newSpaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "TransferBoostResult",
+          "modifiers": []
+        },
+        "RemoveBoost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "boostId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "GetSpaceBoostStatus": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "SpaceBoostStatus",
+          "modifiers": []
+        },
+        "PurchaseBoostPack": {
+          "args": [
+            {
+              "index": 0,
+              "name": "pack",
+              "type": "BoostPackType"
+            }
+          ],
+          "returns": "PurchaseBoostResult",
+          "modifiers": []
+        },
+        "SendUltimaGift": {
+          "args": [
+            {
+              "index": 0,
+              "name": "recipientId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "plan",
+              "type": "UltimaPlan"
+            },
+            {
+              "index": 2,
+              "name": "message",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "SendGiftResult",
+          "modifiers": []
+        }
+      }
     },
     "TodayStats": {
       "kind": "Msg",

@@ -484,7 +484,11 @@ union ArgonEvent() {
     ShowModal(interactionId: guid, modal: IonModalDefinition),
 
     ReactionAdded(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string, customEmojiId: guid?),
-    ReactionRemoved(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string)
+    ReactionRemoved(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string),
+
+
+    SpaceBoostUpdated(spaceId: guid, boostCount: i4, boostLevel: i4),
+    UltimaGiftReceived(userId: guid, itemId: guid, senderName: string, message: string?)
 }
 
 msg ChannelReadState {

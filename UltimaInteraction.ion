@@ -1,0 +1,146 @@
+service UltimaInteraction() {
+    // Pricing
+    GetPricing(): UltimaPricing;
+
+    // Subscription
+    GetMySubscription(): UltimaSubscriptionInfo?;
+    CreateCheckoutSession(plan: UltimaPlan): CheckoutResult;
+    CancelSubscription(): bool;
+
+    // Boosts
+    GetMyBoosts(): UltimaBoost[];
+    ApplyBoost(boostId: guid, spaceId: guid): ApplyBoostResult;
+    TransferBoost(boostId: guid, newSpaceId: guid): TransferBoostResult;
+    RemoveBoost(boostId: guid): bool;
+    GetSpaceBoostStatus(spaceId: guid): SpaceBoostStatus;
+    PurchaseBoostPack(pack: BoostPackType): PurchaseBoostResult;
+
+    // Gifts (delivered via inventory)
+    SendUltimaGift(recipientId: guid, plan: UltimaPlan, message: string?): SendGiftResult;
+}
+
+
+// --- Pricing ---
+
+msg UltimaPricing {
+    subscriptionMonthly: ProductPrice;
+    subscriptionAnnual: ProductPrice;
+    boostPack1: ProductPrice;
+    boostPack3: ProductPrice;
+    boostPack5: ProductPrice;
+}
+
+msg ProductPrice {
+    amount: string;
+    amountWithoutDiscount: string?;
+    currency: string;
+}
+
+
+// --- Models ---
+
+msg UltimaSubscriptionInfo {
+    subscriptionId: guid;
+    tier: UltimaPlan;
+    status: UltimaSubscriptionStatus;
+    startsAt: datetime;
+    expiresAt: datetime;
+    autoRenew: bool;
+    totalBoostSlots: i4;
+    usedBoostSlots: i4;
+}
+
+msg UltimaBoost {
+    boostId: guid;
+    spaceId: guid?;
+    spaceName: string?;
+    appliedAt: datetime?;
+    transferCooldownUntil: datetime?;
+    source: BoostSource;
+}
+
+msg SpaceBoostStatus {
+    boostCount: i4;
+    boostLevel: i4;
+    boosters: SpaceBooster[];
+}
+
+msg SpaceBooster {
+    userId: guid;
+    username: string;
+    boostCount: i4;
+}
+
+
+// --- Enums ---
+
+enum UltimaPlan { Monthly, Annual }
+
+enum UltimaSubscriptionStatus { Active, Cancelled, Expired, GracePeriod }
+
+enum BoostPackType { Pack1, Pack3, Pack5 }
+
+enum BoostSource { Subscription, PurchasedPack1, PurchasedPack3, PurchasedPack5, GiftReward }
+
+
+// --- Unions ---
+
+union CheckoutResult {
+    SuccessCheckout(checkoutUrl: string, sessionId: string),
+    FailedCheckout(error: CheckoutError)
+}
+
+enum CheckoutError {
+    ALREADY_SUBSCRIBED,
+    PAYMENT_ERROR,
+    REGION_UNAVAILABLE
+}
+
+
+union ApplyBoostResult {
+    SuccessApplyBoost(),
+    FailedApplyBoost(error: ApplyBoostError)
+}
+
+enum ApplyBoostError {
+    NOT_FOUND,
+    NO_AVAILABLE_SLOTS,
+    NOT_A_MEMBER,
+    ALREADY_APPLIED
+}
+
+
+union TransferBoostResult {
+    SuccessTransfer(),
+    FailedTransfer(error: TransferBoostError)
+}
+
+enum TransferBoostError {
+    NOT_FOUND,
+    ON_COOLDOWN,
+    NOT_A_MEMBER,
+    NOT_APPLIED
+}
+
+
+union PurchaseBoostResult {
+    SuccessPurchaseBoost(checkoutUrl: string),
+    FailedPurchaseBoost(error: PurchaseBoostError)
+}
+
+enum PurchaseBoostError {
+    PAYMENT_ERROR,
+    LIMIT_REACHED
+}
+
+
+union SendGiftResult {
+    SuccessSendGift(checkoutUrl: string),
+    FailedSendGift(error: SendGiftError)
+}
+
+enum SendGiftError {
+    USER_NOT_FOUND,
+    SELF_GIFT,
+    PAYMENT_ERROR
+}
