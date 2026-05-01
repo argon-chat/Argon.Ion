@@ -62,6 +62,7 @@ msg PaymentAccountInfo {
     cardType: string?;
     expiryMonth: string?;
     expiryYear: string?;
+    paymentAccountId: i8?;
 }
 
 msg UltimaTransaction {
@@ -74,6 +75,9 @@ msg UltimaTransaction {
     boostCount: i4?;
     recipientId: guid?;
     transactionType: string?;
+    cardSuffix: string?;
+    cardBrand: string?;
+    status: string?;
 }
 
 msg UltimaBoost {
