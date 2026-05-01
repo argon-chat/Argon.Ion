@@ -144,6 +144,12 @@ msg ArgonUserProfile {
     bio: string?;
     badges: string[];
     archetypes: SpaceMemberArchetype[];
+    backgroundId: i4?;
+    voiceCardEffectId: i4?;
+    avatarFrameId: i4?;
+    nickEffectId: i4?;
+    primaryColor: i4?;
+    accentColor: i4?;
 }
 
 flags UserFlag : i4

@@ -488,7 +488,9 @@ union ArgonEvent() {
 
 
     SpaceBoostUpdated(spaceId: guid, boostCount: i4, boostLevel: i4),
-    UltimaGiftReceived(userId: guid, itemId: guid, senderName: string, message: string?)
+    UltimaGiftReceived(userId: guid, itemId: guid, senderName: string, message: string?),
+
+    UserProfileUpdated(spaceId: guid, userId: guid, profile: ArgonUserProfile)
 }
 
 msg ChannelReadState {

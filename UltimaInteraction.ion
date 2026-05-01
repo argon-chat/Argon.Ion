@@ -31,6 +31,9 @@ msg UltimaPricing {
     boostPack1: ProductPrice;
     boostPack3: ProductPrice;
     boostPack5: ProductPrice;
+    boostPack1Annual: ProductPrice;
+    boostPack3Annual: ProductPrice;
+    boostPack5Annual: ProductPrice;
 }
 
 msg ProductPrice {
@@ -101,9 +104,9 @@ enum UltimaPlan { Monthly, Annual }
 
 enum UltimaSubscriptionStatus { Active, Cancelled, Expired, GracePeriod }
 
-enum BoostPackType { Pack1, Pack3, Pack5 }
+enum BoostPackType { Pack1, Pack3, Pack5, Pack1Annual, Pack3Annual, Pack5Annual }
 
-enum BoostSource { Subscription, PurchasedPack1, PurchasedPack3, PurchasedPack5, GiftReward }
+enum BoostSource { Subscription, PurchasedPack1, PurchasedPack3, PurchasedPack5, GiftReward, PurchasedPack1Annual, PurchasedPack3Annual, PurchasedPack5Annual }
 
 
 // --- Unions ---

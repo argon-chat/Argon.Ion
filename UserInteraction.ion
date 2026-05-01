@@ -5,7 +5,7 @@ service UserInteraction() {
     CreateSpace(request: CreateServerRequest): CreateSpaceResult;
     GetSpaces(): ArgonSpaceBase[];
 
-    UpdateMe(request: UserEditInput): ArgonUser;
+    UpdateMe(request: UserEditInput): UpdateMeResult;
 
     JoinToSpace(inviteCode: InviteCode): JoinToSpaceResult;
 
@@ -22,8 +22,7 @@ service UserInteraction() {
     BeginUploadAvatar(): UploadFileResult;
     CompleteUploadAvatar(blobId: guid);
 
-    BeginUploadProfileHeader(): UploadFileResult;
-    CompleteUploadProfileHeader(blobId: guid);
+
 
 
     GetTodayStats(): TodayStats;
@@ -77,6 +76,28 @@ enum CreateSpaceError {
 msg UserEditInput {
     displayName: string?;
     avatarId: string?;
+    backgroundId: i4?;
+    voiceCardEffectId: i4?;
+    avatarFrameId: i4?;
+    nickEffectId: i4?;
+    customStatus: string?;
+    customStatusIconId: string?;
+    primaryColor: i4?;
+    accentColor: i4?;
+}
+
+union UpdateMeResult {
+    SuccessUpdateMe(user: ArgonUser, profile: ArgonUserProfile),
+    FailedUpdateMe(error: UpdateMeError)
+}
+
+enum UpdateMeError {
+    NONE,
+    COOLDOWN_ACTIVE,
+    PREMIUM_REQUIRED,
+    INVALID_PRESET_ID,
+    DISPLAY_NAME_TOO_LONG,
+    DISPLAY_NAME_EMPTY
 }
 
 msg FeatureFlag {
