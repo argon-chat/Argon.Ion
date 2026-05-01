@@ -112,7 +112,7 @@ enum BoostSource { Subscription, PurchasedPack1, PurchasedPack3, PurchasedPack5,
 // --- Unions ---
 
 union CheckoutResult {
-    SuccessCheckout(checkoutUrl: string, sessionId: string),
+    SuccessCheckout(checkoutUrl: string, sessionId: string, countryCode: string),
     FailedCheckout(error: CheckoutError)
 }
 
@@ -150,7 +150,7 @@ enum TransferBoostError {
 
 
 union PurchaseBoostResult {
-    SuccessPurchaseBoost(checkoutUrl: string),
+    SuccessPurchaseBoost(checkoutUrl: string, countryCode: string),
     FailedPurchaseBoost(error: PurchaseBoostError)
 }
 
@@ -161,7 +161,7 @@ enum PurchaseBoostError {
 
 
 union SendGiftResult {
-    SuccessSendGift(checkoutUrl: string),
+    SuccessSendGift(checkoutUrl: string, countryCode: string),
     FailedSendGift(error: SendGiftError)
 }
 
