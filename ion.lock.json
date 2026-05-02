@@ -896,7 +896,7 @@
     },
     "AttachmentInfo": {
       "kind": "Msg",
-      "nextIndex": 4,
+      "nextIndex": 5,
       "fields": [
         {
           "index": 0,
@@ -917,6 +917,11 @@
           "index": 3,
           "name": "contentType",
           "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "downloadUrl",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },

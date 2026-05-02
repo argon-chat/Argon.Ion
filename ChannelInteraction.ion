@@ -75,7 +75,7 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     MessageEntitySystemCallTimeout(callerId: guid, callId: guid),
     MessageEntitySystemUserJoined(userId: guid, inviterId: guid?),
 
-    MessageEntityAttachment(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4?, height: i4?, thumbHash: string?)
+    MessageEntityAttachment(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4?, height: i4?, thumbHash: string?, downloadUrl: string?)
 }
 
 enum EntityType : u2
@@ -136,6 +136,7 @@ msg AttachmentInfo {
     fileName: string;
     fileSize: i8;
     contentType: string;
+    downloadUrl: string?;
 }
 
 service ChannelInteraction(spaceId: guid, channelId: guid) {
