@@ -4699,7 +4699,7 @@
               "type": "guid"
             }
           ],
-          "returns": "guid",
+          "returns": "UploadFileResult",
           "modifiers": []
         },
         "CompleteUploadSpaceProfileHeader": {
@@ -4726,7 +4726,7 @@
               "type": "guid"
             }
           ],
-          "returns": "guid",
+          "returns": "UploadFileResult",
           "modifiers": []
         },
         "CompleteUploadSpaceAvatar": {
@@ -5438,6 +5438,22 @@
           "index": 4,
           "name": "readyToClaimCoin",
           "type": "bool"
+        }
+      ]
+    },
+    "FormField": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
         }
       ]
     },

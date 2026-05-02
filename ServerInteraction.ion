@@ -58,10 +58,10 @@ service ServerInteraction(spaceId: guid)
     GetServerArchetypes(): Archetype[];
     GetDetailedServerArchetypes(): ArchetypeGroup[];
 
-    BeginUploadSpaceProfileHeader(): guid;
+    BeginUploadSpaceProfileHeader(): UploadFileResult;
     CompleteUploadSpaceProfileHeader(blobId: guid);
 
-    BeginUploadSpaceAvatar(): guid;
+    BeginUploadSpaceAvatar(): UploadFileResult;
     CompleteUploadSpaceAvatar(blobId: guid);
 
     GetChannelGroups(): ChannelGroup[];

@@ -58,8 +58,13 @@ enum UploadFileError {
     INTERNAL_ERROR
 }
 
+msg FormField {
+    key: string;
+    value: string;
+}
+
 union UploadFileResult {
-    SuccessUploadFile(blobId: guid),
+    SuccessUploadFile(blobId: guid, uploadUrl: string, formFields: FormField[], ttlSeconds: i4),
     FailedUploadFile(error: UploadFileError)
 }
 
