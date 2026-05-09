@@ -4814,6 +4814,24 @@
         }
       ]
     },
+    "ArgonAuthMode": {
+      "kind": "Enum",
+      "members": {
+        "EmailPassword": "0",
+        "EmailOtp": "1",
+        "EmailPasswordOtp": "2"
+      },
+      "baseType": "u4"
+    },
+    "OtpMethod": {
+      "kind": "Enum",
+      "members": {
+        "Email": "0",
+        "Phone": "1",
+        "Totp": "2"
+      },
+      "baseType": "u4"
+    },
     "UltimaPricing": {
       "kind": "Msg",
       "nextIndex": 8,

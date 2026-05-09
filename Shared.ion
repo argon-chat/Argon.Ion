@@ -2,6 +2,18 @@ attribute @AllowAnonymous();
 attribute @MachineIdOptional();
 attribute @DoNotRequireSessionContext();
 
+enum ArgonAuthMode {
+    EmailPassword,
+    EmailOtp,
+    EmailPasswordOtp
+}
+
+enum OtpMethod {
+    Email,
+    Phone,
+    Totp
+}
+
 msg ArgonIonTicket {
     userId: guid;
     ip: string;
