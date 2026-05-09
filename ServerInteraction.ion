@@ -1,6 +1,5 @@
 #feature "orleans"
 
-
 flags ArgonEntitlement: u8 {
     None = 0,
 
@@ -45,7 +44,6 @@ service ServerInteraction(spaceId: guid)
 {
     GetMembers(): RealtimeServerMember[];
     GetMember(userId: guid): RealtimeServerMember;
-
 
     GetInviteCodes(): InviteCodeEntity[];
     CreateInviteCode(): InviteCode;
@@ -125,7 +123,6 @@ msg InviteCodeEntity {
 msg InviteCode {
     inviteCode: string;
 }
-
 
 msg ArgonUser {
     userId: guid;

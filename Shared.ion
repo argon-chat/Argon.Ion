@@ -1,5 +1,3 @@
-
-
 attribute @AllowAnonymous();
 attribute @MachineIdOptional();
 attribute @DoNotRequireSessionContext();

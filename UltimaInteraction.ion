@@ -1,16 +1,12 @@
 service UltimaInteraction() {
-    // Pricing
     GetPricing(): UltimaPricing;
 
-    // Subscription
     GetMySubscription(): UltimaSubscriptionInfo?;
     CreateCheckoutSession(plan: UltimaPlan): CheckoutResult;
     CancelSubscription(): bool;
 
-    // Transaction history
     GetTransactionHistory(): UltimaTransaction[];
 
-    // Boosts
     GetMyBoosts(): UltimaBoost[];
     ApplyBoost(boostId: guid, spaceId: guid): ApplyBoostResult;
     TransferBoost(boostId: guid, newSpaceId: guid): TransferBoostResult;
@@ -18,12 +14,8 @@ service UltimaInteraction() {
     GetSpaceBoostStatus(spaceId: guid): SpaceBoostStatus;
     PurchaseBoostPack(pack: BoostPackType): PurchaseBoostResult;
 
-    // Gifts (delivered via inventory)
     SendUltimaGift(recipientId: guid, plan: UltimaPlan, message: string?): SendGiftResult;
 }
-
-
-// --- Pricing ---
 
 msg UltimaPricing {
     subscriptionMonthly: ProductPrice;
@@ -42,8 +34,6 @@ msg ProductPrice {
     currency: string;
 }
 
-
-// --- Models ---
 
 msg UltimaSubscriptionInfo {
     subscriptionId: guid;
@@ -101,9 +91,6 @@ msg SpaceBooster {
     boostCount: i4;
 }
 
-
-// --- Enums ---
-
 enum UltimaPlan { Monthly, Annual }
 
 enum UltimaSubscriptionStatus { Active, Cancelled, Expired, GracePeriod }
@@ -111,9 +98,6 @@ enum UltimaSubscriptionStatus { Active, Cancelled, Expired, GracePeriod }
 enum BoostPackType { Pack1, Pack3, Pack5, Pack1Annual, Pack3Annual, Pack5Annual }
 
 enum BoostSource { Subscription, PurchasedPack1, PurchasedPack3, PurchasedPack5, GiftReward, PurchasedPack1Annual, PurchasedPack3Annual, PurchasedPack5Annual }
-
-
-// --- Unions ---
 
 union CheckoutResult {
     SuccessCheckout(checkoutUrl: string, sessionId: string, countryCode: string),
