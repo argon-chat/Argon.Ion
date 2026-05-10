@@ -3624,6 +3624,301 @@
         }
       }
     },
+    "ReportTarget": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kind",
+          "type": "ReportTargetKind"
+        },
+        {
+          "index": 1,
+          "name": "targetId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "channelId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "messageId",
+          "type": "Maybe\u003Cu8\u003E"
+        }
+      ]
+    },
+    "CreateReportInput": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "target",
+          "type": "ReportTarget"
+        },
+        {
+          "index": 1,
+          "name": "category",
+          "type": "ReportCategory"
+        },
+        {
+          "index": 2,
+          "name": "reason",
+          "type": "ReportReason"
+        },
+        {
+          "index": 3,
+          "name": "additionalInfo",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "referenceReportId",
+          "type": "Maybe\u003Cguid\u003E"
+        }
+      ]
+    },
+    "ReportInfo": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "reportId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "reporterId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "target",
+          "type": "ReportTarget"
+        },
+        {
+          "index": 3,
+          "name": "category",
+          "type": "ReportCategory"
+        },
+        {
+          "index": 4,
+          "name": "reason",
+          "type": "ReportReason"
+        },
+        {
+          "index": 5,
+          "name": "additionalInfo",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "status",
+          "type": "ReportStatus"
+        },
+        {
+          "index": 7,
+          "name": "referenceReportId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 8,
+          "name": "createdAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "UserTrustInfo": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "trustScore",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "totalReportsReceived",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "confirmedReportsReceived",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "totalReportsFiled",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "falseReportsFiled",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "lastUpdated",
+          "type": "datetime"
+        }
+      ]
+    },
+    "ReportTargetKind": {
+      "kind": "Enum",
+      "members": {
+        "PROFILE": "0",
+        "MESSAGE": "1",
+        "CHANNEL": "2",
+        "SPACE": "3",
+        "USER": "4"
+      },
+      "baseType": "u4"
+    },
+    "ReportCategory": {
+      "kind": "Enum",
+      "members": {
+        "I_DONT_LIKE_IT": "0",
+        "CHILD_ABUSE": "1",
+        "VIOLENCE": "2",
+        "ILLEGAL_GOODS": "3",
+        "ILLEGAL_ADULT_CONTENT": "4",
+        "PERSONAL_DATA": "5",
+        "SCAM_OR_FRAUD": "6",
+        "COPYRIGHT": "7",
+        "SPAM": "8",
+        "OTHER": "9"
+      },
+      "baseType": "u4"
+    },
+    "ReportReason": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHILD_SEXUAL_ABUSE": "1",
+        "CHILD_PHYSICAL_ABUSE": "2",
+        "INSULTS_OR_FALSE_INFO": "3",
+        "GRAPHIC_OR_DISTURBING_CONTENT": "4",
+        "EXTREME_VIOLENCE": "5",
+        "HATE_SPEECH_OR_SYMBOL": "6",
+        "CALLING_FOR_VIOLENCE": "7",
+        "ORGANIZED_CRIME": "8",
+        "TERRORISM": "9",
+        "ANIMAL_ABUSE": "10",
+        "WEAPONS": "11",
+        "DRUGS": "12",
+        "FAKE_DOCUMENTS": "13",
+        "COUNTERFEIT_MONEY": "14",
+        "HACKING_TOOLS_AND_MALWARE": "15",
+        "COUNTERFEIT_MERCHANDISE": "16",
+        "OTHER_GOODS_AND_SERVICES": "17",
+        "IAC_CHILD_ABUSE": "18",
+        "ILLEGAL_SEXUAL_SERVICES": "19",
+        "IAC_ANIMAL_ABUSE": "20",
+        "NON_CONSENSUAL_SEXUAL_IMAGERY": "21",
+        "PORNOGRAPHY": "22",
+        "IAC_OTHER": "23",
+        "PRIVATE_IMAGES": "24",
+        "PHONE_NUMBER": "25",
+        "ADDRESS": "26",
+        "STOLEN_DATA_OR_CREDENTIALS": "27",
+        "PD_OTHER": "28",
+        "IMPERSONATION": "29",
+        "DECEPTIVE_FINANCIAL_CLAIMS": "30",
+        "SF_MALWARE": "31",
+        "PHISHING": "32",
+        "FRAUDULENT_SELLER": "33",
+        "SPAM_INSULTS_OR_FALSE_INFO": "34",
+        "PROMOTING_ILLEGAL_CONTENT": "35",
+        "SPAM_OTHER": "36",
+        "OTHER_I_DONT_LIKE_IT": "37",
+        "OTHER_FALSE_INFO": "38",
+        "OTHER_ILLEGAL_ADULT_CONTENT": "39",
+        "OTHER_ILLEGAL_GOODS_AND_SERVICES": "40",
+        "OTHER_ELSE": "41"
+      },
+      "baseType": "u4"
+    },
+    "ReportStatus": {
+      "kind": "Enum",
+      "members": {
+        "PENDING": "0",
+        "UNDER_REVIEW": "1",
+        "RESOLVED_ACTION_TAKEN": "2",
+        "RESOLVED_NO_ACTION": "3",
+        "DISMISSED": "4",
+        "ESCALATED": "5"
+      },
+      "baseType": "u4"
+    },
+    "SubmitReportError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_TARGET": "1",
+        "CANNOT_REPORT_SELF": "2",
+        "DUPLICATE_REPORT": "3",
+        "RATE_LIMITED": "4",
+        "TARGET_NOT_FOUND": "5",
+        "INTERNAL_ERROR": "6"
+      },
+      "baseType": "u4"
+    },
+    "SubmitReportResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSubmitReport"
+        },
+        {
+          "index": 1,
+          "name": "FailedSubmitReport"
+        }
+      ]
+    },
+    "ReportInteraction": {
+      "kind": "Service",
+      "methods": {
+        "SubmitReport": {
+          "args": [
+            {
+              "index": 0,
+              "name": "input",
+              "type": "CreateReportInput"
+            }
+          ],
+          "returns": "SubmitReportResult",
+          "modifiers": []
+        },
+        "GetMyReports": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CReportInfo\u003E",
+          "modifiers": []
+        }
+      }
+    },
     "SecurityDetails": {
       "kind": "Msg",
       "nextIndex": 5,

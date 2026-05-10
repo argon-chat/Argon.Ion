@@ -1,0 +1,136 @@
+
+
+enum ReportTargetKind {
+    PROFILE,
+    MESSAGE,
+    CHANNEL,
+    SPACE,
+    USER
+}
+
+enum ReportCategory {
+    I_DONT_LIKE_IT,
+    CHILD_ABUSE,
+    VIOLENCE,
+    ILLEGAL_GOODS,
+    ILLEGAL_ADULT_CONTENT,
+    PERSONAL_DATA,
+    SCAM_OR_FRAUD,
+    COPYRIGHT,
+    SPAM,
+    OTHER
+}
+
+enum ReportReason {
+    NONE,
+    CHILD_SEXUAL_ABUSE,
+    CHILD_PHYSICAL_ABUSE,
+    INSULTS_OR_FALSE_INFO,
+    GRAPHIC_OR_DISTURBING_CONTENT,
+    EXTREME_VIOLENCE,
+    HATE_SPEECH_OR_SYMBOL,
+    CALLING_FOR_VIOLENCE,
+    ORGANIZED_CRIME,
+    TERRORISM,
+    ANIMAL_ABUSE,
+    WEAPONS,
+    DRUGS,
+    FAKE_DOCUMENTS,
+    COUNTERFEIT_MONEY,
+    HACKING_TOOLS_AND_MALWARE,
+    COUNTERFEIT_MERCHANDISE,
+    OTHER_GOODS_AND_SERVICES,
+    IAC_CHILD_ABUSE,
+    ILLEGAL_SEXUAL_SERVICES,
+    IAC_ANIMAL_ABUSE,
+    NON_CONSENSUAL_SEXUAL_IMAGERY,
+    PORNOGRAPHY,
+    IAC_OTHER,
+    PRIVATE_IMAGES,
+    PHONE_NUMBER,
+    ADDRESS,
+    STOLEN_DATA_OR_CREDENTIALS,
+    PD_OTHER,
+    IMPERSONATION,
+    DECEPTIVE_FINANCIAL_CLAIMS,
+    SF_MALWARE,
+    PHISHING,
+    FRAUDULENT_SELLER,
+    SPAM_INSULTS_OR_FALSE_INFO,
+    PROMOTING_ILLEGAL_CONTENT,
+    SPAM_OTHER,
+    OTHER_I_DONT_LIKE_IT,
+    OTHER_FALSE_INFO,
+    OTHER_ILLEGAL_ADULT_CONTENT,
+    OTHER_ILLEGAL_GOODS_AND_SERVICES,
+    OTHER_ELSE
+}
+
+enum ReportStatus {
+    PENDING,
+    UNDER_REVIEW,
+    RESOLVED_ACTION_TAKEN,
+    RESOLVED_NO_ACTION,
+    DISMISSED,
+    ESCALATED
+}
+
+enum SubmitReportError {
+    NONE,
+    INVALID_TARGET,
+    CANNOT_REPORT_SELF,
+    DUPLICATE_REPORT,
+    RATE_LIMITED,
+    TARGET_NOT_FOUND,
+    INTERNAL_ERROR
+}
+
+
+msg ReportTarget {
+    kind: ReportTargetKind;
+    targetId: guid;
+    channelId: guid?;
+    messageId: u8?;
+}
+
+msg CreateReportInput {
+    target: ReportTarget;
+    category: ReportCategory;
+    reason: ReportReason;
+    additionalInfo: string?;
+    referenceReportId: guid?;
+}
+
+msg ReportInfo {
+    reportId: guid;
+    reporterId: guid;
+    target: ReportTarget;
+    category: ReportCategory;
+    reason: ReportReason;
+    additionalInfo: string?;
+    status: ReportStatus;
+    referenceReportId: guid?;
+    createdAt: datetime;
+}
+
+msg UserTrustInfo {
+    userId: guid;
+    trustScore: i4;
+    totalReportsReceived: i4;
+    confirmedReportsReceived: i4;
+    totalReportsFiled: i4;
+    falseReportsFiled: i4;
+    lastUpdated: datetime;
+}
+
+
+union SubmitReportResult {
+    SuccessSubmitReport(reportId: guid),
+    FailedSubmitReport(error: SubmitReportError)
+}
+
+
+service ReportInteraction() {
+    SubmitReport(input: CreateReportInput): SubmitReportResult;
+    GetMyReports(limit: i4, offset: i4): ReportInfo[];
+}
