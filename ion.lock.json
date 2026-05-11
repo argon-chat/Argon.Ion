@@ -1530,7 +1530,8 @@
         "SystemCallEnded": "17",
         "SystemCallTimeout": "18",
         "SystemUserJoined": "19",
-        "Attachment": "20"
+        "Attachment": "20",
+        "Gif": "21"
       },
       "baseType": "u2"
     },
@@ -1706,7 +1707,7 @@
     },
     "MessageEntity": {
       "kind": "Union",
-      "nextIndex": 21,
+      "nextIndex": 22,
       "cases": [
         {
           "index": 0,
@@ -1791,6 +1792,10 @@
         {
           "index": 20,
           "name": "MessageEntityAttachment"
+        },
+        {
+          "index": 21,
+          "name": "MessageEntityGif"
         }
       ],
       "sharedFields": [
@@ -3332,6 +3337,238 @@
             }
           ],
           "returns": "Array\u003CDirectMessage\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "GifItem": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "gifId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "title",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "previewUrl",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "webmUrl",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "hmac",
+          "type": "string"
+        }
+      ]
+    },
+    "GifSearchResult": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "items",
+          "type": "Array\u003CGifItem\u003E"
+        },
+        {
+          "index": 1,
+          "name": "hasNext",
+          "type": "bool"
+        }
+      ]
+    },
+    "SavedGif": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "id",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "gifId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "previewUrl",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "webmUrl",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "addedAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "GifCategory": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "imageUrl",
+          "type": "string"
+        }
+      ]
+    },
+    "SaveGifError": {
+      "kind": "Enum",
+      "members": {
+        "INVALID_HMAC": "0",
+        "ALREADY_SAVED": "1",
+        "NOT_FOUND": "2"
+      },
+      "baseType": "u4"
+    },
+    "SaveGifResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSaveGif"
+        },
+        {
+          "index": 1,
+          "name": "FailedSaveGif"
+        }
+      ]
+    },
+    "GifInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetTrending": {
+          "args": [
+            {
+              "index": 0,
+              "name": "page",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "perPage",
+              "type": "i4"
+            }
+          ],
+          "returns": "GifSearchResult",
+          "modifiers": []
+        },
+        "Search": {
+          "args": [
+            {
+              "index": 0,
+              "name": "query",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "page",
+              "type": "i4"
+            },
+            {
+              "index": 2,
+              "name": "perPage",
+              "type": "i4"
+            }
+          ],
+          "returns": "GifSearchResult",
+          "modifiers": []
+        },
+        "GetCategories": {
+          "args": [],
+          "returns": "Array\u003CGifCategory\u003E",
+          "modifiers": []
+        },
+        "GetSavedGifs": {
+          "args": [
+            {
+              "index": 0,
+              "name": "page",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "perPage",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CSavedGif\u003E",
+          "modifiers": []
+        },
+        "SaveGif": {
+          "args": [
+            {
+              "index": 0,
+              "name": "gifId",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "hmac",
+              "type": "string"
+            }
+          ],
+          "returns": "SaveGifResult",
+          "modifiers": []
+        },
+        "RemoveSavedGif": {
+          "args": [
+            {
+              "index": 0,
+              "name": "savedGifId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
           "modifiers": []
         }
       }

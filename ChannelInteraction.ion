@@ -75,7 +75,9 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     MessageEntitySystemCallTimeout(callerId: guid, callId: guid),
     MessageEntitySystemUserJoined(userId: guid, inviterId: guid?),
 
-    MessageEntityAttachment(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4?, height: i4?, thumbHash: string?, downloadUrl: string?)
+    MessageEntityAttachment(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4?, height: i4?, thumbHash: string?, downloadUrl: string?),
+
+    MessageEntityGif(gifId: string, hmac: string, fileId: guid?, width: i4, height: i4, previewUrl: string?)
 }
 
 enum EntityType : u2
@@ -103,7 +105,9 @@ enum EntityType : u2
     SystemCallTimeout,
     SystemUserJoined,
 
-    Attachment
+    Attachment,
+
+    Gif
 }
 
 msg ReactionInfo {

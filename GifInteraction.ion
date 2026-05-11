@@ -1,0 +1,50 @@
+msg GifItem {
+    gifId: string;
+    title: string?;
+    previewUrl: string;
+    webmUrl: string;
+    width: i4;
+    height: i4;
+    hmac: string;
+}
+
+msg GifSearchResult {
+    items: GifItem[];
+    hasNext: bool;
+}
+
+msg SavedGif {
+    id: guid;
+    gifId: string?;
+    fileId: guid;
+    previewUrl: string;
+    webmUrl: string;
+    width: i4;
+    height: i4;
+    addedAt: datetime;
+}
+
+msg GifCategory {
+    title: string;
+    imageUrl: string;
+}
+
+service GifInteraction() {
+    GetTrending(page: i4, perPage: i4): GifSearchResult;
+    Search(query: string, page: i4, perPage: i4): GifSearchResult;
+    GetCategories(): GifCategory[];
+    GetSavedGifs(page: i4, perPage: i4): SavedGif[];
+    SaveGif(gifId: string, hmac: string): SaveGifResult;
+    RemoveSavedGif(savedGifId: guid): bool;
+}
+
+union SaveGifResult {
+    SuccessSaveGif(gif: SavedGif),
+    FailedSaveGif(error: SaveGifError)
+}
+
+enum SaveGifError {
+    INVALID_HMAC,
+    ALREADY_SAVED,
+    NOT_FOUND
+}
