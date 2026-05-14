@@ -4189,7 +4189,7 @@
     },
     "Passkey": {
       "kind": "Msg",
-      "nextIndex": 4,
+      "nextIndex": 6,
       "fields": [
         {
           "index": 0,
@@ -4210,22 +4210,16 @@
           "index": 3,
           "name": "lastUsedAt",
           "type": "Maybe\u003Cdatetime\u003E"
-        }
-      ]
-    },
-    "PasskeyCredentialDescriptor": {
-      "kind": "Msg",
-      "nextIndex": 2,
-      "fields": [
-        {
-          "index": 0,
-          "name": "id",
-          "type": "string"
         },
         {
-          "index": 1,
-          "name": "type",
-          "type": "string"
+          "index": 4,
+          "name": "aaGuid",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 5,
+          "name": "authenticatorName",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -4304,8 +4298,10 @@
         "NONE": "0",
         "NOT_FOUND": "1",
         "LIMIT_REACHED": "2",
-        "INVALID_PUBLIC_KEY": "3",
-        "INTERNAL_ERROR": "4"
+        "INVALID_CREDENTIAL": "3",
+        "VERIFICATION_FAILED": "4",
+        "CHALLENGE_EXPIRED": "5",
+        "INTERNAL_ERROR": "6"
       },
       "baseType": "u4"
     },
@@ -4646,12 +4642,7 @@
           "args": [
             {
               "index": 0,
-              "name": "passkeyId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "publicKey",
+              "name": "registrationResponse",
               "type": "string"
             }
           ],
@@ -4699,22 +4690,7 @@
           "args": [
             {
               "index": 0,
-              "name": "credentialId",
-              "type": "string"
-            },
-            {
-              "index": 1,
-              "name": "signature",
-              "type": "string"
-            },
-            {
-              "index": 2,
-              "name": "authenticatorData",
-              "type": "string"
-            },
-            {
-              "index": 3,
-              "name": "clientDataJSON",
+              "name": "authenticationResponse",
               "type": "string"
             }
           ],

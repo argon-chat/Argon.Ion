@@ -16,7 +16,7 @@ service SecurityInteraction() {
 
     GetPasskeys(): Passkey[];
     BeginAddPasskey(name: string): BeginPasskeyResult;
-    CompleteAddPasskey(passkeyId: guid, publicKey: string): CompletePasskeyResult;
+    CompleteAddPasskey(registrationResponse: string): CompletePasskeyResult;
     RemovePasskey(passkeyId: guid): RemovePasskeyResult;
 
     SetAutoDeletePeriod(months: i4?): SetAutoDeleteResult;
@@ -27,7 +27,7 @@ service SecurityInteraction() {
 
 
     BeginValidatePasskey(): BeginPasskeyValidateResult;
-    CompleteValidatePasskey(credentialId: string, signature: string, authenticatorData: string, clientDataJSON: string): CompletePasskeyResult;
+    CompleteValidatePasskey(authenticationResponse: string): CompletePasskeyResult;
 }
 
 msg SecurityDetails {
@@ -130,10 +130,12 @@ msg Passkey {
     name: string;
     createdAt: datetime;
     lastUsedAt: datetime?;
+    aaGuid: guid?;
+    authenticatorName: string?;
 }
 
 union BeginPasskeyResult {
-    SuccessBeginPasskey(passkeyId: guid, challenge: string),
+    SuccessBeginPasskey(optionsJson: string),
     FailedBeginPasskey(error: PasskeyError)
 }
 
@@ -148,13 +150,8 @@ union RemovePasskeyResult {
 }
 
 union BeginPasskeyValidateResult {
-    SuccessBeginValidatePasskey(challenge: string, allowedCredentials: PasskeyCredentialDescriptor[]),
+    SuccessBeginValidatePasskey(optionsJson: string),
     FailedBeginValidatePasskey(error: PasskeyError)
-}
-
-msg PasskeyCredentialDescriptor {
-    id: string;
-    type: string;
 }
 
 
@@ -162,7 +159,9 @@ enum PasskeyError {
     NONE,
     NOT_FOUND,
     LIMIT_REACHED,
-    INVALID_PUBLIC_KEY,
+    INVALID_CREDENTIAL,
+    VERIFICATION_FAILED,
+    CHALLENGE_EXPIRED,
     INTERNAL_ERROR
 }
 
