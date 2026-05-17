@@ -5,7 +5,9 @@ attribute @DoNotRequireSessionContext();
 enum ArgonAuthMode {
     EmailPassword,
     EmailOtp,
-    EmailPasswordOtp
+    EmailPasswordOtp,
+    PasskeyOnly,
+    PasskeyWithOtp
 }
 
 enum OtpMethod {
