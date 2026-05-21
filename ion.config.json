@@ -15,6 +15,15 @@
         },
         "browser": {
             "outputFile": "./../packages/glue/src/argonChat.ts"
+        },
+        "rust": {
+            "features": [
+                "client",
+                "models"
+            ],
+            "outputs": "./../../src/argon-contracts/src/generated",
+            "crateName": "argon-contracts",
+            "rustcorePath": null
         }
     }
 }   
