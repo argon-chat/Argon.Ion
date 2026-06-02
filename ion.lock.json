@@ -1935,7 +1935,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 58,
+      "nextIndex": 59,
       "cases": [
         {
           "index": 0,
@@ -2168,6 +2168,10 @@
         {
           "index": 57,
           "name": "UserProfileUpdated"
+        },
+        {
+          "index": 58,
+          "name": "FeatureFlagActivated"
         }
       ]
     },
