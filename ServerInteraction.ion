@@ -23,7 +23,6 @@ flags ArgonEntitlement: u8 {
     Video   = 1 << 22,
     Stream  = 1 << 23,
 
-    // Permission to draw on another member's shared screen (screencast drawing).
     CanDrawOnStream = 1 << 24,
 
     UseASIO           = 1 << 30,
