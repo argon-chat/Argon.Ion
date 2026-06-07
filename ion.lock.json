@@ -1986,7 +1986,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 59,
+      "nextIndex": 61,
       "cases": [
         {
           "index": 0,
@@ -2223,6 +2223,14 @@
         {
           "index": 58,
           "name": "FeatureFlagActivated"
+        },
+        {
+          "index": 59,
+          "name": "DrawingSessionStarted"
+        },
+        {
+          "index": 60,
+          "name": "DrawingSessionEnded"
         }
       ]
     },

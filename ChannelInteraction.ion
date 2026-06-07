@@ -522,7 +522,10 @@ union ArgonEvent() {
 
     UserProfileUpdated(spaceId: guid, userId: guid, profile: ArgonUserProfile),
 
-    FeatureFlagActivated(userId: guid, flagId: string, isEnabled: bool, variant: string?)
+    FeatureFlagActivated(userId: guid, flagId: string, isEnabled: bool, variant: string?),
+
+    DrawingSessionStarted(spaceId: guid, channelId: guid, sessionId: string, streamerId: guid, allowedDrawers: guid[], defaultTtlMs: i4),
+    DrawingSessionEnded(spaceId: guid, channelId: guid, sessionId: string)
 }
 
 msg ChannelReadState {
