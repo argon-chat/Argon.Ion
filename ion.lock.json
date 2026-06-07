@@ -1273,7 +1273,7 @@
         },
         {
           "index": 1,
-          "name": "streamerId",
+          "name": "ownerId",
           "type": "guid"
         },
         {

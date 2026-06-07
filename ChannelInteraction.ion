@@ -419,7 +419,7 @@ enum StartStreamError: u2 {
 
 msg DrawingSession {
     sessionId: string;
-    streamerId: guid;
+    ownerId: guid;
     allowedDrawers: guid[];
     defaultTtlMs: i4;
 }
@@ -524,7 +524,7 @@ union ArgonEvent() {
 
     FeatureFlagActivated(userId: guid, flagId: string, isEnabled: bool, variant: string?),
 
-    DrawingSessionStarted(spaceId: guid, channelId: guid, sessionId: string, streamerId: guid, allowedDrawers: guid[], defaultTtlMs: i4),
+    DrawingSessionStarted(spaceId: guid, channelId: guid, sessionId: string, ownerId: guid, allowedDrawers: guid[], defaultTtlMs: i4),
     DrawingSessionEnded(spaceId: guid, channelId: guid, sessionId: string)
 }
 
