@@ -1262,6 +1262,32 @@
         }
       ]
     },
+    "DrawingSession": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "sessionId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "streamerId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "allowedDrawers",
+          "type": "Array\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "defaultTtlMs",
+          "type": "i4"
+        }
+      ]
+    },
     "ChannelReadState": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -1648,6 +1674,17 @@
       },
       "baseType": "u2"
     },
+    "DrawingDenyReason": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "FEATURE_DISABLED": "1",
+        "NOT_STREAMING": "2",
+        "NO_PERMISSION": "3",
+        "INTERNAL_ERROR": "4"
+      },
+      "baseType": "u2"
+    },
     "TypingKind": {
       "kind": "Enum",
       "members": {
@@ -1930,6 +1967,20 @@
         {
           "index": 1,
           "name": "FailedStartStream"
+        }
+      ]
+    },
+    "StartDrawingResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "DrawingStarted"
+        },
+        {
+          "index": 1,
+          "name": "DrawingDenied"
         }
       ]
     },
@@ -2542,6 +2593,43 @@
             }
           ],
           "returns": "InterlinkStreamResult",
+          "modifiers": []
+        },
+        "StartDrawingSession": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "StartDrawingResult",
+          "modifiers": []
+        },
+        "StopDrawingSession": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "sessionId",
+              "type": "string"
+            }
+          ],
+          "returns": "bool",
           "modifiers": []
         },
         "KickMemberFromChannel": {
@@ -3865,6 +3953,98 @@
         }
       }
     },
+    "PrivacyRuleView": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "mode",
+          "type": "PrivacyRuleMode"
+        },
+        {
+          "index": 2,
+          "name": "scopeSpaceId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "allow",
+          "type": "Array\u003Cguid\u003E"
+        },
+        {
+          "index": 4,
+          "name": "deny",
+          "type": "Array\u003Cguid\u003E"
+        }
+      ]
+    },
+    "PrivacyRuleMode": {
+      "kind": "Enum",
+      "members": {
+        "EVERYBODY": "0",
+        "CONTACTS": "1",
+        "NOBODY": "2"
+      },
+      "baseType": "u2"
+    },
+    "PrivacyInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetPrivacyRule": {
+          "args": [
+            {
+              "index": 0,
+              "name": "key",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ],
+          "returns": "PrivacyRuleView",
+          "modifiers": []
+        },
+        "SetPrivacyRule": {
+          "args": [
+            {
+              "index": 0,
+              "name": "key",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "mode",
+              "type": "PrivacyRuleMode"
+            },
+            {
+              "index": 2,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "allow",
+              "type": "Array\u003Cguid\u003E"
+            },
+            {
+              "index": 4,
+              "name": "deny",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
     "ReportTarget": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -5062,6 +5242,7 @@
         "Speak": "2097152",
         "Video": "4194304",
         "Stream": "8388608",
+        "CanDrawOnStream": "16777216",
         "UseASIO": "1073741824",
         "AdditionalStreams": "2147483648",
         "DisconnectMember": "1099511627776",
