@@ -163,6 +163,11 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     Interlink(): InterlinkResult;
     InterlinkStream(density: i4): InterlinkStreamResult;
 
+    // Screencast drawing: the streamer opens a drawing session for their active share;
+    // the server computes who may draw (entitlement + privacy) and broadcasts it.
+    StartDrawingSession(): StartDrawingResult;
+    StopDrawingSession(sessionId: string): bool;
+
     KickMemberFromChannel(memberId: guid): bool;
 
 
@@ -410,6 +415,26 @@ enum StartStreamError: u2 {
     NONE,
     BAD_PARAMS,
     INTERNAL_ERROR
+}
+
+msg DrawingSession {
+    sessionId: string;
+    streamerId: guid;
+    allowedDrawers: guid[];
+    defaultTtlMs: i4;
+}
+
+enum DrawingDenyReason: u2 {
+    NONE,
+    FEATURE_DISABLED,
+    NOT_STREAMING,
+    NO_PERMISSION,
+    INTERNAL_ERROR
+}
+
+union StartDrawingResult() {
+    DrawingStarted(session: DrawingSession),
+    DrawingDenied(error: DrawingDenyReason)
 }
 
 enum TypingKind {

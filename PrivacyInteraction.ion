@@ -1,0 +1,20 @@
+enum PrivacyRuleMode: u2 {
+    EVERYBODY,
+    CONTACTS,
+    NOBODY
+}
+
+msg PrivacyRuleView {
+    key: string;
+    mode: PrivacyRuleMode;
+    scopeSpaceId: guid?;
+    allow: guid[];
+    deny: guid[];
+}
+
+// Flexible "about-me" privacy rules (who may do X to/about me). Generic over a string
+// key (e.g. "stream.draw") so future behaviours plug in without a new service.
+service PrivacyInteraction() {
+    GetPrivacyRule(key: string, spaceId: guid?): PrivacyRuleView;
+    SetPrivacyRule(key: string, mode: PrivacyRuleMode, spaceId: guid?, allow: guid[], deny: guid[]): bool;
+}
