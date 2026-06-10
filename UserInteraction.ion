@@ -36,6 +36,9 @@ service UserInteraction() {
     GetNotificationFeed(limit: i4, before: datetime?): SystemNotificationDto[];
     MarkNotificationRead(notificationId: guid);
     MarkAllNotificationsRead(type: string?);
+
+    GetMyLegalState(): LegalState;
+    AcceptLegal(request: AcceptLegalInput): LegalState;
 }
 
 msg TodayStats {
@@ -147,6 +150,18 @@ msg NewUserCredentialsInput {
     birthDate: dateonly;
     argreeOptionalEmails: bool;
     captchaToken: string?;
+    tosVersion: string?;
+    privacyVersion: string?;
+}
+
+msg LegalState {
+    tosVersion: string?;
+    privacyVersion: string?;
+}
+
+msg AcceptLegalInput {
+    tosVersion: string;
+    privacyVersion: string;
 }
 
 union AuthorizeResult {

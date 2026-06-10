@@ -6361,7 +6361,7 @@
     },
     "NewUserCredentialsInput": {
       "kind": "Msg",
-      "nextIndex": 8,
+      "nextIndex": 10,
       "fields": [
         {
           "index": 0,
@@ -6402,6 +6402,48 @@
           "index": 7,
           "name": "captchaToken",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 8,
+          "name": "tosVersion",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "privacyVersion",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "LegalState": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "tosVersion",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "privacyVersion",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "AcceptLegalInput": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "tosVersion",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "privacyVersion",
+          "type": "string"
         }
       ]
     },
@@ -6787,6 +6829,22 @@
             }
           ],
           "returns": "void",
+          "modifiers": []
+        },
+        "GetMyLegalState": {
+          "args": [],
+          "returns": "LegalState",
+          "modifiers": []
+        },
+        "AcceptLegal": {
+          "args": [
+            {
+              "index": 0,
+              "name": "request",
+              "type": "AcceptLegalInput"
+            }
+          ],
+          "returns": "LegalState",
           "modifiers": []
         }
       }
