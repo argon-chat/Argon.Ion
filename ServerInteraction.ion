@@ -48,7 +48,13 @@ service ServerInteraction(spaceId: guid)
     GetMember(userId: guid): RealtimeServerMember;
 
     GetInviteCodes(): InviteCodeEntity[];
-    CreateInviteCode(): InviteCode;
+    CreateInviteCode(expireMinutes: i4, maxUses: i4): InviteCode;
+    RevokeInviteCode(code: InviteCode);
+
+    UpdateSpaceInfo(name: string, description: string);
+    SetBoostStripHidden(hidden: bool);
+    GetSpaceStats(): SpaceStats;
+    GetInviteDomain(): string;
 
     PrefetchUser(userId: guid): ArgonUser;
     PrefetchProfile(userId: guid): ArgonUserProfile;
@@ -64,6 +70,9 @@ service ServerInteraction(spaceId: guid)
     BeginUploadSpaceAvatar(): UploadFileResult;
     CompleteUploadSpaceAvatar(blobId: guid);
 
+    BeginUploadInviteImage(): UploadFileResult;
+    CompleteUploadInviteImage(blobId: guid);
+
     GetChannelGroups(): ChannelGroup[];
 }
 
@@ -75,6 +84,10 @@ msg ArgonSpaceBase {
     topBannerFileId: string?;
     boostCount: i4;
     boostLevel: i4;
+    isVerified: bool;
+    isOfficial: bool;
+    hideBoostStrip: bool;
+    inviteImageFileId: string?;
 }
 
 msg ArgonSpace {
@@ -86,6 +99,10 @@ msg ArgonSpace {
     channels: ArgonChannel[];
     members: SpaceMember[];
     archetypes: Archetype[];
+    isVerified: bool;
+    isOfficial: bool;
+    hideBoostStrip: bool;
+    inviteImageFileId: string?;
 }
 
 msg ArchetypeGroup {
@@ -120,10 +137,21 @@ msg InviteCodeEntity {
     issuerId: guid;
     expireTime: datetime;
     used: u8;
+    maxUses: i4;
+    createdAt: datetime;
 }
 
 msg InviteCode {
     inviteCode: string;
+}
+
+msg SpaceStats {
+    memberCount: i4;
+    onlineCount: i4;
+    channelCount: i4;
+    boostCount: i4;
+    boostLevel: i4;
+    createdAt: datetime;
 }
 
 msg ArgonUser {

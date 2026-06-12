@@ -4893,7 +4893,7 @@
     },
     "ArgonSpaceBase": {
       "kind": "Msg",
-      "nextIndex": 7,
+      "nextIndex": 11,
       "fields": [
         {
           "index": 0,
@@ -4929,12 +4929,32 @@
           "index": 6,
           "name": "boostLevel",
           "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 8,
+          "name": "isOfficial",
+          "type": "bool"
+        },
+        {
+          "index": 9,
+          "name": "hideBoostStrip",
+          "type": "bool"
+        },
+        {
+          "index": 10,
+          "name": "inviteImageFileId",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
     "ArgonSpace": {
       "kind": "Msg",
-      "nextIndex": 8,
+      "nextIndex": 12,
       "fields": [
         {
           "index": 0,
@@ -4975,6 +4995,26 @@
           "index": 7,
           "name": "archetypes",
           "type": "Array\u003CArchetype\u003E"
+        },
+        {
+          "index": 8,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 9,
+          "name": "isOfficial",
+          "type": "bool"
+        },
+        {
+          "index": 10,
+          "name": "hideBoostStrip",
+          "type": "bool"
+        },
+        {
+          "index": 11,
+          "name": "inviteImageFileId",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -5069,7 +5109,7 @@
     },
     "InviteCodeEntity": {
       "kind": "Msg",
-      "nextIndex": 5,
+      "nextIndex": 7,
       "fields": [
         {
           "index": 0,
@@ -5095,6 +5135,16 @@
           "index": 4,
           "name": "used",
           "type": "u8"
+        },
+        {
+          "index": 5,
+          "name": "maxUses",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "createdAt",
+          "type": "datetime"
         }
       ]
     },
@@ -5106,6 +5156,42 @@
           "index": 0,
           "name": "inviteCode",
           "type": "string"
+        }
+      ]
+    },
+    "SpaceStats": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "memberCount",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "onlineCount",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "channelCount",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "boostCount",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "boostLevel",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "createdAt",
+          "type": "datetime"
         }
       ]
     },
@@ -5327,9 +5413,94 @@
               "index": 0,
               "name": "spaceId",
               "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "expireMinutes",
+              "type": "i4"
+            },
+            {
+              "index": 2,
+              "name": "maxUses",
+              "type": "i4"
             }
           ],
           "returns": "InviteCode",
+          "modifiers": []
+        },
+        "RevokeInviteCode": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "code",
+              "type": "InviteCode"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UpdateSpaceInfo": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "description",
+              "type": "string"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "SetBoostStripHidden": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "hidden",
+              "type": "bool"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetSpaceStats": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "SpaceStats",
+          "modifiers": []
+        },
+        "GetInviteDomain": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "string",
           "modifiers": []
         },
         "PrefetchUser": {
@@ -5436,6 +5607,33 @@
           "modifiers": []
         },
         "CompleteUploadSpaceAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "BeginUploadInviteImage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadInviteImage": {
           "args": [
             {
               "index": 0,
@@ -6482,7 +6680,8 @@
         "NONE": "0",
         "NOT_FOUND": "1",
         "EXPIRED": "2",
-        "YOU_ARE_BANNED": "3"
+        "YOU_ARE_BANNED": "3",
+        "LIMIT_REACHED": "4"
       },
       "baseType": "u4"
     },

@@ -184,7 +184,8 @@ enum AcceptInviteError
     NONE,
     NOT_FOUND,
     EXPIRED,
-    YOU_ARE_BANNED
+    YOU_ARE_BANNED,
+    LIMIT_REACHED
 }
 
 
