@@ -47,14 +47,13 @@ service ServerInteraction(spaceId: guid)
     GetMembers(): RealtimeServerMember[];
     GetMember(userId: guid): RealtimeServerMember;
 
-    GetInviteCodes(): InviteCodeEntity[];
+    GetInviteCodes(): ServerInvites;
     CreateInviteCode(expireMinutes: i4, maxUses: i4): InviteCode;
     RevokeInviteCode(code: InviteCode);
 
     UpdateSpaceInfo(name: string, description: string);
     SetBoostStripHidden(hidden: bool);
     GetSpaceStats(): SpaceStats;
-    GetInviteDomain(): string;
 
     PrefetchUser(userId: guid): ArgonUser;
     PrefetchProfile(userId: guid): ArgonUserProfile;
@@ -139,6 +138,11 @@ msg InviteCodeEntity {
     used: u8;
     maxUses: i4;
     createdAt: datetime;
+}
+
+msg ServerInvites {
+    domain: string;
+    invites: InviteCodeEntity[];
 }
 
 msg InviteCode {

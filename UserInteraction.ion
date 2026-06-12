@@ -8,6 +8,7 @@ service UserInteraction() {
     UpdateMe(request: UserEditInput): UpdateMeResult;
 
     JoinToSpace(inviteCode: InviteCode): JoinToSpaceResult;
+    PreviewInvite(inviteCode: InviteCode): PreviewInviteResult;
 
     BroadcastPresence(presence: UserActivityPresence);
 
@@ -177,6 +178,24 @@ union RegistrationResult {
 union JoinToSpaceResult {
     SuccessJoin(space: ArgonSpace),
     FailedJoin(error: AcceptInviteError)
+}
+
+union PreviewInviteResult {
+    SuccessPreview(preview: InvitePreview),
+    FailedPreview(error: AcceptInviteError)
+}
+
+msg InvitePreview {
+    spaceId: guid;
+    name: string;
+    description: string;
+    avatarFileId: string?;
+    topBannerFileId: string?;
+    inviteImageFileId: string?;
+    isVerified: bool;
+    isOfficial: bool;
+    memberCount: i4;
+    onlineCount: i4;
 }
 
 enum AcceptInviteError

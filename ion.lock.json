@@ -5148,6 +5148,22 @@
         }
       ]
     },
+    "ServerInvites": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "domain",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "invites",
+          "type": "Array\u003CInviteCodeEntity\u003E"
+        }
+      ]
+    },
     "InviteCode": {
       "kind": "Msg",
       "nextIndex": 1,
@@ -5404,7 +5420,7 @@
               "type": "guid"
             }
           ],
-          "returns": "Array\u003CInviteCodeEntity\u003E",
+          "returns": "ServerInvites",
           "modifiers": []
         },
         "CreateInviteCode": {
@@ -5490,17 +5506,6 @@
             }
           ],
           "returns": "SpaceStats",
-          "modifiers": []
-        },
-        "GetInviteDomain": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            }
-          ],
-          "returns": "string",
           "modifiers": []
         },
         "PrefetchUser": {
@@ -6645,6 +6650,62 @@
         }
       ]
     },
+    "InvitePreview": {
+      "kind": "Msg",
+      "nextIndex": 10,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "topBannerFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "inviteImageFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "isVerified",
+          "type": "bool"
+        },
+        {
+          "index": 7,
+          "name": "isOfficial",
+          "type": "bool"
+        },
+        {
+          "index": 8,
+          "name": "memberCount",
+          "type": "i4"
+        },
+        {
+          "index": 9,
+          "name": "onlineCount",
+          "type": "i4"
+        }
+      ]
+    },
     "UploadFileError": {
       "kind": "Enum",
       "members": {
@@ -6826,6 +6887,20 @@
         }
       ]
     },
+    "PreviewInviteResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPreview"
+        },
+        {
+          "index": 1,
+          "name": "FailedPreview"
+        }
+      ]
+    },
     "UserInteraction": {
       "kind": "Service",
       "methods": {
@@ -6870,6 +6945,17 @@
             }
           ],
           "returns": "JoinToSpaceResult",
+          "modifiers": []
+        },
+        "PreviewInvite": {
+          "args": [
+            {
+              "index": 0,
+              "name": "inviteCode",
+              "type": "InviteCode"
+            }
+          ],
+          "returns": "PreviewInviteResult",
           "modifiers": []
         },
         "BroadcastPresence": {
