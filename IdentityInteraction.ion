@@ -18,6 +18,66 @@ service IdentityInteraction() {
     @AllowAnonymous()
     @DoNotRequireSessionContext()
     GetMyAuthorization(token: string, refreshToken: string?): MyAuthStatus;
+
+    @AllowAnonymous()
+    CreateLoginRequest(): CreateLoginRequestResult;
+    @AllowAnonymous()
+    PollLoginRequest(token: string): LoginPollResult;
+
+    PreviewLoginRequest(token: string): LoginRequestPreviewResult;
+    ApproveLoginRequest(token: string): ApproveLoginRequestResult;
+    RejectLoginRequest(token: string): RejectLoginRequestResult;
+}
+
+union CreateLoginRequestResult {
+    SuccessCreateLoginRequest(ticket: LoginRequestTicket),
+    FailedCreateLoginRequest(error: LoginRequestError)
+}
+
+msg LoginRequestTicket {
+    token: string;
+    expiresAt: datetime;
+}
+
+union LoginPollResult {
+    PendingLoginRequest(expiresAt: datetime),
+    ApprovedLoginRequest(token: string, refreshToken: string?),
+    RejectedLoginRequest(),
+    FailedLoginPoll(error: LoginRequestError)
+}
+
+union LoginRequestPreviewResult {
+    SuccessLoginRequestPreview(preview: LoginRequestPreview),
+    FailedLoginRequestPreview(error: LoginRequestError)
+}
+
+msg LoginRequestPreview {
+    clientName: string;
+    hostName: string?;
+    ip: string;
+    region: string;
+    createdAt: datetime;
+    expiresAt: datetime;
+}
+
+union ApproveLoginRequestResult {
+    SuccessApproveLoginRequest(),
+    FailedApproveLoginRequest(error: LoginRequestError)
+}
+
+union RejectLoginRequestResult {
+    SuccessRejectLoginRequest(),
+    FailedRejectLoginRequest(error: LoginRequestError)
+}
+
+enum LoginRequestError {
+    NONE,
+    NOT_FOUND,
+    EXPIRED,
+    ALREADY_USED,
+    DEVICE_MISMATCH,
+    RATE_LIMITED,
+    INTERNAL_ERROR
 }
 
 union MyAuthStatus {

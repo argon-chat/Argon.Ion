@@ -28,6 +28,31 @@ service SecurityInteraction() {
 
     BeginValidatePasskey(): BeginPasskeyValidateResult;
     CompleteValidatePasskey(authenticationResponse: string): CompletePasskeyResult;
+
+
+    GetSessions(): SessionInfo[];
+    RevokeSession(sessionId: guid): RevokeSessionResult;
+    RevokeAllSessions(): RevokeSessionResult;
+}
+
+msg SessionInfo {
+    sessionId: guid;
+    clientName: string;
+    region: string;
+    lastSeenAt: datetime;
+    isCurrent: bool;
+}
+
+union RevokeSessionResult {
+    SuccessRevokeSession(),
+    FailedRevokeSession(error: SessionError)
+}
+
+enum SessionError {
+    NONE,
+    NOT_FOUND,
+    CANNOT_REVOKE_CURRENT,
+    INTERNAL_ERROR
 }
 
 msg SecurityDetails {
