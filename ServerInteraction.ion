@@ -1,5 +1,9 @@
 #feature "orleans"
 
+// ManageMessages: moderating other people's messages — taking them down, and being exempt from slow
+// mode. It sits above ManageServer rather than in the 1 << 4x moderation block because that block is
+// full, and renumbering a flag that is already persisted on archetype rows would silently re-grant
+// every existing role something it never had.
 flags ArgonEntitlement: u8 {
     None = 0,
 
@@ -39,7 +43,8 @@ flags ArgonEntitlement: u8 {
     ManageBots      = 1 << 52,
     ManageEvents    = 1 << 53,
     ManageBehaviour = 1 << 54,
-    ManageServer    = 1 << 55
+    ManageServer    = 1 << 55,
+    ManageMessages  = 1 << 56
 }
 
 service ServerInteraction(spaceId: guid)
@@ -181,6 +186,12 @@ msg ArgonUserProfile {
     nickEffectId: i4?;
     primaryColor: i4?;
     accentColor: i4?;
+    // "In Argon since <date>" on the profile card. Lives here rather than on ArgonUser because
+    // ArgonUser rides along with every member list and every UserUpdated broadcast, while this is
+    // read once when a card opens — next to friendAt, which is the other half of that same line.
+    // Nullable only for the wire: a client built against the previous schema fails to decode the
+    // whole profile if a newly added field is required, and every user does have a registration date.
+    registeredAt: datetime?;
 }
 
 flags UserFlag : i4

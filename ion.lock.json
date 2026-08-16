@@ -752,7 +752,7 @@
     },
     "ArgonChannel": {
       "kind": "Msg",
-      "nextIndex": 8,
+      "nextIndex": 9,
       "fields": [
         {
           "index": 0,
@@ -793,6 +793,11 @@
           "index": 7,
           "name": "lastMessageId",
           "type": "i8"
+        },
+        {
+          "index": 8,
+          "name": "slowModeSeconds",
+          "type": "Maybe\u003Ci4\u003E"
         }
       ]
     },
@@ -1561,6 +1566,40 @@
       },
       "baseType": "u2"
     },
+    "UpdateChannelError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "NAME_EMPTY": "3",
+        "NAME_TOO_LONG": "4",
+        "DESCRIPTION_TOO_LONG": "5",
+        "SLOW_MODE_NOT_ALLOWED": "6",
+        "NOT_A_TEXT_CHANNEL": "7"
+      },
+      "baseType": "u2"
+    },
+    "VoiceInviteError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "CHANNEL_IS_NOT_VOICE": "2",
+        "INSUFFICIENT_PERMISSIONS": "3",
+        "INTERNAL_ERROR": "4"
+      },
+      "baseType": "u2"
+    },
+    "DeleteMessageError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2"
+      },
+      "baseType": "u2"
+    },
     "ControlType": {
       "kind": "Enum",
       "members": {
@@ -1858,6 +1897,48 @@
         }
       ]
     },
+    "UpdateChannelResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUpdateChannel"
+        },
+        {
+          "index": 1,
+          "name": "FailedUpdateChannel"
+        }
+      ]
+    },
+    "CreateVoiceInviteResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateVoiceInvite"
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateVoiceInvite"
+        }
+      ]
+    },
+    "DeleteMessageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDeleteMessage"
+        },
+        {
+          "index": 1,
+          "name": "FailedDeleteMessage"
+        }
+      ]
+    },
     "InvokeSlashCommandResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -1986,7 +2067,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 61,
+      "nextIndex": 62,
       "cases": [
         {
           "index": 0,
@@ -2231,6 +2312,10 @@
         {
           "index": 60,
           "name": "DrawingSessionEnded"
+        },
+        {
+          "index": 61,
+          "name": "MessageDeleted"
         }
       ]
     },
@@ -2452,6 +2537,63 @@
           "returns": "void",
           "modifiers": []
         },
+        "UpdateChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "name",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 3,
+              "name": "description",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 4,
+              "name": "slowModeSeconds",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ],
+          "returns": "UpdateChannelResult",
+          "modifiers": []
+        },
+        "CreateVoiceInviteCode": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "expireMinutes",
+              "type": "i4"
+            },
+            {
+              "index": 3,
+              "name": "maxUses",
+              "type": "i4"
+            }
+          ],
+          "returns": "CreateVoiceInviteResult",
+          "modifiers": []
+        },
         "QueryMessages": {
           "args": [
             {
@@ -2548,6 +2690,27 @@
             }
           ],
           "returns": "SendMessageReadback",
+          "modifiers": []
+        },
+        "DeleteMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "DeleteMessageResult",
           "modifiers": []
         },
         "DisconnectFromVoiceChannel": {
@@ -5512,7 +5675,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 14,
+      "nextIndex": 15,
       "fields": [
         {
           "index": 0,
@@ -5583,6 +5746,11 @@
           "index": 13,
           "name": "accentColor",
           "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 14,
+          "name": "registeredAt",
+          "type": "Maybe\u003Cdatetime\u003E"
         }
       ]
     },
@@ -5633,7 +5801,8 @@
         "ManageBots": "4503599627370496",
         "ManageEvents": "9007199254740992",
         "ManageBehaviour": "18014398509481984",
-        "ManageServer": "36028797018963968"
+        "ManageServer": "36028797018963968",
+        "ManageMessages": "72057594037927936"
       },
       "baseType": "u8"
     },
@@ -6656,7 +6825,7 @@
     },
     "UserEditInput": {
       "kind": "Msg",
-      "nextIndex": 10,
+      "nextIndex": 11,
       "fields": [
         {
           "index": 0,
@@ -6707,6 +6876,11 @@
           "index": 9,
           "name": "accentColor",
           "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 10,
+          "name": "bio",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -6920,7 +7094,7 @@
     },
     "InvitePreview": {
       "kind": "Msg",
-      "nextIndex": 10,
+      "nextIndex": 12,
       "fields": [
         {
           "index": 0,
@@ -6971,6 +7145,16 @@
           "index": 9,
           "name": "onlineCount",
           "type": "i4"
+        },
+        {
+          "index": 10,
+          "name": "voiceChannelId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 11,
+          "name": "voiceChannelName",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -6999,7 +7183,8 @@
         "PREMIUM_REQUIRED": "2",
         "INVALID_PRESET_ID": "3",
         "DISPLAY_NAME_TOO_LONG": "4",
-        "DISPLAY_NAME_EMPTY": "5"
+        "DISPLAY_NAME_EMPTY": "5",
+        "BIO_TOO_LONG": "6"
       },
       "baseType": "u4"
     },

@@ -93,6 +93,9 @@ msg UserEditInput {
     customStatusIconId: string?;
     primaryColor: i4?;
     accentColor: i4?;
+    // Unlike customStatus this is not a premium field — it is the plain "about me" that
+    // ArgonUserProfile.bio has always been readable from. Empty string clears it.
+    bio: string?;
 }
 
 union UpdateMeResult {
@@ -106,7 +109,8 @@ enum UpdateMeError {
     PREMIUM_REQUIRED,
     INVALID_PRESET_ID,
     DISPLAY_NAME_TOO_LONG,
-    DISPLAY_NAME_EMPTY
+    DISPLAY_NAME_EMPTY,
+    BIO_TOO_LONG
 }
 
 msg FeatureFlag {
@@ -196,6 +200,11 @@ msg InvitePreview {
     isOfficial: bool;
     memberCount: i4;
     onlineCount: i4;
+    // Set only for links made by CreateVoiceInviteCode. The preview sheet needs the room's name to
+    // say "join <room>", and the client needs its id to Interlink right after JoinToSpace — without
+    // them a voice link degrades into a plain space invite that drops the guest nowhere in particular.
+    voiceChannelId: guid?;
+    voiceChannelName: string?;
 }
 
 enum AcceptInviteError

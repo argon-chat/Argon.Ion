@@ -40,6 +40,10 @@ msg ArgonChannel {
     groupId: guid?;
     fractionalIndex: string?;
     lastMessageId: i8;
+    // Cooldown between two messages from the same author, in seconds. Null on voice channels and on
+    // text channels that never had it set; 0 is never stored — "off" is null, so the client does not
+    // have to distinguish "unset" from "explicitly disabled" when it renders the picker.
+    slowModeSeconds: i4?;
 }
 
 flags ChannelMemberState
@@ -153,10 +157,23 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     GetChannels(): RealtimeChannel[];
     UpdateChannelGroup(groupId: guid, name: string?, description: string?);
 
-    
+    // Name, topic and slow mode share one settings sheet in the client, so they share one call —
+    // a method per field would cost a round-trip per toggle. Null means "leave as is", matching
+    // UpdateChannelGroup; slowModeSeconds: 0 is the one value that clears rather than skips.
+    UpdateChannel(name: string?, description: string?, slowModeSeconds: i4?): UpdateChannelResult;
+
+    // A voice-room link ("argon.gl/v/<code>"): the same invite code space as CreateInviteCode, but
+    // remembering which room it points at. One link has to work both for someone who is not a member
+    // yet and for a member who is simply in the wrong room, which a directed call cannot express.
+    CreateVoiceInviteCode(expireMinutes: i4, maxUses: i4): CreateVoiceInviteResult;
+
+
     QueryMessages(from: i8?, limit: i4): ArgonMessage[];
     SendMessage(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
     SendMessageWithReadback(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): SendMessageReadback;
+
+    // Authors may always retract their own message; taking down somebody else's needs ManageMessages.
+    DeleteMessage(messageId: i8): DeleteMessageResult;
 
     DisconnectFromVoiceChannel();
 
@@ -199,6 +216,51 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 msg MessageReactionsEntry {
     messageId: i8;
     reactions: ReactionInfo[];
+}
+
+union UpdateChannelResult() {
+    SuccessUpdateChannel(channel: ArgonChannel),
+    FailedUpdateChannel(error: UpdateChannelError)
+}
+
+// SLOW_MODE_NOT_ALLOWED: slow mode is a picker, not a free-form number — only 0 (off), 5, 15, 30, 60
+// and 300 seconds exist in the design, and the server refuses the rest so that two clients can never
+// disagree about which cooldowns are representable.
+// NOT_A_TEXT_CHANNEL: cooldowns only mean something where messages are sent.
+enum UpdateChannelError: u2 {
+    NONE,
+    CHANNEL_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    NAME_EMPTY,
+    NAME_TOO_LONG,
+    DESCRIPTION_TOO_LONG,
+    SLOW_MODE_NOT_ALLOWED,
+    NOT_A_TEXT_CHANNEL
+}
+
+union CreateVoiceInviteResult() {
+    SuccessCreateVoiceInvite(code: InviteCode, url: string),
+    FailedCreateVoiceInvite(error: VoiceInviteError)
+}
+
+// INSUFFICIENT_PERMISSIONS: you cannot hand out a key to a room you cannot walk into yourself.
+enum VoiceInviteError: u2 {
+    NONE,
+    CHANNEL_NOT_FOUND,
+    CHANNEL_IS_NOT_VOICE,
+    INSUFFICIENT_PERMISSIONS,
+    INTERNAL_ERROR
+}
+
+union DeleteMessageResult() {
+    SuccessDeleteMessage(),
+    FailedDeleteMessage(error: DeleteMessageError)
+}
+
+enum DeleteMessageError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS
 }
 
 msg SlashCommandOption {
@@ -525,7 +587,13 @@ union ArgonEvent() {
     FeatureFlagActivated(userId: guid, flagId: string, isEnabled: bool, variant: string?),
 
     DrawingSessionStarted(spaceId: guid, channelId: guid, sessionId: string, ownerId: guid, allowedDrawers: guid[], defaultTtlMs: i4),
-    DrawingSessionEnded(spaceId: guid, channelId: guid, sessionId: string)
+    DrawingSessionEnded(spaceId: guid, channelId: guid, sessionId: string),
+
+    // Appended, never inserted: a union case carries its position as its wire tag, so slotting this
+    // next to MessageEdited where it belongs by topic would renumber every case after it.
+    // byUserId lets a client tell "I deleted this" from "a moderator deleted this" without a second
+    // lookup — the two render differently.
+    MessageDeleted(spaceId: guid, channelId: guid, messageId: i8, byUserId: guid)
 }
 
 msg ChannelReadState {
