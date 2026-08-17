@@ -21,14 +21,6 @@ msg CreateChannelRequest {
 msg RealtimeChannel {
     channel: ArgonChannel;
     users: RealtimeChannelUser[];
-    meetInfo: LinkedMeetingInfo?;
-}
-
-msg LinkedMeetingInfo {
-    meetingId: guid;
-    meetingUrl: string;
-    meetingCode: string;
-    startDate: datetime;
 }
 
 msg ArgonChannel {
@@ -190,10 +182,6 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     BeginRecord(): bool;
     StopRecord(): bool;
-
-
-    CreateLinkedMeeting(): LinkedMeetingInfo;
-    EndLinkedMeeting(): void;
 
 
     BeginUploadAttachment(): UploadFileResult;
@@ -567,8 +555,6 @@ union ArgonEvent() {
 
     SpaceDetailsUpdated(spaceId: guid, details: ArgonSpaceBase),
 
-    MeetingCreatedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo),
-    MeetingDeletedFor(spaceId: guid, channelId: guid, meetInfo: LinkedMeetingInfo),
     LeavedFromServerUser(spaceId: guid, userId: guid),
 
     InteractionAcked(interactionId: guid),
