@@ -22,6 +22,13 @@ service SecurityInteraction() {
     SetAutoDeletePeriod(months: i4?): SetAutoDeleteResult;
     GetAutoDeletePeriod(): AutoDeletePeriod;
 
+    // Building the archive takes minutes and outlives the request, so this is a job rather than a
+    // download: ask once, poll the status, and follow downloadUrl when it turns up. Rate limited to
+    // one export per 30 days server-side — RATE_LIMITED is a normal answer, not a fault.
+    RequestDataExport(): RequestDataExportResult;
+    GetDataExportStatus(): DataExportStatus;
+    CancelDataExport();
+
 
     GetSecurityDetails(): SecurityDetails;
 
@@ -205,4 +212,36 @@ enum AutoDeleteError {
     PREMIUM_REQUIRED,
     INVALID_PERIOD,
     INTERNAL_ERROR
+}
+
+enum DataExportStatusKind: u2 {
+    IDLE,
+    QUEUED,
+    COLLECTING,
+    ASSEMBLING,
+    COMPLETED,
+    EXPIRED,
+    FAILED
+}
+
+enum DataExportError: u2 {
+    NONE,
+    ALREADY_IN_PROGRESS,
+    RATE_LIMITED,
+    NOT_CONFIGURED
+}
+
+msg DataExportStatus {
+    status: DataExportStatusKind;
+    exportId: guid?;
+    startedAt: datetime?;
+    completedAt: datetime?;
+    downloadUrl: string?;
+    itemsProcessed: i4;
+    totalItemsEstimate: i4;
+}
+
+union RequestDataExportResult {
+    SuccessRequestDataExport(exportId: guid),
+    FailedRequestDataExport(error: DataExportError)
 }

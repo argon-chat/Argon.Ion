@@ -45,7 +45,7 @@
     },
     "Archetype": {
       "kind": "Msg",
-      "nextIndex": 12,
+      "nextIndex": 13,
       "fields": [
         {
           "index": 0,
@@ -106,6 +106,53 @@
           "index": 11,
           "name": "entitlement",
           "type": "ArgonEntitlement"
+        },
+        {
+          "index": 12,
+          "name": "order",
+          "type": "Maybe\u003Ci4\u003E"
+        }
+      ]
+    },
+    "ArchetypeError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "NO_PERMISSION": "2",
+        "IS_DEFAULT": "3",
+        "IS_LOCKED": "4",
+        "IN_USE": "5",
+        "INCOMPLETE_ORDER": "6",
+        "INTERNAL_ERROR": "7"
+      },
+      "baseType": "u2"
+    },
+    "DeleteArchetypeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDeleteArchetype"
+        },
+        {
+          "index": 1,
+          "name": "FailedDeleteArchetype"
+        }
+      ]
+    },
+    "ReorderArchetypesResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessReorderArchetypes"
+        },
+        {
+          "index": 1,
+          "name": "FailedReorderArchetypes"
         }
       ]
     },
@@ -258,6 +305,38 @@
             }
           ],
           "returns": "bool",
+          "modifiers": []
+        },
+        "DeleteArchetype": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "archetypeId",
+              "type": "guid"
+            }
+          ],
+          "returns": "DeleteArchetypeResult",
+          "modifiers": []
+        },
+        "ReorderArchetypes": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "ReorderArchetypesResult",
           "modifiers": []
         }
       }
@@ -2067,7 +2146,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 62,
+      "nextIndex": 66,
       "cases": [
         {
           "index": 0,
@@ -2316,6 +2395,22 @@
         {
           "index": 61,
           "name": "MessageDeleted"
+        },
+        {
+          "index": 62,
+          "name": "ArchetypeRemoved"
+        },
+        {
+          "index": 63,
+          "name": "ArchetypesReordered"
+        },
+        {
+          "index": 64,
+          "name": "SpaceDeletionScheduled"
+        },
+        {
+          "index": 65,
+          "name": "SpaceDeletionCancelled"
         }
       ]
     },
@@ -4817,6 +4912,47 @@
         }
       ]
     },
+    "DataExportStatus": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "status",
+          "type": "DataExportStatusKind"
+        },
+        {
+          "index": 1,
+          "name": "exportId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "startedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 3,
+          "name": "completedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 4,
+          "name": "downloadUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "itemsProcessed",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "totalItemsEstimate",
+          "type": "i4"
+        }
+      ]
+    },
     "SessionError": {
       "kind": "Enum",
       "members": {
@@ -4902,6 +5038,29 @@
         "INTERNAL_ERROR": "3"
       },
       "baseType": "u4"
+    },
+    "DataExportStatusKind": {
+      "kind": "Enum",
+      "members": {
+        "IDLE": "0",
+        "QUEUED": "1",
+        "COLLECTING": "2",
+        "ASSEMBLING": "3",
+        "COMPLETED": "4",
+        "EXPIRED": "5",
+        "FAILED": "6"
+      },
+      "baseType": "u2"
+    },
+    "DataExportError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "ALREADY_IN_PROGRESS": "1",
+        "RATE_LIMITED": "2",
+        "NOT_CONFIGURED": "3"
+      },
+      "baseType": "u2"
     },
     "RevokeSessionResult": {
       "kind": "Union",
@@ -5113,6 +5272,20 @@
         }
       ]
     },
+    "RequestDataExportResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRequestDataExport"
+        },
+        {
+          "index": 1,
+          "name": "FailedRequestDataExport"
+        }
+      ]
+    },
     "SecurityInteraction": {
       "kind": "Service",
       "methods": {
@@ -5278,6 +5451,21 @@
           "returns": "AutoDeletePeriod",
           "modifiers": []
         },
+        "RequestDataExport": {
+          "args": [],
+          "returns": "RequestDataExportResult",
+          "modifiers": []
+        },
+        "GetDataExportStatus": {
+          "args": [],
+          "returns": "DataExportStatus",
+          "modifiers": []
+        },
+        "CancelDataExport": {
+          "args": [],
+          "returns": "void",
+          "modifiers": []
+        },
         "GetSecurityDetails": {
           "args": [],
           "returns": "SecurityDetails",
@@ -5321,6 +5509,32 @@
           "modifiers": []
         }
       }
+    },
+    "SpaceDeletionState": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "status",
+          "type": "SpaceDeletionStatus"
+        },
+        {
+          "index": 1,
+          "name": "scheduledAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 2,
+          "name": "executionAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 3,
+          "name": "isCommunity",
+          "type": "bool"
+        }
+      ]
     },
     "ArgonSpaceBase": {
       "kind": "Msg",
@@ -5754,6 +5968,27 @@
         }
       ]
     },
+    "SpaceDeletionStatus": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "SCHEDULED": "1",
+        "EXECUTING": "2"
+      },
+      "baseType": "u2"
+    },
+    "SpaceDeletionError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_OWNER": "1",
+        "ALREADY_SCHEDULED": "2",
+        "NOT_SCHEDULED": "3",
+        "ALREADY_EXECUTING": "4",
+        "INTERNAL_ERROR": "5"
+      },
+      "baseType": "u2"
+    },
     "UserStatus": {
       "kind": "Enum",
       "members": {
@@ -5818,6 +6053,34 @@
         "DELETED": "32"
       },
       "baseType": "i4"
+    },
+    "RequestDeleteSpaceResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRequestDeleteSpace"
+        },
+        {
+          "index": 1,
+          "name": "FailedRequestDeleteSpace"
+        }
+      ]
+    },
+    "CancelDeleteSpaceResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCancelDeleteSpace"
+        },
+        {
+          "index": 1,
+          "name": "FailedCancelDeleteSpace"
+        }
+      ]
     },
     "ServerInteraction": {
       "kind": "Service",
@@ -6100,6 +6363,39 @@
             }
           ],
           "returns": "Array\u003CChannelGroup\u003E",
+          "modifiers": []
+        },
+        "RequestDeleteSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "RequestDeleteSpaceResult",
+          "modifiers": []
+        },
+        "CancelDeleteSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "CancelDeleteSpaceResult",
+          "modifiers": []
+        },
+        "GetSpaceDeletionState": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "SpaceDeletionState",
           "modifiers": []
         }
       }
@@ -7256,6 +7552,15 @@
       },
       "baseType": "u4"
     },
+    "LookupError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "NO_ANCHOR": "2"
+      },
+      "baseType": "u2"
+    },
     "UploadFileResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -7354,6 +7659,34 @@
         }
       ]
     },
+    "LookupUserResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessLookupUser"
+        },
+        {
+          "index": 1,
+          "name": "FailedLookupUser"
+        }
+      ]
+    },
+    "LookupProfileResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessLookupProfile"
+        },
+        {
+          "index": 1,
+          "name": "FailedLookupProfile"
+        }
+      ]
+    },
     "UserInteraction": {
       "kind": "Service",
       "methods": {
@@ -7435,6 +7768,28 @@
         "GetMyProfile": {
           "args": [],
           "returns": "ArgonUserProfile",
+          "modifiers": []
+        },
+        "LookupUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LookupUserResult",
+          "modifiers": []
+        },
+        "LookupProfile": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LookupProfileResult",
           "modifiers": []
         },
         "BeginUploadAvatar": {

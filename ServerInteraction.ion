@@ -78,6 +78,49 @@ service ServerInteraction(spaceId: guid)
     CompleteUploadInviteImage(blobId: guid);
 
     GetChannelGroups(): ChannelGroup[];
+
+    // Deleting a space is scheduled, never immediate, and the wait is the point: a space is other
+    // people's history too, so everyone in it gets notice and the owner gets time to change their
+    // mind. RequestDeleteSpace answers with the moment it will happen; CancelDeleteSpace calls it
+    // off any time before then.
+    //
+    // A community waits longer than a private space — see SpaceDeletionState.executionAt, which the
+    // header reads to show the countdown to every member rather than only to the owner.
+    RequestDeleteSpace(): RequestDeleteSpaceResult;
+    CancelDeleteSpace(): CancelDeleteSpaceResult;
+    GetSpaceDeletionState(): SpaceDeletionState;
+}
+
+enum SpaceDeletionStatus: u2 {
+    NONE,
+    SCHEDULED,
+    EXECUTING
+}
+
+enum SpaceDeletionError: u2 {
+    NONE,
+    NOT_OWNER,
+    ALREADY_SCHEDULED,
+    NOT_SCHEDULED,
+    ALREADY_EXECUTING,
+    INTERNAL_ERROR
+}
+
+msg SpaceDeletionState {
+    status: SpaceDeletionStatus;
+    scheduledAt: datetime?;
+    executionAt: datetime?;
+    isCommunity: bool;
+}
+
+union RequestDeleteSpaceResult {
+    SuccessRequestDeleteSpace(state: SpaceDeletionState),
+    FailedRequestDeleteSpace(error: SpaceDeletionError)
+}
+
+union CancelDeleteSpaceResult {
+    SuccessCancelDeleteSpace(),
+    FailedCancelDeleteSpace(error: SpaceDeletionError)
 }
 
 msg ArgonSpaceBase {

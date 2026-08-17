@@ -19,6 +19,9 @@ service UserInteraction() {
 
     GetMyProfile(): ArgonUserProfile;
 
+    LookupUser(userId: guid): LookupUserResult;
+    LookupProfile(userId: guid): LookupProfileResult;
+
 
     BeginUploadAvatar(): UploadFileResult;
     CompleteUploadAvatar(blobId: guid);
@@ -263,4 +266,19 @@ enum LockdownSeverity {
     Low,
     Middle,
     Critical
+}
+enum LookupError: u2 {
+    NONE,
+    NOT_FOUND,
+    NO_ANCHOR
+}
+
+union LookupUserResult {
+    SuccessLookupUser(user: ArgonUser),
+    FailedLookupUser(error: LookupError)
+}
+
+union LookupProfileResult {
+    SuccessLookupProfile(profile: ArgonUserProfile),
+    FailedLookupProfile(error: LookupError)
 }

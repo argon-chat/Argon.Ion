@@ -11,6 +11,30 @@ service ArchetypeInteraction(spaceId: guid) {
             deny: ArgonEntitlement, allow: ArgonEntitlement): ChannelEntitlementOverwrite?;
     GetChannelEntitlementOverwrites(channelId: guid): ChannelEntitlementOverwrite[];
     DeleteEntitlementForChannel(channelId: guid, entitlementOverwriteId: guid): bool;
+
+    DeleteArchetype(archetypeId: guid): DeleteArchetypeResult;
+    ReorderArchetypes(ordered: guid[]): ReorderArchetypesResult;
+}
+
+enum ArchetypeError: u2 {
+    NONE,
+    NOT_FOUND,
+    NO_PERMISSION,
+    IS_DEFAULT,
+    IS_LOCKED,
+    IN_USE,
+    INCOMPLETE_ORDER,
+    INTERNAL_ERROR
+}
+
+union DeleteArchetypeResult {
+    SuccessDeleteArchetype(),
+    FailedDeleteArchetype(error: ArchetypeError)
+}
+
+union ReorderArchetypesResult {
+    SuccessReorderArchetypes(archetypes: Archetype[]),
+    FailedReorderArchetypes(error: ArchetypeError)
 }
 
 msg ChannelEntitlementOverwrite {
@@ -42,4 +66,13 @@ msg Archetype
     iconFileId: string?;
 
     entitlement: ArgonEntitlement;
+
+    // Rank in the space, highest first: the member list groups by the top archetype a member
+    // holds, and before this field it had to guess from arrival order. Set only by
+    // ReorderArchetypes — UpdateArchetype ignores it, so an edit cannot silently repack the
+    // hierarchy while somebody else is dragging it.
+    //
+    // Nullable so a reader built before this field still deserializes (ION0029), and because null
+    // is the honest value for every archetype minted before the first reorder: unranked, not zero.
+    order: i4?;
 }

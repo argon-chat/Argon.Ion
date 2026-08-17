@@ -593,7 +593,19 @@ union ArgonEvent() {
     // next to MessageEdited where it belongs by topic would renumber every case after it.
     // byUserId lets a client tell "I deleted this" from "a moderator deleted this" without a second
     // lookup — the two render differently.
-    MessageDeleted(spaceId: guid, channelId: guid, messageId: i8, byUserId: guid)
+    MessageDeleted(spaceId: guid, channelId: guid, messageId: i8, byUserId: guid),
+
+    // Also appended for the reason above. ArchetypeCreated/ArchetypeChanged have existed since the
+    // start; without these two a deleted or re-ranked role stayed on every other client until the
+    // next full refresh, which is how a member list ends up grouping people under a role that is
+    // no longer there.
+    ArchetypeRemoved(spaceId: guid, archetypeId: guid),
+    ArchetypesReordered(spaceId: guid, data: Archetype[]),
+
+    // Told to everyone in the space, not just the owner: the wait before a deletion exists so the
+    // people who live there can save what matters and leave, and that only works if they are told.
+    SpaceDeletionScheduled(spaceId: guid, state: SpaceDeletionState),
+    SpaceDeletionCancelled(spaceId: guid)
 }
 
 msg ChannelReadState {
