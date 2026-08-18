@@ -49,6 +49,17 @@ flags ArgonEntitlement: u8 {
 
 service ServerInteraction(spaceId: guid)
 {
+    // Everything the first screen needs about a space, minus whatever the caller already holds.
+    // The client persists all of this and asks again on every sign-in, so the common answer is
+    // "nothing moved" — pass the versions from last time and the parts that match come back null.
+    GetSpaceSnapshot(known: SpaceVersions?): SpaceSnapshot;
+
+    // Deliberately outside the snapshot: presence changes every few seconds, so bundling it would
+    // mean the snapshot version never matches and the whole exchange degrades to a full download.
+    GetMemberPresence(): MemberPresence[];
+
+    // TODO: remove once no shipped client calls them. Superseded by GetSpaceSnapshot, which returns
+    // the same data, versioned, in one round trip instead of three.
     GetMembers(): RealtimeServerMember[];
     GetMember(userId: guid): RealtimeServerMember;
 
@@ -176,6 +187,31 @@ msg RealtimeServerMember
     member: SpaceMember;
     status: UserStatus;
     presence: UserActivityPresence?;
+}
+
+// What the caller already has, part by part. Each is an opaque token: the client stores whatever it
+// was given and hands it back, and nothing but the server ever reads one.
+msg SpaceVersions {
+    members: string?;
+    channels: string?;
+    groups: string?;
+    archetypes: string?;
+}
+
+// A part is null when the caller's version matched, which is not the same as it being empty — an
+// empty array means the space genuinely has none of that thing.
+msg SpaceSnapshot {
+    versions: SpaceVersions;
+    members: SpaceMember[]?;
+    channels: RealtimeChannel[]?;
+    groups: ChannelGroup[]?;
+    archetypes: Archetype[]?;
+}
+
+msg MemberPresence {
+    userId: guid;
+    status: UserStatus;
+    activity: UserActivityPresence?;
 }
 
 msg InviteCodeEntity {

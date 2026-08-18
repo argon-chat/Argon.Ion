@@ -5681,6 +5681,84 @@
         }
       ]
     },
+    "SpaceVersions": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "members",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "channels",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "groups",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "archetypes",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "SpaceSnapshot": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "versions",
+          "type": "SpaceVersions"
+        },
+        {
+          "index": 1,
+          "name": "members",
+          "type": "Maybe\u003CArray\u003CSpaceMember\u003E\u003E"
+        },
+        {
+          "index": 2,
+          "name": "channels",
+          "type": "Maybe\u003CArray\u003CRealtimeChannel\u003E\u003E"
+        },
+        {
+          "index": 3,
+          "name": "groups",
+          "type": "Maybe\u003CArray\u003CChannelGroup\u003E\u003E"
+        },
+        {
+          "index": 4,
+          "name": "archetypes",
+          "type": "Maybe\u003CArray\u003CArchetype\u003E\u003E"
+        }
+      ]
+    },
+    "MemberPresence": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "status",
+          "type": "UserStatus"
+        },
+        {
+          "index": 2,
+          "name": "activity",
+          "type": "Maybe\u003CUserActivityPresence\u003E"
+        }
+      ]
+    },
     "InviteCodeEntity": {
       "kind": "Msg",
       "nextIndex": 7,
@@ -6014,6 +6092,33 @@
     "ServerInteraction": {
       "kind": "Service",
       "methods": {
+        "GetSpaceSnapshot": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "known",
+              "type": "Maybe\u003CSpaceVersions\u003E"
+            }
+          ],
+          "returns": "SpaceSnapshot",
+          "modifiers": []
+        },
+        "GetMemberPresence": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CMemberPresence\u003E",
+          "modifiers": []
+        },
         "GetMembers": {
           "args": [
             {
