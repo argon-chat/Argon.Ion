@@ -1610,7 +1610,8 @@
         "SystemCallTimeout": "18",
         "SystemUserJoined": "19",
         "Attachment": "20",
-        "Gif": "21"
+        "Gif": "21",
+        "LinkPreview": "22"
       },
       "baseType": "u2"
     },
@@ -1831,7 +1832,7 @@
     },
     "MessageEntity": {
       "kind": "Union",
-      "nextIndex": 22,
+      "nextIndex": 23,
       "cases": [
         {
           "index": 0,
@@ -1920,6 +1921,10 @@
         {
           "index": 21,
           "name": "MessageEntityGif"
+        },
+        {
+          "index": 22,
+          "name": "MessageEntityLinkPreview"
         }
       ],
       "sharedFields": [
@@ -2115,7 +2120,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 64,
+      "nextIndex": 65,
       "cases": [
         {
           "index": 0,
@@ -2372,6 +2377,10 @@
         {
           "index": 63,
           "name": "SpaceDeletionCancelled"
+        },
+        {
+          "index": 64,
+          "name": "MessageUpdated"
         }
       ]
     },
@@ -4336,6 +4345,83 @@
             }
           ],
           "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
+    "LinkPreview": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "title",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "siteName",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "imageUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "canonicalUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "LinkPreviewError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_URL": "1",
+        "NO_PREVIEW": "2",
+        "UNAVAILABLE": "3",
+        "RATE_LIMITED": "4"
+      },
+      "baseType": "u2"
+    },
+    "LinkPreviewResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "LinkPreviewReady"
+        },
+        {
+          "index": 1,
+          "name": "LinkPreviewFailed"
+        }
+      ]
+    },
+    "LinkPreviewInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetLinkPreview": {
+          "args": [
+            {
+              "index": 0,
+              "name": "url",
+              "type": "string"
+            }
+          ],
+          "returns": "LinkPreviewResult",
           "modifiers": []
         }
       }
