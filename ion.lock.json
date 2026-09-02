@@ -6264,7 +6264,8 @@
         "MESSAGE": "1",
         "CHANNEL": "2",
         "SPACE": "3",
-        "USER": "4"
+        "USER": "4",
+        "DIRECT_MESSAGE": "5"
       },
       "baseType": "u4"
     },
