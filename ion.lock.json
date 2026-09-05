@@ -6420,7 +6420,7 @@
     },
     "SessionInfo": {
       "kind": "Msg",
-      "nextIndex": 5,
+      "nextIndex": 14,
       "fields": [
         {
           "index": 0,
@@ -6446,6 +6446,51 @@
           "index": 4,
           "name": "isCurrent",
           "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "appId",
+          "type": "string"
+        },
+        {
+          "index": 6,
+          "name": "appName",
+          "type": "string"
+        },
+        {
+          "index": 7,
+          "name": "appVersion",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "platform",
+          "type": "ClientPlatform"
+        },
+        {
+          "index": 9,
+          "name": "osName",
+          "type": "string"
+        },
+        {
+          "index": 10,
+          "name": "deviceName",
+          "type": "string"
+        },
+        {
+          "index": 11,
+          "name": "ip",
+          "type": "string"
+        },
+        {
+          "index": 12,
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "index": 13,
+          "name": "startedAt",
+          "type": "datetime"
         }
       ]
     },
@@ -8378,6 +8423,18 @@
         "Email": "0",
         "Phone": "1",
         "Totp": "2"
+      },
+      "baseType": "u4"
+    },
+    "ClientPlatform": {
+      "kind": "Enum",
+      "members": {
+        "UNKNOWN": "0",
+        "WINDOWS": "1",
+        "MACOS": "2",
+        "LINUX": "3",
+        "ANDROID": "4",
+        "IOS": "5"
       },
       "baseType": "u4"
     },
