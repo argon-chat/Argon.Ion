@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "module": "ArgonContracts",
   "definitions": {
     "ChannelEntitlementOverwrite": {
@@ -134,11 +134,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessDeleteArchetype"
+          "name": "SuccessDeleteArchetype",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedDeleteArchetype"
+          "name": "FailedDeleteArchetype",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ArchetypeError"
+            }
+          ]
         }
       ]
     },
@@ -148,11 +156,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessReorderArchetypes"
+          "name": "SuccessReorderArchetypes",
+          "fields": [
+            {
+              "index": 0,
+              "name": "archetypes",
+              "type": "Array\u003CArchetype\u003E"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedReorderArchetypes"
+          "name": "FailedReorderArchetypes",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ArchetypeError"
+            }
+          ]
         }
       ]
     },
@@ -608,11 +630,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessInstallBot"
+          "name": "SuccessInstallBot",
+          "fields": [
+            {
+              "index": 0,
+              "name": "bot",
+              "type": "InstalledBotInfo"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedInstallBot"
+          "name": "FailedInstallBot",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "InstallBotError"
+            }
+          ]
         }
       ]
     },
@@ -622,11 +658,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessUninstallBot"
+          "name": "SuccessUninstallBot",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedUninstallBot"
+          "name": "FailedUninstallBot",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "UninstallBotError"
+            }
+          ]
         }
       ]
     },
@@ -636,11 +680,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessApproval"
+          "name": "SuccessApproval",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedApproval"
+          "name": "FailedApproval",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ApproveBotEntitlementsError"
+            }
+          ]
         }
       ]
     },
@@ -1610,7 +1662,8 @@
         "SystemCallTimeout": "18",
         "SystemUserJoined": "19",
         "Attachment": "20",
-        "Gif": "21"
+        "Gif": "21",
+        "LinkPreview": "22"
       },
       "baseType": "u2"
     },
@@ -1831,95 +1884,332 @@
     },
     "MessageEntity": {
       "kind": "Union",
-      "nextIndex": 22,
+      "nextIndex": 23,
       "cases": [
         {
           "index": 0,
-          "name": "MessageEntityBold"
+          "name": "MessageEntityBold",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "MessageEntityItalic"
+          "name": "MessageEntityItalic",
+          "fields": []
         },
         {
           "index": 2,
-          "name": "MessageEntityStrikethrough"
+          "name": "MessageEntityStrikethrough",
+          "fields": []
         },
         {
           "index": 3,
-          "name": "MessageEntitySpoiler"
+          "name": "MessageEntitySpoiler",
+          "fields": []
         },
         {
           "index": 4,
-          "name": "MessageEntityMonospace"
+          "name": "MessageEntityMonospace",
+          "fields": []
         },
         {
           "index": 5,
-          "name": "MessageEntityFraction"
+          "name": "MessageEntityFraction",
+          "fields": [
+            {
+              "index": 4,
+              "name": "numerator",
+              "type": "i4"
+            },
+            {
+              "index": 5,
+              "name": "denominator",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 6,
-          "name": "MessageEntityOrdinal"
+          "name": "MessageEntityOrdinal",
+          "fields": []
         },
         {
           "index": 7,
-          "name": "MessageEntityCapitalized"
+          "name": "MessageEntityCapitalized",
+          "fields": []
         },
         {
           "index": 8,
-          "name": "MessageEntityMention"
+          "name": "MessageEntityMention",
+          "fields": [
+            {
+              "index": 4,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 9,
-          "name": "MessageEntityMentionEveryone"
+          "name": "MessageEntityMentionEveryone",
+          "fields": []
         },
         {
           "index": 10,
-          "name": "MessageEntityMentionRole"
+          "name": "MessageEntityMentionRole",
+          "fields": [
+            {
+              "index": 4,
+              "name": "archetypeId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 11,
-          "name": "MessageEntityEmail"
+          "name": "MessageEntityEmail",
+          "fields": [
+            {
+              "index": 4,
+              "name": "email",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 12,
-          "name": "MessageEntityHashTag"
+          "name": "MessageEntityHashTag",
+          "fields": [
+            {
+              "index": 4,
+              "name": "hashtag",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 13,
-          "name": "MessageEntityQuote"
+          "name": "MessageEntityQuote",
+          "fields": [
+            {
+              "index": 4,
+              "name": "quotedUserId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 14,
-          "name": "MessageEntityUnderline"
+          "name": "MessageEntityUnderline",
+          "fields": [
+            {
+              "index": 4,
+              "name": "colour",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 15,
-          "name": "MessageEntityUrl"
+          "name": "MessageEntityUrl",
+          "fields": [
+            {
+              "index": 4,
+              "name": "domain",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "path",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 16,
-          "name": "MessageEntitySystemCallStarted"
+          "name": "MessageEntitySystemCallStarted",
+          "fields": [
+            {
+              "index": 4,
+              "name": "callerId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "callId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 17,
-          "name": "MessageEntitySystemCallEnded"
+          "name": "MessageEntitySystemCallEnded",
+          "fields": [
+            {
+              "index": 4,
+              "name": "callerId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 6,
+              "name": "durationSeconds",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 18,
-          "name": "MessageEntitySystemCallTimeout"
+          "name": "MessageEntitySystemCallTimeout",
+          "fields": [
+            {
+              "index": 4,
+              "name": "callerId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "callId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 19,
-          "name": "MessageEntitySystemUserJoined"
+          "name": "MessageEntitySystemUserJoined",
+          "fields": [
+            {
+              "index": 4,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "inviterId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ]
         },
         {
           "index": 20,
-          "name": "MessageEntityAttachment"
+          "name": "MessageEntityAttachment",
+          "fields": [
+            {
+              "index": 4,
+              "name": "fileId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "fileName",
+              "type": "string"
+            },
+            {
+              "index": 6,
+              "name": "fileSize",
+              "type": "i8"
+            },
+            {
+              "index": 7,
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "index": 8,
+              "name": "width",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 9,
+              "name": "height",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 10,
+              "name": "thumbHash",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 11,
+              "name": "downloadUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 21,
-          "name": "MessageEntityGif"
+          "name": "MessageEntityGif",
+          "fields": [
+            {
+              "index": 4,
+              "name": "gifId",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "hmac",
+              "type": "string"
+            },
+            {
+              "index": 6,
+              "name": "fileId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 7,
+              "name": "width",
+              "type": "i4"
+            },
+            {
+              "index": 8,
+              "name": "height",
+              "type": "i4"
+            },
+            {
+              "index": 9,
+              "name": "previewUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
+        },
+        {
+          "index": 22,
+          "name": "MessageEntityLinkPreview",
+          "fields": [
+            {
+              "index": 4,
+              "name": "url",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "title",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 6,
+              "name": "description",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 7,
+              "name": "siteName",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 8,
+              "name": "imageUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 9,
+              "name": "canonicalUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         }
       ],
       "sharedFields": [
@@ -1951,11 +2241,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessUpdateChannel"
+          "name": "SuccessUpdateChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channel",
+              "type": "ArgonChannel"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedUpdateChannel"
+          "name": "FailedUpdateChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "UpdateChannelError"
+            }
+          ]
         }
       ]
     },
@@ -1965,11 +2269,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCreateVoiceInvite"
+          "name": "SuccessCreateVoiceInvite",
+          "fields": [
+            {
+              "index": 0,
+              "name": "code",
+              "type": "InviteCode"
+            },
+            {
+              "index": 1,
+              "name": "url",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedCreateVoiceInvite"
+          "name": "FailedCreateVoiceInvite",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VoiceInviteError"
+            }
+          ]
         }
       ]
     },
@@ -1979,11 +2302,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessDeleteMessage"
+          "name": "SuccessDeleteMessage",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedDeleteMessage"
+          "name": "FailedDeleteMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "DeleteMessageError"
+            }
+          ]
         }
       ]
     },
@@ -1993,11 +2324,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessInvokeSlashCommand"
+          "name": "SuccessInvokeSlashCommand",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedInvokeSlashCommand"
+          "name": "FailedInvokeSlashCommand",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "InvokeSlashCommandError"
+            }
+          ]
         }
       ]
     },
@@ -2007,11 +2346,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessInteractWithControl"
+          "name": "SuccessInteractWithControl",
+          "fields": [
+            {
+              "index": 0,
+              "name": "interactionId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedInteractWithControl"
+          "name": "FailedInteractWithControl",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "InteractWithControlError"
+            }
+          ]
         }
       ]
     },
@@ -2021,11 +2374,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessInteractWithSelect"
+          "name": "SuccessInteractWithSelect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "interactionId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedInteractWithSelect"
+          "name": "FailedInteractWithSelect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "InteractWithSelectError"
+            }
+          ]
         }
       ]
     },
@@ -2035,11 +2402,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessSubmitModal"
+          "name": "SuccessSubmitModal",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedSubmitModal"
+          "name": "FailedSubmitModal",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SubmitModalError"
+            }
+          ]
         }
       ]
     },
@@ -2049,11 +2424,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessAddReaction"
+          "name": "SuccessAddReaction",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedAddReaction"
+          "name": "FailedAddReaction",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AddReactionError"
+            }
+          ]
         }
       ]
     },
@@ -2063,11 +2446,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRemoveReaction"
+          "name": "SuccessRemoveReaction",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRemoveReaction"
+          "name": "FailedRemoveReaction",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "RemoveReactionError"
+            }
+          ]
         }
       ]
     },
@@ -2077,11 +2468,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessJoinVoice"
+          "name": "SuccessJoinVoice",
+          "fields": [
+            {
+              "index": 0,
+              "name": "rtc",
+              "type": "RtcEndpoint"
+            },
+            {
+              "index": 1,
+              "name": "token",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedJoinVoice"
+          "name": "FailedJoinVoice",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "JoinToChannelError"
+            }
+          ]
         }
       ]
     },
@@ -2091,11 +2501,35 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessStartStream"
+          "name": "SuccessStartStream",
+          "fields": [
+            {
+              "index": 0,
+              "name": "rtc",
+              "type": "RtcEndpoint"
+            },
+            {
+              "index": 1,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "whipEndpoint",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedStartStream"
+          "name": "FailedStartStream",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "StartStreamError"
+            }
+          ]
         }
       ]
     },
@@ -2105,273 +2539,1266 @@
       "cases": [
         {
           "index": 0,
-          "name": "DrawingStarted"
+          "name": "DrawingStarted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "session",
+              "type": "DrawingSession"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "DrawingDenied"
+          "name": "DrawingDenied",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "DrawingDenyReason"
+            }
+          ]
         }
       ]
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 64,
+      "nextIndex": 65,
       "cases": [
         {
           "index": 0,
-          "name": "ArchetypeChanged"
+          "name": "ArchetypeChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "Archetype"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "ArchetypeCreated"
+          "name": "ArchetypeCreated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "Archetype"
+            }
+          ]
         },
         {
           "index": 2,
-          "name": "ChannelCreated"
+          "name": "ChannelCreated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "ArgonChannel"
+            }
+          ]
         },
         {
           "index": 3,
-          "name": "ChannelModified"
+          "name": "ChannelModified",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "bag",
+              "type": "Array\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 4,
-          "name": "ChannelRemoved"
+          "name": "ChannelRemoved",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 5,
-          "name": "UserTypingEvent"
+          "name": "UserTypingEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "kind",
+              "type": "Maybe\u003CTypingKind\u003E"
+            }
+          ]
         },
         {
           "index": 6,
-          "name": "UserStopTypingEvent"
+          "name": "UserStopTypingEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 7,
-          "name": "JoinedToChannelUser"
+          "name": "JoinedToChannelUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 8,
-          "name": "JoinToServerUser"
+          "name": "JoinToServerUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 9,
-          "name": "LeavedFromChannelUser"
+          "name": "LeavedFromChannelUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 10,
-          "name": "UserUpdated"
+          "name": "UserUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "dto",
+              "type": "ArgonUser"
+            }
+          ]
         },
         {
           "index": 11,
-          "name": "OnUserPresenceActivityChanged"
+          "name": "OnUserPresenceActivityChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "presence",
+              "type": "UserActivityPresence"
+            }
+          ]
         },
         {
           "index": 12,
-          "name": "OnUserPresenceActivityRemoved"
+          "name": "OnUserPresenceActivityRemoved",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 13,
-          "name": "UserChangedStatus"
+          "name": "UserChangedStatus",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "status",
+              "type": "UserStatus"
+            },
+            {
+              "index": 3,
+              "name": "bag",
+              "type": "Array\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 14,
-          "name": "MessageSent"
+          "name": "MessageSent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "message",
+              "type": "ArgonMessage"
+            }
+          ]
         },
         {
           "index": 15,
-          "name": "MessageEdited"
+          "name": "MessageEdited",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "text",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 4,
+              "name": "updatedAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 16,
-          "name": "ServerModified"
+          "name": "ServerModified",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "bag",
+              "type": "Array\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 17,
-          "name": "RecordStarted"
+          "name": "RecordStarted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "byUserId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 18,
-          "name": "RecordEnded"
+          "name": "RecordEnded",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 19,
-          "name": "CallIncoming"
+          "name": "CallIncoming",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "fromId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 20,
-          "name": "CallFinished"
+          "name": "CallFinished",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 21,
-          "name": "CallAccepted"
+          "name": "CallAccepted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "fromId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 22,
-          "name": "CallRejected"
+          "name": "CallRejected",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "fromId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 23,
-          "name": "FriendRequestReceivedEvent"
+          "name": "FriendRequestReceivedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "requesterId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "requestDate",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 24,
-          "name": "FriendRequestSentEvent"
+          "name": "FriendRequestSentEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "targetId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "requestDate",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 25,
-          "name": "FriendRequestAcceptedEvent"
+          "name": "FriendRequestAcceptedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "friendAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 26,
-          "name": "FriendRequestDeclinedEvent"
+          "name": "FriendRequestDeclinedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "targetId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 27,
-          "name": "FriendRequestCanceledEvent"
+          "name": "FriendRequestCanceledEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "requesterId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 28,
-          "name": "FriendshipRemovedEvent"
+          "name": "FriendshipRemovedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 29,
-          "name": "UserBlockedEvent"
+          "name": "UserBlockedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "blockId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 30,
-          "name": "UserUnblockedEvent"
+          "name": "UserUnblockedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "blockId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 31,
-          "name": "RecentChatUpdatedEvent"
+          "name": "RecentChatUpdatedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "lastMessage",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 3,
+              "name": "lastMessageAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 32,
-          "name": "ChatPinnedEvent"
+          "name": "ChatPinnedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "pinnedAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 33,
-          "name": "ChatUnpinnedEvent"
+          "name": "ChatUnpinnedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 34,
-          "name": "ChatReadEvent"
+          "name": "ChatReadEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 35,
-          "name": "ChannelGroupCreated"
+          "name": "ChannelGroupCreated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "ChannelGroup"
+            }
+          ]
         },
         {
           "index": 36,
-          "name": "ChannelGroupModified"
+          "name": "ChannelGroupModified",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "groupId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "data",
+              "type": "ChannelGroup"
+            }
+          ]
         },
         {
           "index": 37,
-          "name": "ChannelGroupRemoved"
+          "name": "ChannelGroupRemoved",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "groupId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 38,
-          "name": "ChannelGroupReordered"
+          "name": "ChannelGroupReordered",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "groupId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "fractionalIndex",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 39,
-          "name": "ChannelReordered"
+          "name": "ChannelReordered",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "targetGroupId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "fractionalIndex",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 40,
-          "name": "DirectMessageSent"
+          "name": "DirectMessageSent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "senderId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "receiverId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "message",
+              "type": "DirectMessage"
+            }
+          ]
         },
         {
           "index": 41,
-          "name": "ReadStateUpdated"
+          "name": "ReadStateUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "lastReadMessageId",
+              "type": "i8"
+            },
+            {
+              "index": 4,
+              "name": "mentionCount",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 42,
-          "name": "SystemNotificationReceived"
+          "name": "SystemNotificationReceived",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "notification",
+              "type": "SystemNotificationDto"
+            }
+          ]
         },
         {
           "index": 43,
-          "name": "MuteSettingsChanged"
+          "name": "MuteSettingsChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "targetId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "muteLevel",
+              "type": "MuteLevelType"
+            }
+          ]
         },
         {
           "index": 44,
-          "name": "BatchMentionOccurred"
+          "name": "BatchMentionOccurred",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "mentionType",
+              "type": "MentionTargetType"
+            }
+          ]
         },
         {
           "index": 45,
-          "name": "UserSecurityDetailsUpdated"
+          "name": "UserSecurityDetailsUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "details",
+              "type": "SecurityDetails"
+            }
+          ]
         },
         {
           "index": 46,
-          "name": "SpaceDetailsUpdated"
+          "name": "SpaceDetailsUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "details",
+              "type": "ArgonSpaceBase"
+            }
+          ]
         },
         {
           "index": 47,
-          "name": "LeavedFromServerUser"
+          "name": "LeavedFromServerUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 48,
-          "name": "InteractionAcked"
+          "name": "InteractionAcked",
+          "fields": [
+            {
+              "index": 0,
+              "name": "interactionId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 49,
-          "name": "InteractionDeferred"
+          "name": "InteractionDeferred",
+          "fields": [
+            {
+              "index": 0,
+              "name": "interactionId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 50,
-          "name": "ShowModal"
+          "name": "ShowModal",
+          "fields": [
+            {
+              "index": 0,
+              "name": "interactionId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "modal",
+              "type": "IonModalDefinition"
+            }
+          ]
         },
         {
           "index": 51,
-          "name": "ReactionAdded"
+          "name": "ReactionAdded",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 4,
+              "name": "emoji",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "customEmojiId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ]
         },
         {
           "index": 52,
-          "name": "ReactionRemoved"
+          "name": "ReactionRemoved",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 4,
+              "name": "emoji",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 53,
-          "name": "SpaceBoostUpdated"
+          "name": "SpaceBoostUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "boostCount",
+              "type": "i4"
+            },
+            {
+              "index": 2,
+              "name": "boostLevel",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 54,
-          "name": "UltimaGiftReceived"
+          "name": "UltimaGiftReceived",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "itemId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "senderName",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "message",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 55,
-          "name": "UserProfileUpdated"
+          "name": "UserProfileUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
         },
         {
           "index": 56,
-          "name": "FeatureFlagActivated"
+          "name": "FeatureFlagActivated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "flagId",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "isEnabled",
+              "type": "bool"
+            },
+            {
+              "index": 3,
+              "name": "variant",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 57,
-          "name": "DrawingSessionStarted"
+          "name": "DrawingSessionStarted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "sessionId",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "ownerId",
+              "type": "guid"
+            },
+            {
+              "index": 4,
+              "name": "allowedDrawers",
+              "type": "Array\u003Cguid\u003E"
+            },
+            {
+              "index": 5,
+              "name": "defaultTtlMs",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 58,
-          "name": "DrawingSessionEnded"
+          "name": "DrawingSessionEnded",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "sessionId",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 59,
-          "name": "MessageDeleted"
+          "name": "MessageDeleted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "byUserId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 60,
-          "name": "ArchetypeRemoved"
+          "name": "ArchetypeRemoved",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "archetypeId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 61,
-          "name": "ArchetypesReordered"
+          "name": "ArchetypesReordered",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "data",
+              "type": "Array\u003CArchetype\u003E"
+            }
+          ]
         },
         {
           "index": 62,
-          "name": "SpaceDeletionScheduled"
+          "name": "SpaceDeletionScheduled",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "state",
+              "type": "SpaceDeletionState"
+            }
+          ]
         },
         {
           "index": 63,
-          "name": "SpaceDeletionCancelled"
+          "name": "SpaceDeletionCancelled",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 64,
+          "name": "MessageUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "message",
+              "type": "ArgonMessage"
+            }
+          ]
         }
       ]
     },
@@ -2381,19 +3808,41 @@
       "cases": [
         {
           "index": 0,
-          "name": "IAmTypingEvent"
+          "name": "IAmTypingEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "IAmStopTypingEvent"
+          "name": "IAmStopTypingEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 2,
-          "name": "HeartBeatEvent"
+          "name": "HeartBeatEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "status",
+              "type": "UserStatus"
+            }
+          ]
         },
         {
           "index": 3,
-          "name": "SubscribeToMySpaces"
+          "name": "SubscribeToMySpaces",
+          "fields": []
         }
       ]
     },
@@ -3762,11 +5211,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessSaveGif"
+          "name": "SuccessSaveGif",
+          "fields": [
+            {
+              "index": 0,
+              "name": "gif",
+              "type": "SavedGif"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedSaveGif"
+          "name": "FailedSaveGif",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SaveGifError"
+            }
+          ]
         }
       ]
     },
@@ -3940,11 +5403,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCreateLoginRequest"
+          "name": "SuccessCreateLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "ticket",
+              "type": "LoginRequestTicket"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedCreateLoginRequest"
+          "name": "FailedCreateLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LoginRequestError"
+            }
+          ]
         }
       ]
     },
@@ -3954,19 +5431,46 @@
       "cases": [
         {
           "index": 0,
-          "name": "PendingLoginRequest"
+          "name": "PendingLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "expiresAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "ApprovedLoginRequest"
+          "name": "ApprovedLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "refreshToken",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 2,
-          "name": "RejectedLoginRequest"
+          "name": "RejectedLoginRequest",
+          "fields": []
         },
         {
           "index": 3,
-          "name": "FailedLoginPoll"
+          "name": "FailedLoginPoll",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LoginRequestError"
+            }
+          ]
         }
       ]
     },
@@ -3976,11 +5480,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessLoginRequestPreview"
+          "name": "SuccessLoginRequestPreview",
+          "fields": [
+            {
+              "index": 0,
+              "name": "preview",
+              "type": "LoginRequestPreview"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedLoginRequestPreview"
+          "name": "FailedLoginRequestPreview",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LoginRequestError"
+            }
+          ]
         }
       ]
     },
@@ -3990,11 +5508,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessApproveLoginRequest"
+          "name": "SuccessApproveLoginRequest",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedApproveLoginRequest"
+          "name": "FailedApproveLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LoginRequestError"
+            }
+          ]
         }
       ]
     },
@@ -4004,11 +5530,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRejectLoginRequest"
+          "name": "SuccessRejectLoginRequest",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRejectLoginRequest"
+          "name": "FailedRejectLoginRequest",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LoginRequestError"
+            }
+          ]
         }
       ]
     },
@@ -4018,19 +5552,62 @@
       "cases": [
         {
           "index": 0,
-          "name": "GoodAuthStatus"
+          "name": "GoodAuthStatus",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "BadAuthStatus"
+          "name": "BadAuthStatus",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "BadAuthKind"
+            }
+          ]
         },
         {
           "index": 2,
-          "name": "LockedAuthStatus"
+          "name": "LockedAuthStatus",
+          "fields": [
+            {
+              "index": 0,
+              "name": "lockdownReason",
+              "type": "Maybe\u003CLockdownReason\u003E"
+            },
+            {
+              "index": 1,
+              "name": "lockDownExpiration",
+              "type": "Maybe\u003Cdatetime\u003E"
+            },
+            {
+              "index": 2,
+              "name": "isAppealable",
+              "type": "bool"
+            },
+            {
+              "index": 3,
+              "name": "severity",
+              "type": "LockdownSeverity"
+            }
+          ]
         },
         {
           "index": 3,
-          "name": "CertificateErrorAuthStatus"
+          "name": "CertificateErrorAuthStatus",
+          "fields": [
+            {
+              "index": 0,
+              "name": "message",
+              "type": "string"
+            }
+          ]
         }
       ]
     },
@@ -4284,11 +5861,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRedeem"
+          "name": "SuccessRedeem",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRedeem"
+          "name": "FailedRedeem",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "RedeemError"
+            }
+          ]
         }
       ]
     },
@@ -4336,6 +5921,97 @@
             }
           ],
           "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
+    "LinkPreview": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "title",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "siteName",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "imageUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "canonicalUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "LinkPreviewError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INVALID_URL": "1",
+        "NO_PREVIEW": "2",
+        "UNAVAILABLE": "3",
+        "RATE_LIMITED": "4"
+      },
+      "baseType": "u2"
+    },
+    "LinkPreviewResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "LinkPreviewReady",
+          "fields": [
+            {
+              "index": 0,
+              "name": "preview",
+              "type": "LinkPreview"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "LinkPreviewFailed",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LinkPreviewError"
+            }
+          ]
+        }
+      ]
+    },
+    "LinkPreviewInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetLinkPreview": {
+          "args": [
+            {
+              "index": 0,
+              "name": "url",
+              "type": "string"
+            }
+          ],
+          "returns": "LinkPreviewResult",
           "modifiers": []
         }
       }
@@ -4588,7 +6264,8 @@
         "MESSAGE": "1",
         "CHANNEL": "2",
         "SPACE": "3",
-        "USER": "4"
+        "USER": "4",
+        "DIRECT_MESSAGE": "5"
       },
       "baseType": "u4"
     },
@@ -4687,11 +6364,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessSubmitReport"
+          "name": "SuccessSubmitReport",
+          "fields": [
+            {
+              "index": 0,
+              "name": "reportId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedSubmitReport"
+          "name": "FailedSubmitReport",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SubmitReportError"
+            }
+          ]
         }
       ]
     },
@@ -4729,7 +6420,7 @@
     },
     "SessionInfo": {
       "kind": "Msg",
-      "nextIndex": 5,
+      "nextIndex": 14,
       "fields": [
         {
           "index": 0,
@@ -4755,6 +6446,51 @@
           "index": 4,
           "name": "isCurrent",
           "type": "bool"
+        },
+        {
+          "index": 5,
+          "name": "appId",
+          "type": "string"
+        },
+        {
+          "index": 6,
+          "name": "appName",
+          "type": "string"
+        },
+        {
+          "index": 7,
+          "name": "appVersion",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "platform",
+          "type": "ClientPlatform"
+        },
+        {
+          "index": 9,
+          "name": "osName",
+          "type": "string"
+        },
+        {
+          "index": 10,
+          "name": "deviceName",
+          "type": "string"
+        },
+        {
+          "index": 11,
+          "name": "ip",
+          "type": "string"
+        },
+        {
+          "index": 12,
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "index": 13,
+          "name": "startedAt",
+          "type": "datetime"
         }
       ]
     },
@@ -4997,11 +6733,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRevokeSession"
+          "name": "SuccessRevokeSession",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRevokeSession"
+          "name": "FailedRevokeSession",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SessionError"
+            }
+          ]
         }
       ]
     },
@@ -5011,11 +6755,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRequestEmailChange"
+          "name": "SuccessRequestEmailChange",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRequestEmailChange"
+          "name": "FailedRequestEmailChange",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "EmailChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5025,11 +6777,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessConfirmEmailChange"
+          "name": "SuccessConfirmEmailChange",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedConfirmEmailChange"
+          "name": "FailedConfirmEmailChange",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "EmailChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5039,11 +6799,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRequestPhoneChange"
+          "name": "SuccessRequestPhoneChange",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRequestPhoneChange"
+          "name": "FailedRequestPhoneChange",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PhoneChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5053,11 +6821,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessConfirmPhoneChange"
+          "name": "SuccessConfirmPhoneChange",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedConfirmPhoneChange"
+          "name": "FailedConfirmPhoneChange",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PhoneChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5067,11 +6843,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRemovePhone"
+          "name": "SuccessRemovePhone",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRemovePhone"
+          "name": "FailedRemovePhone",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PhoneChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5081,11 +6865,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessChangePassword"
+          "name": "SuccessChangePassword",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedChangePassword"
+          "name": "FailedChangePassword",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PasswordChangeError"
+            }
+          ]
         }
       ]
     },
@@ -5095,11 +6887,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessEnableOTP"
+          "name": "SuccessEnableOTP",
+          "fields": [
+            {
+              "index": 0,
+              "name": "secret",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "qrCodeUrl",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedEnableOTP"
+          "name": "FailedEnableOTP",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "OTPError"
+            }
+          ]
         }
       ]
     },
@@ -5109,11 +6920,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessVerifyOTP"
+          "name": "SuccessVerifyOTP",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedVerifyOTP"
+          "name": "FailedVerifyOTP",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "OTPError"
+            }
+          ]
         }
       ]
     },
@@ -5123,11 +6942,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessDisableOTP"
+          "name": "SuccessDisableOTP",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedDisableOTP"
+          "name": "FailedDisableOTP",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "OTPError"
+            }
+          ]
         }
       ]
     },
@@ -5137,11 +6964,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessBeginPasskey"
+          "name": "SuccessBeginPasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "optionsJson",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedBeginPasskey"
+          "name": "FailedBeginPasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PasskeyError"
+            }
+          ]
         }
       ]
     },
@@ -5151,11 +6992,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCompletePasskey"
+          "name": "SuccessCompletePasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "passkey",
+              "type": "Passkey"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedCompletePasskey"
+          "name": "FailedCompletePasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PasskeyError"
+            }
+          ]
         }
       ]
     },
@@ -5165,11 +7020,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRemovePasskey"
+          "name": "SuccessRemovePasskey",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedRemovePasskey"
+          "name": "FailedRemovePasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PasskeyError"
+            }
+          ]
         }
       ]
     },
@@ -5179,11 +7042,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessBeginValidatePasskey"
+          "name": "SuccessBeginValidatePasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "optionsJson",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedBeginValidatePasskey"
+          "name": "FailedBeginValidatePasskey",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PasskeyError"
+            }
+          ]
         }
       ]
     },
@@ -5193,11 +7070,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessSetAutoDelete"
+          "name": "SuccessSetAutoDelete",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedSetAutoDelete"
+          "name": "FailedSetAutoDelete",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AutoDeleteError"
+            }
+          ]
         }
       ]
     },
@@ -5207,11 +7092,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRequestDataExport"
+          "name": "SuccessRequestDataExport",
+          "fields": [
+            {
+              "index": 0,
+              "name": "exportId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedRequestDataExport"
+          "name": "FailedRequestDataExport",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "DataExportError"
+            }
+          ]
         }
       ]
     },
@@ -5681,6 +7580,84 @@
         }
       ]
     },
+    "SpaceVersions": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "members",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "channels",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "groups",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "archetypes",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "SpaceSnapshot": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "versions",
+          "type": "SpaceVersions"
+        },
+        {
+          "index": 1,
+          "name": "members",
+          "type": "Maybe\u003CArray\u003CSpaceMember\u003E\u003E"
+        },
+        {
+          "index": 2,
+          "name": "channels",
+          "type": "Maybe\u003CArray\u003CRealtimeChannel\u003E\u003E"
+        },
+        {
+          "index": 3,
+          "name": "groups",
+          "type": "Maybe\u003CArray\u003CChannelGroup\u003E\u003E"
+        },
+        {
+          "index": 4,
+          "name": "archetypes",
+          "type": "Maybe\u003CArray\u003CArchetype\u003E\u003E"
+        }
+      ]
+    },
+    "MemberPresence": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "status",
+          "type": "UserStatus"
+        },
+        {
+          "index": 2,
+          "name": "activity",
+          "type": "Maybe\u003CUserActivityPresence\u003E"
+        }
+      ]
+    },
     "InviteCodeEntity": {
       "kind": "Msg",
       "nextIndex": 7,
@@ -5989,11 +7966,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRequestDeleteSpace"
+          "name": "SuccessRequestDeleteSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "state",
+              "type": "SpaceDeletionState"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedRequestDeleteSpace"
+          "name": "FailedRequestDeleteSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SpaceDeletionError"
+            }
+          ]
         }
       ]
     },
@@ -6003,17 +7994,52 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCancelDeleteSpace"
+          "name": "SuccessCancelDeleteSpace",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedCancelDeleteSpace"
+          "name": "FailedCancelDeleteSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SpaceDeletionError"
+            }
+          ]
         }
       ]
     },
     "ServerInteraction": {
       "kind": "Service",
       "methods": {
+        "GetSpaceSnapshot": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "known",
+              "type": "Maybe\u003CSpaceVersions\u003E"
+            }
+          ],
+          "returns": "SpaceSnapshot",
+          "modifiers": []
+        },
+        "GetMemberPresence": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CMemberPresence\u003E",
+          "modifiers": []
+        },
         "GetMembers": {
           "args": [
             {
@@ -6397,6 +8423,18 @@
         "Email": "0",
         "Phone": "1",
         "Totp": "2"
+      },
+      "baseType": "u4"
+    },
+    "ClientPlatform": {
+      "kind": "Enum",
+      "members": {
+        "UNKNOWN": "0",
+        "WINDOWS": "1",
+        "MACOS": "2",
+        "LINUX": "3",
+        "ANDROID": "4",
+        "IOS": "5"
       },
       "baseType": "u4"
     },
@@ -6789,11 +8827,35 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCheckout"
+          "name": "SuccessCheckout",
+          "fields": [
+            {
+              "index": 0,
+              "name": "checkoutUrl",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "sessionId",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "countryCode",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedCheckout"
+          "name": "FailedCheckout",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CheckoutError"
+            }
+          ]
         }
       ]
     },
@@ -6803,11 +8865,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessApplyBoost"
+          "name": "SuccessApplyBoost",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedApplyBoost"
+          "name": "FailedApplyBoost",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ApplyBoostError"
+            }
+          ]
         }
       ]
     },
@@ -6817,11 +8887,19 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessTransfer"
+          "name": "SuccessTransfer",
+          "fields": []
         },
         {
           "index": 1,
-          "name": "FailedTransfer"
+          "name": "FailedTransfer",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "TransferBoostError"
+            }
+          ]
         }
       ]
     },
@@ -6831,11 +8909,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessPurchaseBoost"
+          "name": "SuccessPurchaseBoost",
+          "fields": [
+            {
+              "index": 0,
+              "name": "checkoutUrl",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "countryCode",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedPurchaseBoost"
+          "name": "FailedPurchaseBoost",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PurchaseBoostError"
+            }
+          ]
         }
       ]
     },
@@ -6845,11 +8942,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessSendGift"
+          "name": "SuccessSendGift",
+          "fields": [
+            {
+              "index": 0,
+              "name": "checkoutUrl",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "countryCode",
+              "type": "string"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedSendGift"
+          "name": "FailedSendGift",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SendGiftError"
+            }
+          ]
         }
       ]
     },
@@ -7496,11 +9612,40 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessUploadFile"
+          "name": "SuccessUploadFile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "blobId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "uploadUrl",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "formFields",
+              "type": "Array\u003CFormField\u003E"
+            },
+            {
+              "index": 3,
+              "name": "ttlSeconds",
+              "type": "i4"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedUploadFile"
+          "name": "FailedUploadFile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "UploadFileError"
+            }
+          ]
         }
       ]
     },
@@ -7510,11 +9655,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessCreateSpace"
+          "name": "SuccessCreateSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "space",
+              "type": "ArgonSpaceBase"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedCreateSpace"
+          "name": "FailedCreateSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CreateSpaceError"
+            }
+          ]
         }
       ]
     },
@@ -7524,11 +9683,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessUpdateMe"
+          "name": "SuccessUpdateMe",
+          "fields": [
+            {
+              "index": 0,
+              "name": "user",
+              "type": "ArgonUser"
+            },
+            {
+              "index": 1,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedUpdateMe"
+          "name": "FailedUpdateMe",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "UpdateMeError"
+            }
+          ]
         }
       ]
     },
@@ -7538,11 +9716,30 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessAuthorize"
+          "name": "SuccessAuthorize",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "refreshToken",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedAuthorize"
+          "name": "FailedAuthorize",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AuthorizationError"
+            }
+          ]
         }
       ]
     },
@@ -7552,11 +9749,40 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessRegistration"
+          "name": "SuccessRegistration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "refreshToken",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedRegistration"
+          "name": "FailedRegistration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "RegistrationError"
+            },
+            {
+              "index": 1,
+              "name": "field",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 2,
+              "name": "message",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
         }
       ]
     },
@@ -7566,11 +9792,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessJoin"
+          "name": "SuccessJoin",
+          "fields": [
+            {
+              "index": 0,
+              "name": "space",
+              "type": "ArgonSpace"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedJoin"
+          "name": "FailedJoin",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AcceptInviteError"
+            }
+          ]
         }
       ]
     },
@@ -7580,11 +9820,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessPreview"
+          "name": "SuccessPreview",
+          "fields": [
+            {
+              "index": 0,
+              "name": "preview",
+              "type": "InvitePreview"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedPreview"
+          "name": "FailedPreview",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AcceptInviteError"
+            }
+          ]
         }
       ]
     },
@@ -7594,11 +9848,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessLookupUser"
+          "name": "SuccessLookupUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "user",
+              "type": "ArgonUser"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedLookupUser"
+          "name": "FailedLookupUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LookupError"
+            }
+          ]
         }
       ]
     },
@@ -7608,11 +9876,25 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessLookupProfile"
+          "name": "SuccessLookupProfile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedLookupProfile"
+          "name": "FailedLookupProfile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LookupError"
+            }
+          ]
         }
       ]
     },
@@ -7990,11 +10272,35 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessDingDong"
+          "name": "SuccessDingDong",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "rtc",
+              "type": "RtcEndpoint"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedDingDong"
+          "name": "FailedDingDong",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CallFailedError"
+            }
+          ]
         }
       ]
     },
@@ -8004,11 +10310,35 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessPickUp"
+          "name": "SuccessPickUp",
+          "fields": [
+            {
+              "index": 0,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "callId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "rtc",
+              "type": "RtcEndpoint"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedPickUp"
+          "name": "FailedPickUp",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "string"
+            }
+          ]
         }
       ]
     },
@@ -8018,11 +10348,40 @@
       "cases": [
         {
           "index": 0,
-          "name": "SuccessDialCheck"
+          "name": "SuccessDialCheck",
+          "fields": [
+            {
+              "index": 0,
+              "name": "priceMin",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "corelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "corlId",
+              "type": "guid"
+            }
+          ]
         },
         {
           "index": 1,
-          "name": "FailedDialCheck"
+          "name": "FailedDialCheck",
+          "fields": [
+            {
+              "index": 0,
+              "name": "reason",
+              "type": "DialCheckFailReason"
+            },
+            {
+              "index": 1,
+              "name": "priceMin",
+              "type": "i4"
+            }
+          ]
         }
       ]
     },

@@ -1,0 +1,35 @@
+// The card a link turns into: what the composer shows above the input while the message is being
+// written, and what MessageEntityLinkPreview carries once it is sent. Image and canonical URLs are the
+// crawler's re-hosted copies where it has them, never something the client supplied.
+msg LinkPreview {
+    url: string;
+    title: string?;
+    description: string?;
+    siteName: string?;
+    imageUrl: string?;
+    canonicalUrl: string?;
+}
+
+enum LinkPreviewError : u2
+{
+    NONE,
+    // Not an absolute http(s) URL.
+    INVALID_URL,
+    // The page answered but carries nothing worth a card (no title, description or image), or the
+    // crawler was refused (robots.txt, private address, HTTP error).
+    NO_PREVIEW,
+    // The crawler is down or did not answer in time; the client may try again later.
+    UNAVAILABLE,
+    RATE_LIMITED
+}
+
+union LinkPreviewResult {
+    LinkPreviewReady(preview: LinkPreview),
+    LinkPreviewFailed(error: LinkPreviewError)
+}
+
+service LinkPreviewInteraction() {
+    // Asked while the user types (debounced, first link in the draft), so the preview is on screen
+    // before the send and the crawler's cache is warm when the message path asks for it again.
+    GetLinkPreview(url: string): LinkPreviewResult;
+}

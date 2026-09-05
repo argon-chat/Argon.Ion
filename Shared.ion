@@ -27,3 +27,14 @@ msg ArgonIonTicket {
     machineId: string;
     region: string;
 }
+
+// The operating system a session runs on, as far as the server can tell. Reported by the client
+// (X-Argon-Client) or read off the User-Agent; display-only and trusted for nothing.
+enum ClientPlatform {
+    UNKNOWN,
+    WINDOWS,
+    MACOS,
+    LINUX,
+    ANDROID,
+    IOS
+}

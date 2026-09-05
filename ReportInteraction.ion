@@ -1,11 +1,23 @@
 
 
+// What a report points at. The server resolves the target itself and refuses anything the reporter
+// cannot see, so a client only ever names things it has already been shown.
+//
+//   PROFILE / USER    targetId = the user. The two are one thing server-side; both are kept because
+//                     the values are already on the wire.
+//   MESSAGE           targetId = the author, channelId = the space channel, messageId = the message.
+//   DIRECT_MESSAGE    targetId = the author (the peer), channelId = the peer as well, messageId = the
+//                     message. Older clients send these as MESSAGE with channelId = peer; the server
+//                     recognises that shape too.
+//   CHANNEL           targetId = the channel.
+//   SPACE             targetId = the space.
 enum ReportTargetKind {
     PROFILE,
     MESSAGE,
     CHANNEL,
     SPACE,
-    USER
+    USER,
+    DIRECT_MESSAGE
 }
 
 enum ReportCategory {
@@ -130,6 +142,14 @@ union SubmitReportResult {
 }
 
 
+// SubmitReport answers SuccessSubmitReport for everything the client did right, whether or not the
+// report was kept: a duplicate, a rate-limited or a low-standing submission is acknowledged exactly
+// like a stored one, and the receipt id says nothing about which it was. The errors are the ones a
+// client can act on — a target it should not have offered, or the caller reporting themself.
+//
+// GetMyReports is deliberately empty. A reporter learns the outcome through a system notification
+// when a case closes; a browsable history would let them tell which reports stuck and which were
+// dropped, which is the signal a nuisance reporter tunes against.
 service ReportInteraction() {
     SubmitReport(input: CreateReportInput): SubmitReportResult;
     GetMyReports(limit: i4, offset: i4): ReportInfo[];

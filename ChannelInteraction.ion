@@ -73,7 +73,14 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
 
     MessageEntityAttachment(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4?, height: i4?, thumbHash: string?, downloadUrl: string?),
 
-    MessageEntityGif(gifId: string, hmac: string, fileId: guid?, width: i4, height: i4, previewUrl: string?)
+    MessageEntityGif(gifId: string, hmac: string, fileId: guid?, width: i4, height: i4, previewUrl: string?),
+
+    // A web page card for a link in the message (what Telegram calls a web page preview). The client
+    // attaches a stub carrying only `url` (offset/length pointing at the link in the text); the server
+    // fills the rest from the crawler and delivers it either with the message or, when the page was not
+    // cached in time, through MessageUpdated. A page that yields nothing has its stub removed. Only the
+    // first stub in a message is honoured. Appended, never inserted: the case position is the wire tag.
+    MessageEntityLinkPreview(url: string, title: string?, description: string?, siteName: string?, imageUrl: string?, canonicalUrl: string?)
 }
 
 enum EntityType : u2
@@ -103,7 +110,9 @@ enum EntityType : u2
 
     Attachment,
 
-    Gif
+    Gif,
+
+    LinkPreview
 }
 
 msg ReactionInfo {
@@ -591,7 +600,12 @@ union ArgonEvent() {
     // Told to everyone in the space, not just the owner: the wait before a deletion exists so the
     // people who live there can save what matters and leave, and that only works if they are told.
     SpaceDeletionScheduled(spaceId: guid, state: SpaceDeletionState),
-    SpaceDeletionCancelled(spaceId: guid)
+    SpaceDeletionCancelled(spaceId: guid),
+
+    // The message row changed after MessageSent without anybody editing it — today a link preview that
+    // the crawler finished after the send. Channel-scoped like edits and reactions, and it carries the
+    // whole message so a client replaces rather than patches. Appended for the reason above.
+    MessageUpdated(spaceId: guid, channelId: guid, message: ArgonMessage)
 }
 
 msg ChannelReadState {

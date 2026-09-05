@@ -44,10 +44,28 @@ service SecurityInteraction() {
 
 msg SessionInfo {
     sessionId: guid;
+    // The raw client string (a User-Agent). Kept for the tooltip; the fields below are what to show.
     clientName: string;
+    // ISO 3166-1 alpha-2 country the session last connected from, or "" when the edge said nothing.
     region: string;
     lastSeenAt: datetime;
     isCurrent: bool;
+    // Everything from here on was added later and is filled from the per-session record written at
+    // connect time. Older sessions and older clients see "" / UNKNOWN, never a missing row.
+    appId: string;
+    // Display name of the application: a registered first-party app ("Argon Desktop"), or the
+    // browser for a web session ("Chrome"). "" when neither could be told.
+    appName: string;
+    appVersion: string;
+    platform: ClientPlatform;
+    // "Windows 11 Pro", "macOS 15.2", "Android 14" — whatever the client reported.
+    osName: string;
+    // Hostname or device model the client reported. "" for browsers, which cannot know it.
+    deviceName: string;
+    ip: string;
+    // City the edge placed the address in, English name, or "".
+    city: string;
+    startedAt: datetime;
 }
 
 union RevokeSessionResult {
