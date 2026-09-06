@@ -84,6 +84,10 @@ service UserChatInteractions() {
     // Hides the conversation on this side only: the peer keeps theirs, the messages stay, and the
     // next message either side sends brings the row back.
     DeleteChat(peerId: guid);
+    // Files in a direct chat: the same ticket flow as a channel's, scoped to the sender rather than
+    // a space, and refused only when the peer has blocked the sender.
+    BeginUploadAttachment(peerId: guid): UploadFileResult;
+    CompleteUploadAttachment(peerId: guid, blobId: guid): AttachmentInfo;
     SendDirectMessage(receiverId: guid, text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
     QueryDirectMessages(peerId: guid, from: i8?, limit: i4): DirectMessage[];
 }

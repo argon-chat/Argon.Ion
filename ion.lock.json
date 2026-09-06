@@ -5192,6 +5192,33 @@
           "returns": "void",
           "modifiers": []
         },
+        "BeginUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "AttachmentInfo",
+          "modifiers": []
+        },
         "SendDirectMessage": {
           "args": [
             {
