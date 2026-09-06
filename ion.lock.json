@@ -2608,7 +2608,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 65,
+      "nextIndex": 68,
       "cases": [
         {
           "index": 0,
@@ -3844,6 +3844,39 @@
               "type": "ArgonMessage"
             }
           ]
+        },
+        {
+          "index": 65,
+          "name": "UserIgnoredEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "ignoredId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 66,
+          "name": "UserUnignoredEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "ignoredId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 67,
+          "name": "ChatDeletedEvent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ]
         }
       ]
     },
@@ -4732,6 +4765,27 @@
         }
       }
     },
+    "UserIgnore": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "ignoredId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "ignoredAt",
+          "type": "datetime"
+        }
+      ]
+    },
     "UserBlock": {
       "kind": "Msg",
       "nextIndex": 3,
@@ -5034,6 +5088,44 @@
           ],
           "returns": "void",
           "modifiers": []
+        },
+        "GetIgnoreList": {
+          "args": [
+            {
+              "index": 0,
+              "name": "limit",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "offset",
+              "type": "i4"
+            }
+          ],
+          "returns": "Array\u003CUserIgnore\u003E",
+          "modifiers": []
+        },
+        "IgnoreUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "UnignoreUser": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
         }
       }
     },
@@ -5079,6 +5171,17 @@
           "modifiers": []
         },
         "MarkChatRead": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "DeleteChat": {
           "args": [
             {
               "index": 0,

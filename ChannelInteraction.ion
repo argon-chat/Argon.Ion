@@ -629,7 +629,13 @@ union ArgonEvent() {
     // The message row changed after MessageSent without anybody editing it — today a link preview that
     // the crawler finished after the send. Channel-scoped like edits and reactions, and it carries the
     // whole message so a client replaces rather than patches. Appended for the reason above.
-    MessageUpdated(spaceId: guid, channelId: guid, message: ArgonMessage)
+    MessageUpdated(spaceId: guid, channelId: guid, message: ArgonMessage),
+
+    // Appended for the reason above. Personal, like the friend and block events: only the actor's
+    // own sessions receive them, which is how a second window learns what the first one did.
+    UserIgnoredEvent(ignoredId: guid),
+    UserUnignoredEvent(ignoredId: guid),
+    ChatDeletedEvent(peerId: guid)
 }
 
 msg ChannelReadState {

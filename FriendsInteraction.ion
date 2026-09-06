@@ -12,6 +12,19 @@ service FriendsInteraction() {
 
     BlockUser(userId: guid);
     UnblockUser(userId: guid);
+
+    // Ignoring is the quiet alternative to a block: the other person is not told and can still
+    // write, but nothing they send counts as unread or raises a notification. Kept apart from
+    // blocks so a client can offer both and lift either on its own.
+    GetIgnoreList(limit: i4, offset: i4): UserIgnore[];
+    IgnoreUser(userId: guid);
+    UnignoreUser(userId: guid);
+}
+
+msg UserIgnore {
+    userId: guid;
+    ignoredId: guid;
+    ignoredAt: datetime;
 }
 
 enum SendFriendStatus {
@@ -68,6 +81,9 @@ service UserChatInteractions() {
     PinChat(peerId: guid);
     UnpinChat(peerId: guid);
     MarkChatRead(peerId: guid);
+    // Hides the conversation on this side only: the peer keeps theirs, the messages stay, and the
+    // next message either side sends brings the row back.
+    DeleteChat(peerId: guid);
     SendDirectMessage(receiverId: guid, text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
     QueryDirectMessages(peerId: guid, from: i8?, limit: i4): DirectMessage[];
 }
