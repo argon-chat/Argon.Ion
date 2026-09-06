@@ -36,6 +36,9 @@ msg ArgonChannel {
     // text channels that never had it set; 0 is never stored — "off" is null, so the client does not
     // have to distinguish "unset" from "explicitly disabled" when it renders the picker.
     slowModeSeconds: i4?;
+    // Voice only: the audio bitrate members publish at, in kbps. Null means the client's default;
+    // 0 is never stored, the same way slow mode treats "off". Applied when a member joins the room.
+    bitrate: i4?;
 }
 
 flags ChannelMemberState
@@ -158,10 +161,15 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     GetChannels(): RealtimeChannel[];
     UpdateChannelGroup(groupId: guid, name: string?, description: string?);
 
-    // Name, topic and slow mode share one settings sheet in the client, so they share one call —
-    // a method per field would cost a round-trip per toggle. Null means "leave as is", matching
-    // UpdateChannelGroup; slowModeSeconds: 0 is the one value that clears rather than skips.
-    UpdateChannel(name: string?, description: string?, slowModeSeconds: i4?): UpdateChannelResult;
+    // Name, topic, slow mode and bitrate share one settings sheet in the client, so they share one
+    // call — a method per field would cost a round-trip per toggle. Null means "leave as is",
+    // matching UpdateChannelGroup; slowModeSeconds: 0 and bitrate: 0 are the values that clear
+    // rather than skip.
+    UpdateChannel(name: string?, description: string?, slowModeSeconds: i4?, bitrate: i4?): UpdateChannelResult;
+
+    // A copy of this channel — same type, name, topic, cooldown, bitrate and permission overwrites —
+    // placed right after it in the same group. Messages are not copied: it is a new room, not a fork.
+    DuplicateChannel(): DuplicateChannelResult;
 
     // A voice-room link ("argon.gl/v/<code>"): the same invite code space as CreateInviteCode, but
     // remembering which room it points at. One link has to work both for someone who is not a member
@@ -232,7 +240,23 @@ enum UpdateChannelError: u2 {
     NAME_TOO_LONG,
     DESCRIPTION_TOO_LONG,
     SLOW_MODE_NOT_ALLOWED,
-    NOT_A_TEXT_CHANNEL
+    NOT_A_TEXT_CHANNEL,
+    // Appended: enum cases are wire values. Bitrate is a range (8–320 kbps), not a picker, because
+    // the useful value depends on the room's bandwidth rather than on a design choice.
+    BITRATE_OUT_OF_RANGE,
+    NOT_A_VOICE_CHANNEL
+}
+
+union DuplicateChannelResult() {
+    SuccessDuplicateChannel(channel: ArgonChannel),
+    FailedDuplicateChannel(error: DuplicateChannelError)
+}
+
+enum DuplicateChannelError: u2 {
+    NONE,
+    CHANNEL_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    INTERNAL_ERROR
 }
 
 union CreateVoiceInviteResult() {
