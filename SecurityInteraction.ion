@@ -246,7 +246,10 @@ enum DataExportError: u2 {
     NONE,
     ALREADY_IN_PROGRESS,
     RATE_LIMITED,
-    NOT_CONFIGURED
+    NOT_CONFIGURED,
+    // The account is on its way out: a deletion is scheduled, running or done. Appended rather than
+    // slotted in, because the case index is the wire tag.
+    ACCOUNT_DELETION_SCHEDULED
 }
 
 msg DataExportStatus {
@@ -255,8 +258,10 @@ msg DataExportStatus {
     startedAt: datetime?;
     completedAt: datetime?;
     downloadUrl: string?;
+    // Collection steps done so far, not items: one per tick. There is no total to divide it by —
+    // the step count is only knowable once the conversation and channel cursors are seeded, which
+    // is several ticks in, so the field that used to promise one was always zero and is gone.
     itemsProcessed: i4;
-    totalItemsEstimate: i4;
 }
 
 union RequestDataExportResult {

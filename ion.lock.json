@@ -6748,7 +6748,7 @@
     },
     "DataExportStatus": {
       "kind": "Msg",
-      "nextIndex": 7,
+      "nextIndex": 6,
       "fields": [
         {
           "index": 0,
@@ -6778,11 +6778,6 @@
         {
           "index": 5,
           "name": "itemsProcessed",
-          "type": "i4"
-        },
-        {
-          "index": 6,
-          "name": "totalItemsEstimate",
           "type": "i4"
         }
       ]
@@ -6892,7 +6887,8 @@
         "NONE": "0",
         "ALREADY_IN_PROGRESS": "1",
         "RATE_LIMITED": "2",
-        "NOT_CONFIGURED": "3"
+        "NOT_CONFIGURED": "3",
+        "ACCOUNT_DELETION_SCHEDULED": "4"
       },
       "baseType": "u2"
     },
