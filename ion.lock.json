@@ -852,7 +852,7 @@
     },
     "ArgonChannel": {
       "kind": "Msg",
-      "nextIndex": 9,
+      "nextIndex": 10,
       "fields": [
         {
           "index": 0,
@@ -897,6 +897,11 @@
         {
           "index": 8,
           "name": "slowModeSeconds",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 9,
+          "name": "bitrate",
           "type": "Maybe\u003Ci4\u003E"
         }
       ]
@@ -1677,7 +1682,19 @@
         "NAME_TOO_LONG": "4",
         "DESCRIPTION_TOO_LONG": "5",
         "SLOW_MODE_NOT_ALLOWED": "6",
-        "NOT_A_TEXT_CHANNEL": "7"
+        "NOT_A_TEXT_CHANNEL": "7",
+        "BITRATE_OUT_OF_RANGE": "8",
+        "NOT_A_VOICE_CHANNEL": "9"
+      },
+      "baseType": "u2"
+    },
+    "DuplicateChannelError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "INTERNAL_ERROR": "3"
       },
       "baseType": "u2"
     },
@@ -2258,6 +2275,34 @@
               "index": 0,
               "name": "error",
               "type": "UpdateChannelError"
+            }
+          ]
+        }
+      ]
+    },
+    "DuplicateChannelResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessDuplicateChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channel",
+              "type": "ArgonChannel"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedDuplicateChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "DuplicateChannelError"
             }
           ]
         }
@@ -4068,9 +4113,30 @@
               "index": 4,
               "name": "slowModeSeconds",
               "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 5,
+              "name": "bitrate",
+              "type": "Maybe\u003Ci4\u003E"
             }
           ],
           "returns": "UpdateChannelResult",
+          "modifiers": []
+        },
+        "DuplicateChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "DuplicateChannelResult",
           "modifiers": []
         },
         "CreateVoiceInviteCode": {
