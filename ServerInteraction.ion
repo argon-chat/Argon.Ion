@@ -146,6 +146,14 @@ msg ArgonSpaceBase {
     isOfficial: bool;
     hideBoostStrip: bool;
     inviteImageFileId: string?;
+    // A space run as a public community rather than a private group. Owner-visible consequences
+    // live on the server (a longer deletion grace, reports from non-members); the client reads it
+    // only to show the "Community" tag next to the name.
+    //
+    // Nullable only for the wire, same reason as ArgonUserProfile.registeredAt: a client built
+    // against the previous schema cannot decode a message that grew a required field. Absent means
+    // false — the server always sends it.
+    isCommunity: bool?;
 }
 
 msg ArgonSpace {
@@ -161,6 +169,7 @@ msg ArgonSpace {
     isOfficial: bool;
     hideBoostStrip: bool;
     inviteImageFileId: string?;
+    isCommunity: bool?;
 }
 
 msg ArchetypeGroup {

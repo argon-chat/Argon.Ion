@@ -6775,7 +6775,7 @@
     },
     "DataExportStatus": {
       "kind": "Msg",
-      "nextIndex": 7,
+      "nextIndex": 6,
       "fields": [
         {
           "index": 0,
@@ -7558,7 +7558,7 @@
     },
     "ArgonSpaceBase": {
       "kind": "Msg",
-      "nextIndex": 11,
+      "nextIndex": 12,
       "fields": [
         {
           "index": 0,
@@ -7614,12 +7614,17 @@
           "index": 10,
           "name": "inviteImageFileId",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 11,
+          "name": "isCommunity",
+          "type": "Maybe\u003Cbool\u003E"
         }
       ]
     },
     "ArgonSpace": {
       "kind": "Msg",
-      "nextIndex": 12,
+      "nextIndex": 13,
       "fields": [
         {
           "index": 0,
@@ -7680,6 +7685,11 @@
           "index": 11,
           "name": "inviteImageFileId",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 12,
+          "name": "isCommunity",
+          "type": "Maybe\u003Cbool\u003E"
         }
       ]
     },
@@ -9627,7 +9637,7 @@
     },
     "InvitePreview": {
       "kind": "Msg",
-      "nextIndex": 12,
+      "nextIndex": 13,
       "fields": [
         {
           "index": 0,
@@ -9688,6 +9698,11 @@
           "index": 11,
           "name": "voiceChannelName",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 12,
+          "name": "isCommunity",
+          "type": "Maybe\u003Cbool\u003E"
         }
       ]
     },

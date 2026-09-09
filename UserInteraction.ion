@@ -208,6 +208,9 @@ msg InvitePreview {
     // them a voice link degrades into a plain space invite that drops the guest nowhere in particular.
     voiceChannelId: guid?;
     voiceChannelName: string?;
+    // Shown as a "Community" tag on the invite sheet, so a guest can tell a public community from
+    // someone's private group before joining. Nullable for the wire only; absent means false.
+    isCommunity: bool?;
 }
 
 enum AcceptInviteError
