@@ -8397,6 +8397,22 @@
           "returns": "ArgonUserProfile",
           "modifiers": []
         },
+        "PrefetchProfiles": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userIds",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "Array\u003CArgonUserProfile\u003E",
+          "modifiers": []
+        },
         "GetChannels": {
           "args": [
             {

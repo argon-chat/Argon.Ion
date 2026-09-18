@@ -74,6 +74,15 @@ service ServerInteraction(spaceId: guid)
     PrefetchUser(userId: guid): ArgonUser;
     PrefetchProfile(userId: guid): ArgonUserProfile;
 
+    // The same answer as PrefetchProfile, for everyone a member list is showing at once. One call
+    // per member meant one DbContext and one join over three tables per member, so opening a space
+    // with a few hundred of them opened with a few hundred round trips.
+    //
+    // One entry per id, in the order asked. Ids past the server's cap are not answered at all
+    // rather than answered wrongly, so a caller with more than that to ask about sends them in
+    // chunks — PrefetchProfile stays for the single-member case.
+    PrefetchProfiles(userIds: guid[]): ArgonUserProfile[];
+
     GetChannels(): RealtimeChannel[];
 
     GetServerArchetypes(): Archetype[];
