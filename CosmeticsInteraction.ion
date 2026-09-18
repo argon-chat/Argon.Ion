@@ -1,0 +1,312 @@
+// Profile cosmetics: what a person may wear, what they are wearing, and where.
+//
+// Separate from UpdateMe deliberately. That call already carries the premium gate, the display-name
+// cooldown, avatar ownership and the legacy preset fields; hanging a second, differently-shaped
+// concern off it would mean every equip re-ran all of that, and every future cosmetic field widened
+// a message that four other things already depend on.
+
+service CosmeticsInteraction() {
+    // Everything published that this build can render, with ownership resolved for the caller.
+    // Unpaged on purpose while the catalogue is small; when it stops being small the change is a
+    // page cursor here, not a different shape.
+    GetCatalogue(): CosmeticCatalogue;
+
+    GetMyCosmetics(): MyCosmetics;
+
+    // The personas and which spaces they are worn in.
+    GetMyLoadouts(): CosmeticLoadoutList;
+
+    CreateLoadout(name: string): CreateLoadoutResult;
+    RenameLoadout(loadoutId: guid, name: string): LoadoutActionResult;
+
+    // Which persona applies where no space says otherwise. The same act as assigning the global
+    // scope, said the other way round, and `isDefault` is the name that one assignment goes by —
+    // release it and nobody is wearing a look everywhere, which is what "only in the spaces I
+    // picked" is built on. Deleting the one that holds it is refused while others exist, so the
+    // first look a person ever made does not become the one they are stuck with.
+    SetDefaultLoadout(loadoutId: guid): LoadoutActionResult;
+
+    // Sets a look aside, or takes it out again. A look put away is worn nowhere whatever it is
+    // assigned to, and keeps every assignment for when it comes back — the spaces were being used as
+    // an on switch, and lost every time it was switched off.
+    SetLoadoutPaused(loadoutId: guid, paused: bool): LoadoutActionResult;
+
+    DeleteLoadout(loadoutId: guid): LoadoutActionResult;
+
+    // Both return the caller's profile as it now reads, so the client can render the result without
+    // a second round trip — the same echo UpdateMe gives.
+    Equip(loadoutId: guid, cosmeticId: guid, slotIndex: i4, overridesJson: string?): EquipResult;
+    Unequip(loadoutId: guid, kindKey: string, slotIndex: i4): EquipResult;
+
+    // The parts of something worn that only its wearer decides: the axes, and whatever the kind lets
+    // them fill in — the colours of their own name, say.
+    //
+    // Not more arguments on Equip: adding one to a method that has shipped is how installed builds
+    // stop being able to call it.
+    //
+    // It is also the only way a kind with no catalogue rows is worn. Such a kind has nothing to
+    // equip — configuring it is putting it on — so this creates the row, and taking it off is an
+    // ordinary Unequip.
+    ConfigureCosmetic(loadoutId: guid, kindKey: string, slotIndex: i4, overridesJson: string?, contentJson: string?): EquipResult;
+
+    // What a look is called, what it looks like, and what it says — in the spaces it applies to.
+    //
+    // A null field means the account's own value shows through, and the call always carries all
+    // three, so clearing an override and never setting one are the same thing said the same way.
+    SetLoadoutIdentity(input: LoadoutIdentityInput): LoadoutActionResult;
+
+    // A look's own picture, uploaded the same way an account avatar is and moderated by the same
+    // call: a picture other people see is a picture other people see, whichever field holds it.
+    BeginUploadLoadoutAvatar(loadoutId: guid): UploadFileResult;
+    CompleteUploadLoadoutAvatar(loadoutId: guid, blobId: guid): LoadoutActionResult;
+
+    // A picture for a board card. Taken in the same way and moderated by the same call as an avatar,
+    // and it answers with the file id rather than storing it: an avatar has a column, a card does
+    // not, so the card carries it and uploading is not the same act as putting it on.
+    BeginUploadWidgetPicture(loadoutId: guid): UploadFileResult;
+    CompleteUploadWidgetPicture(loadoutId: guid, blobId: guid): WidgetPictureResult;
+
+    // Replaces a look's whole profile board at once: which cards, in what order, how wide, and
+    // what each one says.
+    //
+    // One call rather than an equip per card because the board is one thing — reordering is every
+    // card's position changing at the same time, and doing that as a sequence of edits means every
+    // intermediate state is a board somebody could be looking at.
+    SetWidgetBoard(loadoutId: guid, cards: WidgetCard[]): LoadoutActionResult;
+
+    // A null space is the global default — what is worn anywhere no space says otherwise.
+    //
+    // A space belongs to one look at a time: assigning it to a second takes it from the first, which
+    // is the database's rule rather than a policy, and the reason a picker has to show where a space
+    // is going from.
+    AssignLoadoutToSpace(spaceId: guid?, loadoutId: guid): LoadoutActionResult;
+
+    // Takes a space back off whatever look holds it, or, with a null space, leaves nothing wearing
+    // the "everywhere" role. Both then fall through to the default look.
+    UnassignLoadoutFromSpace(spaceId: guid?): LoadoutActionResult;
+
+    // What a group of people are wearing, in one call.
+    //
+    // This exists because of where cosmetics have to be drawn: a message author's name and a member
+    // list row. Asking per person would be one request per message on screen, and the member list of
+    // a large space would make thousands — so the batch is the only shape those surfaces can use,
+    // and offering only the per-person read would have meant either a slow product or those surfaces
+    // never getting cosmetics at all.
+    //
+    // Space-scoped, because that is the question being asked: a person can wear a different loadout
+    // in each space, and a member list wants this space's answer. A null space asks for the global
+    // one. Capped server-side; ask for the window being rendered rather than the whole roster.
+    GetWornBy(spaceId: guid?, userIds: guid[]): WornCosmetics[];
+}
+
+msg WornCosmetics {
+    userId: guid;
+    cosmetics: EquippedCosmetic[];
+
+    // The same two answers, for the surfaces that draw a person without reading their profile — a
+    // member list row, a message author. They already ask this call what somebody is wearing here;
+    // who they are here is the same question with the same scope.
+    displayNameOverride: string?;
+    avatarFileIdOverride: string?;
+}
+
+msg CosmeticCatalogue {
+    kinds: CosmeticKindSummary[];
+    items: CatalogueCosmetic[];
+}
+
+// What a kind is, as far as a client needs to know: which renderer, where it draws, and how many of
+// it may be worn. Enough to lay out a picker without the client hardcoding a list of kinds.
+msg CosmeticKindSummary {
+    kindKey: string;
+    primitive: string;
+    surfaces: string[];
+    scopes: string[];
+    layer: i4;
+    maxSlots: i4;
+}
+
+msg CatalogueCosmetic {
+    cosmeticId: guid;
+    kindKey: string;
+    slug: string;
+    nameKey: string;
+    descriptionKey: string?;
+    rarity: string?;
+    version: i4;
+    payloadJson: string;
+    assets: EquippedCosmeticAsset[];
+
+    // Whether the caller may equip it right now — by a grant, a promo code, a purchase, or a
+    // subscription that covers it. A subscription-held item is owned for exactly as long as the
+    // subscription lasts and has no grant behind it, which is why this is computed rather than read.
+    owned: bool;
+
+    availableUntil: datetime?;
+
+    // How this is come by, so a picker can say what to do about something the person does not have.
+    // Without it a locked tile can only be locked, which tells somebody nothing they can act on.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    acquisition: CosmeticAcquisition[]?;
+
+    // Set only for a card on the profile board: what an operator decided about this one, already
+    // held inside what its kind can draw. Null for everything that is simply worn.
+    board: CatalogueBoardPolicy?;
+
+    // What it is called, in every language an operator has written it in — not just the caller's.
+    //
+    // All of them travel because the catalogue is read once and kept for the session: nothing
+    // refetches it when somebody changes language, so a name resolved at fetch time would be the
+    // one string on screen still in the old language. It is also why this is not an argument on
+    // GetCatalogue, quite apart from that being a method that has shipped.
+    //
+    // Appended and nullable, like every field added to a message that already shipped. Empty or
+    // absent means fall back to nameKey.
+    text: CosmeticText[]?;
+}
+
+msg CosmeticText {
+    // The client's own code for the language — en, ru, jp, am, ru_pt.
+    locale: string;
+
+    name: string;
+    description: string?;
+}
+
+msg CatalogueBoardPolicy {
+    // How many of this card one board may hold. One makes it unique.
+    maxPerBoard: i4;
+
+    // The size a card of this row is created at.
+    defaultWidth: i4;
+    defaultHeight: i4;
+
+    // The kind's own limits, so a picker holds a choice to the same ones the write path will.
+    maxWidth: i4;
+    minHeight: i4;
+    maxHeight: i4;
+
+    // Narrowest the card may be made — what its editor needs in order to fit.
+    minWidth: i4?;
+}
+
+enum CosmeticAcquisition {
+    OperatorGrant,
+    PromoCode,
+    UltimaTier,
+    Purchase,
+    Gift,
+
+    // Everybody has it. Appended, and the reason a picker can tell "you do not have this" apart from
+    // "this costs nothing".
+    Free
+}
+
+msg MyCosmetics {
+    items: OwnedCosmetic[];
+}
+
+msg OwnedCosmetic {
+    cosmeticId: guid;
+    kindKey: string;
+    slug: string;
+    expiresAt: datetime?;
+
+    // True for something held only because the subscription covers it. It cannot be given away and
+    // it lapses when the subscription does.
+    viaSubscription: bool;
+}
+
+msg CosmeticLoadoutList {
+    loadouts: CosmeticLoadout[];
+    assignments: CosmeticScopeAssignment[];
+}
+
+msg CosmeticLoadout {
+    loadoutId: guid;
+    name: string;
+    isDefault: bool;
+    sortOrder: i4;
+    equipped: EquippedCosmetic[];
+
+    // What this look overrides about its wearer. Null in any of them is "as in the account", which
+    // is what a look inherits until somebody fills it in.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    displayNameOverride: string?;
+    avatarFileIdOverride: string?;
+    bioOverride: string?;
+
+    // Set aside: worn nowhere whatever it is assigned to. Null reads as "not set aside" on a client
+    // built before this existed, which is the state every look was in then.
+    isPaused: bool?;
+}
+
+msg LoadoutIdentityInput {
+    loadoutId: guid;
+
+    // Null in any of these is "as in the account", which is also how one is cleared.
+    displayName: string?;
+    bio: string?;
+
+    // Set by the upload, not by hand: a look cannot point at a file the person does not own.
+    // Passing null here drops the override and goes back to the account's avatar.
+    keepAvatar: bool;
+}
+
+msg WidgetCard {
+    cosmeticId: guid;
+
+    // The wearer's own words, against the schema the kind declares. Null for a card just added.
+    contentJson: string?;
+
+    // Where it sits and how big it is, in grid cells. Held to what the kind and the board allow.
+    x: i4;
+    y: i4;
+    w: i4;
+    h: i4;
+}
+
+msg CosmeticScopeAssignment {
+    spaceId: guid?;
+    loadoutId: guid;
+}
+
+union WidgetPictureResult {
+    SuccessWidgetPicture(fileId: string),
+    FailedWidgetPicture(error: CosmeticError)
+}
+
+union CreateLoadoutResult {
+    SuccessCreateLoadout(loadoutId: guid),
+    FailedCreateLoadout(error: CosmeticError)
+}
+
+union LoadoutActionResult {
+    SuccessLoadoutAction(),
+    FailedLoadoutAction(error: CosmeticError)
+}
+
+union EquipResult {
+    SuccessEquip(profile: ArgonUserProfile),
+    FailedEquip(error: CosmeticError)
+}
+
+enum CosmeticError {
+    NONE,
+    NOT_FOUND,
+    NOT_OWNED,
+    UNKNOWN_KIND,
+    KIND_DISABLED,
+    ITEM_UNAVAILABLE,
+    SLOT_OUT_OF_RANGE,
+    SCOPE_NOT_SUPPORTED,
+    NAME_INVALID,
+    NAME_TAKEN,
+    LOADOUT_LIMIT,
+    CANNOT_DELETE_DEFAULT,
+
+    // A facet choice that the kind does not offer, or a malformed override map.
+    OVERRIDE_INVALID
+}
