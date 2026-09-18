@@ -7,6 +7,11 @@ msg InventoryItem {
     usableVector: ItemUseVector?;
     receivedFrom: guid?;
     ttl: duration?;
+    // Not null marks this item as a key: the client draws its name, art and rarity from the
+    // cosmetics catalogue by this id rather than from the static metadata package, so a new
+    // cosmetic in a case never needs a client release. Appended here deliberately, after ttl —
+    // inserting a field earlier in the message is a breaking change (ION0021).
+    cosmeticId: guid?;
 }
 
 msg DetailedInventoryItem {

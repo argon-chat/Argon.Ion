@@ -4729,6 +4729,833 @@
         }
       }
     },
+    "WornCosmetics": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "userId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "cosmetics",
+          "type": "Array\u003CEquippedCosmetic\u003E"
+        },
+        {
+          "index": 2,
+          "name": "displayNameOverride",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "avatarFileIdOverride",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "CosmeticCatalogue": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kinds",
+          "type": "Array\u003CCosmeticKindSummary\u003E"
+        },
+        {
+          "index": 1,
+          "name": "items",
+          "type": "Array\u003CCatalogueCosmetic\u003E"
+        }
+      ]
+    },
+    "CosmeticKindSummary": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "primitive",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "surfaces",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "scopes",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "layer",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "maxSlots",
+          "type": "i4"
+        }
+      ]
+    },
+    "CatalogueCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 14,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "nameKey",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "descriptionKey",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "rarity",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "version",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "payloadJson",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "assets",
+          "type": "Array\u003CEquippedCosmeticAsset\u003E"
+        },
+        {
+          "index": 9,
+          "name": "owned",
+          "type": "bool"
+        },
+        {
+          "index": 10,
+          "name": "availableUntil",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 11,
+          "name": "acquisition",
+          "type": "Maybe\u003CArray\u003CCosmeticAcquisition\u003E\u003E"
+        },
+        {
+          "index": 12,
+          "name": "board",
+          "type": "Maybe\u003CCatalogueBoardPolicy\u003E"
+        },
+        {
+          "index": 13,
+          "name": "text",
+          "type": "Maybe\u003CArray\u003CCosmeticText\u003E\u003E"
+        }
+      ]
+    },
+    "CosmeticText": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "CatalogueBoardPolicy": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "maxPerBoard",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "defaultWidth",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "defaultHeight",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "maxWidth",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "minHeight",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "maxHeight",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "minWidth",
+          "type": "Maybe\u003Ci4\u003E"
+        }
+      ]
+    },
+    "MyCosmetics": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "items",
+          "type": "Array\u003COwnedCosmetic\u003E"
+        }
+      ]
+    },
+    "OwnedCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "expiresAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 4,
+          "name": "viaSubscription",
+          "type": "bool"
+        }
+      ]
+    },
+    "CosmeticLoadoutList": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "loadouts",
+          "type": "Array\u003CCosmeticLoadout\u003E"
+        },
+        {
+          "index": 1,
+          "name": "assignments",
+          "type": "Array\u003CCosmeticScopeAssignment\u003E"
+        }
+      ]
+    },
+    "CosmeticLoadout": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "loadoutId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "isDefault",
+          "type": "bool"
+        },
+        {
+          "index": 3,
+          "name": "sortOrder",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "equipped",
+          "type": "Array\u003CEquippedCosmetic\u003E"
+        },
+        {
+          "index": 5,
+          "name": "displayNameOverride",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "avatarFileIdOverride",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 7,
+          "name": "bioOverride",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 8,
+          "name": "isPaused",
+          "type": "Maybe\u003Cbool\u003E"
+        }
+      ]
+    },
+    "LoadoutIdentityInput": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "loadoutId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "displayName",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "bio",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "keepAvatar",
+          "type": "bool"
+        }
+      ]
+    },
+    "WidgetCard": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "contentJson",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 2,
+          "name": "x",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "y",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "w",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "h",
+          "type": "i4"
+        }
+      ]
+    },
+    "CosmeticScopeAssignment": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 1,
+          "name": "loadoutId",
+          "type": "guid"
+        }
+      ]
+    },
+    "CosmeticAcquisition": {
+      "kind": "Enum",
+      "members": {
+        "OperatorGrant": "0",
+        "PromoCode": "1",
+        "UltimaTier": "2",
+        "Purchase": "3",
+        "Gift": "4",
+        "Free": "5"
+      },
+      "baseType": "u4"
+    },
+    "CosmeticError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "NOT_OWNED": "2",
+        "UNKNOWN_KIND": "3",
+        "KIND_DISABLED": "4",
+        "ITEM_UNAVAILABLE": "5",
+        "SLOT_OUT_OF_RANGE": "6",
+        "SCOPE_NOT_SUPPORTED": "7",
+        "NAME_INVALID": "8",
+        "NAME_TAKEN": "9",
+        "LOADOUT_LIMIT": "10",
+        "CANNOT_DELETE_DEFAULT": "11",
+        "OVERRIDE_INVALID": "12"
+      },
+      "baseType": "u4"
+    },
+    "WidgetPictureResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessWidgetPicture",
+          "fields": [
+            {
+              "index": 0,
+              "name": "fileId",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedWidgetPicture",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "CreateLoadoutResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateLoadout",
+          "fields": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateLoadout",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "LoadoutActionResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessLoadoutAction",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedLoadoutAction",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "EquipResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "CosmeticsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetCatalogue": {
+          "args": [],
+          "returns": "CosmeticCatalogue",
+          "modifiers": []
+        },
+        "GetMyCosmetics": {
+          "args": [],
+          "returns": "MyCosmetics",
+          "modifiers": []
+        },
+        "GetMyLoadouts": {
+          "args": [],
+          "returns": "CosmeticLoadoutList",
+          "modifiers": []
+        },
+        "CreateLoadout": {
+          "args": [
+            {
+              "index": 0,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "CreateLoadoutResult",
+          "modifiers": []
+        },
+        "RenameLoadout": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "SetDefaultLoadout": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "SetLoadoutPaused": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "paused",
+              "type": "bool"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "DeleteLoadout": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "Equip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "cosmeticId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "slotIndex",
+              "type": "i4"
+            },
+            {
+              "index": 3,
+              "name": "overridesJson",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "Unequip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "kindKey",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "slotIndex",
+              "type": "i4"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "ConfigureCosmetic": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "kindKey",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "slotIndex",
+              "type": "i4"
+            },
+            {
+              "index": 3,
+              "name": "overridesJson",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 4,
+              "name": "contentJson",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "SetLoadoutIdentity": {
+          "args": [
+            {
+              "index": 0,
+              "name": "input",
+              "type": "LoadoutIdentityInput"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "BeginUploadLoadoutAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadLoadoutAvatar": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "BeginUploadWidgetPicture": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "CompleteUploadWidgetPicture": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "blobId",
+              "type": "guid"
+            }
+          ],
+          "returns": "WidgetPictureResult",
+          "modifiers": []
+        },
+        "SetWidgetBoard": {
+          "args": [
+            {
+              "index": 0,
+              "name": "loadoutId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "cards",
+              "type": "Array\u003CWidgetCard\u003E"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "AssignLoadoutToSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 1,
+              "name": "loadoutId",
+              "type": "guid"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "UnassignLoadoutFromSpace": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ],
+          "returns": "LoadoutActionResult",
+          "modifiers": []
+        },
+        "GetWornBy": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 1,
+              "name": "userIds",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "Array\u003CWornCosmetics\u003E",
+          "modifiers": []
+        }
+      }
+    },
     "FeatureFlagData": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -5949,7 +6776,7 @@
     },
     "InventoryItem": {
       "kind": "Msg",
-      "nextIndex": 8,
+      "nextIndex": 9,
       "fields": [
         {
           "index": 0,
@@ -5990,6 +6817,11 @@
           "index": 7,
           "name": "ttl",
           "type": "Maybe\u003Cduration\u003E"
+        },
+        {
+          "index": 8,
+          "name": "cosmeticId",
+          "type": "Maybe\u003Cguid\u003E"
         }
       ]
     },
@@ -7997,7 +8829,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 15,
+      "nextIndex": 19,
       "fields": [
         {
           "index": 0,
@@ -8006,73 +8838,226 @@
         },
         {
           "index": 1,
-          "name": "customStatus",
+          "name": "displayNameOverride",
           "type": "Maybe\u003Cstring\u003E"
         },
         {
           "index": 2,
-          "name": "customStatusIconId",
+          "name": "avatarFileIdOverride",
           "type": "Maybe\u003Cstring\u003E"
         },
         {
           "index": 3,
-          "name": "bannerFileID",
+          "name": "customStatus",
           "type": "Maybe\u003Cstring\u003E"
         },
         {
           "index": 4,
-          "name": "dateOfBirth",
-          "type": "Maybe\u003Cdateonly\u003E"
+          "name": "customStatusIconId",
+          "type": "Maybe\u003Cstring\u003E"
         },
         {
           "index": 5,
-          "name": "bio",
+          "name": "bannerFileID",
           "type": "Maybe\u003Cstring\u003E"
         },
         {
           "index": 6,
+          "name": "dateOfBirth",
+          "type": "Maybe\u003Cdateonly\u003E"
+        },
+        {
+          "index": 7,
+          "name": "bio",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 8,
           "name": "badges",
           "type": "Array\u003Cstring\u003E"
         },
         {
-          "index": 7,
+          "index": 9,
           "name": "archetypes",
           "type": "Array\u003CSpaceMemberArchetype\u003E"
         },
         {
-          "index": 8,
+          "index": 10,
           "name": "backgroundId",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 9,
+          "index": 11,
           "name": "voiceCardEffectId",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 10,
+          "index": 12,
           "name": "avatarFrameId",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 11,
+          "index": 13,
           "name": "nickEffectId",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 12,
+          "index": 14,
           "name": "primaryColor",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 13,
+          "index": 15,
           "name": "accentColor",
           "type": "Maybe\u003Ci4\u003E"
         },
         {
-          "index": 14,
+          "index": 16,
           "name": "registeredAt",
           "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 17,
+          "name": "cosmetics",
+          "type": "Maybe\u003CArray\u003CEquippedCosmetic\u003E\u003E"
+        },
+        {
+          "index": 18,
+          "name": "loadoutId",
+          "type": "Maybe\u003Cguid\u003E"
+        }
+      ]
+    },
+    "EquippedCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 14,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "itemId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "layer",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "slotIndex",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "payloadJson",
+          "type": "string"
+        },
+        {
+          "index": 6,
+          "name": "assets",
+          "type": "Array\u003CEquippedCosmeticAsset\u003E"
+        },
+        {
+          "index": 7,
+          "name": "options",
+          "type": "Maybe\u003CArray\u003CEquippedCosmeticOption\u003E\u003E"
+        },
+        {
+          "index": 8,
+          "name": "contentJson",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "boardX",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 10,
+          "name": "boardY",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 11,
+          "name": "boardW",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 12,
+          "name": "boardH",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 13,
+          "name": "version",
+          "type": "Maybe\u003Ci4\u003E"
+        }
+      ]
+    },
+    "EquippedCosmeticOption": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "facetId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "itemId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "payloadJson",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "assets",
+          "type": "Array\u003CEquippedCosmeticAsset\u003E"
+        },
+        {
+          "index": 6,
+          "name": "version",
+          "type": "Maybe\u003Ci4\u003E"
+        }
+      ]
+    },
+    "EquippedCosmeticAsset": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "slot",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "fileId",
+          "type": "string"
         }
       ]
     },

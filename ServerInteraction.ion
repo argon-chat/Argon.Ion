@@ -261,6 +261,16 @@ msg ArgonUser {
 
 msg ArgonUserProfile {
     userId: guid;
+
+    // Who this person is in the scope this profile was read for, when a look says so. Null means the
+    // account's own name and picture, which is what every look starts out inheriting.
+    //
+    // Here rather than on ArgonUser because that message rides along with every member list and
+    // every broadcast and carries no scope — one row cannot hold an answer that differs per space.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    displayNameOverride: string?;
+    avatarFileIdOverride: string?;
     customStatus: string?;
     customStatusIconId: string?;
     bannerFileID: string?;
@@ -280,6 +290,100 @@ msg ArgonUserProfile {
     // Nullable only for the wire: a client built against the previous schema fails to decode the
     // whole profile if a newly added field is required, and every user does have a registration date.
     registeredAt: datetime?;
+
+    // What this person is actually wearing, and which of their loadouts said so.
+    //
+    // The six fields above are now a PROJECTION of this, kept because installed desktop builds read
+    // them and will for some time. A cosmetic that predates the system answers to one of those
+    // integers and appears in both places; one that does not is simply invisible to an older build,
+    // which is the correct outcome rather than a failure.
+    //
+    // Nullable for the same reason registeredAt is: a client built against the previous schema
+    // cannot decode a profile that grew a required field.
+    cosmetics: EquippedCosmetic[]?;
+    loadoutId: guid?;
+}
+
+// One cosmetic as worn, resolved: the catalogue row's content, not a reference to be looked up.
+//
+// payloadJson is a string and that is deliberate. Ion has no open-schema value, and a typed union
+// per kind would put every kind of cosmetic into this contract — so adding one would be a wire
+// change, and deleting a kind's file would leave a case here with nothing behind it. The whole
+// design rests on a kind being one file that can be added or removed on its own, so the payload
+// crosses as text and the client parses it defensively against the kind it belongs to.
+msg EquippedCosmetic {
+    kindKey: string;
+    itemId: guid;
+    slug: string;
+
+    // Compositing order within a surface, low to high, and the position within the kind for the
+    // kinds that allow several at once.
+    layer: i4;
+    slotIndex: i4;
+
+    payloadJson: string;
+    assets: EquippedCosmeticAsset[];
+
+    // What the wearer composed on this item's axes, already resolved to the option rows they chose.
+    //
+    // Resolved here rather than sent as bare slugs because the expensive reader is a member list: a
+    // row drawing somebody's name needs the face and the colour in hand, and a second lookup per name
+    // is the thing that makes a large space slow. The client folds these into the payload, because
+    // what a font means to a nickname is the renderer's business, not the wire's.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    options: EquippedCosmeticOption[]?;
+
+    // What the wearer wrote into this card, for the kinds that have anything to write into, plus
+    // where it sits on the profile board and how big it is, in grid cells.
+    //
+    // Cells rather than an order: a person dragging a card puts it somewhere, and an ordered list can
+    // only say what it comes after. The layout runs across kinds, so it travels with the worn row
+    // rather than with the kind.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    contentJson: string?;
+    boardX: i4?;
+    boardY: i4?;
+    boardW: i4?;
+    boardH: i4?;
+
+    // Which authoring of the catalogue row this is, so a reader can tell a cached copy from the
+    // current one.
+    //
+    // The payload travels with the profile, and profiles are cached on the client for hours. An
+    // operator who re-authors a published row therefore reaches nobody who already holds the
+    // profile: they keep rendering what was true when it was fetched, and there is no event for it
+    // because nothing about the person changed. The catalogue already carries the same number, so a
+    // client that reads the catalogue can compare the two and drop exactly the profiles that are
+    // behind — rather than everything, on a timer, or not at all.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    version: i4?;
+}
+
+// One option chosen on one axis: the row, its payload, and whatever file it carries.
+msg EquippedCosmeticOption {
+    facetId: string;
+    kindKey: string;
+    itemId: guid;
+    slug: string;
+    payloadJson: string;
+    assets: EquippedCosmeticAsset[];
+
+    // As on the worn row above, and for the same reason: an option is a catalogue row too, and
+    // re-authoring a colour has to reach the people already wearing it.
+    //
+    // Appended and nullable, like every field added to a message that already shipped.
+    version: i4?;
+}
+
+// A file the cosmetic draws with. Carries the id only: the client builds the URL through cdnUrl(),
+// because a server-provided absolute URL gets cached by whoever received it and pins a region that
+// may not be theirs tomorrow.
+msg EquippedCosmeticAsset {
+    slot: string;
+    fileId: string;
 }
 
 flags UserFlag : i4
