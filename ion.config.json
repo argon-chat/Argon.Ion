@@ -10,8 +10,7 @@
                 "server",
                 "client",
                 "models"
-            ],
-            "outputs": "./../Argon.CodeGen"
+            ]
         },
         "browser": {
             "outputFile": "./../packages/glue/src/argonChat.ts"
