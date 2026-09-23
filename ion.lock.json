@@ -1569,6 +1569,22 @@
         }
       ]
     },
+    "RealtimeCursor": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "entryId",
+          "type": "string"
+        }
+      ]
+    },
     "UserActivityPresence": {
       "kind": "Msg",
       "nextIndex": 3,
@@ -3924,6 +3940,190 @@
         }
       ]
     },
+    "RealtimeFrame": {
+      "kind": "Union",
+      "nextIndex": 6,
+      "cases": [
+        {
+          "index": 0,
+          "name": "Welcome",
+          "fields": [
+            {
+              "index": 0,
+              "name": "connectionId",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "ForSelf",
+          "fields": [
+            {
+              "index": 0,
+              "name": "payload",
+              "type": "bytes"
+            },
+            {
+              "index": 1,
+              "name": "entryId",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "ForSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "payload",
+              "type": "bytes"
+            },
+            {
+              "index": 1,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "entryId",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "ForChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "payload",
+              "type": "bytes"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "name": "Resumed",
+          "fields": [
+            {
+              "index": 0,
+              "name": "needFullResync",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "name": "SessionRevoked",
+          "fields": [
+            {
+              "index": 0,
+              "name": "reason",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    "RealtimeCommand": {
+      "kind": "Union",
+      "nextIndex": 7,
+      "cases": [
+        {
+          "index": 0,
+          "name": "Resume",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userCursor",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 1,
+              "name": "spaceCursors",
+              "type": "Array\u003CRealtimeCursor\u003E"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "Heartbeat",
+          "fields": [
+            {
+              "index": 0,
+              "name": "status",
+              "type": "UserStatus"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "GoOffline",
+          "fields": []
+        },
+        {
+          "index": 3,
+          "name": "SubscribeToChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "name": "UnsubscribeFromChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "name": "Typing",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "name": "StopTyping",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        }
+      ]
+    },
     "ChannelInteraction": {
       "kind": "Service",
       "methods": {
@@ -4726,6 +4926,20 @@
           "args": [],
           "returns": "string",
           "modifiers": []
+        },
+        "Realtime": {
+          "args": [
+            {
+              "index": 0,
+              "name": "commands",
+              "type": "RealtimeCommand",
+              "modifier": "stream"
+            }
+          ],
+          "returns": "RealtimeFrame",
+          "modifiers": [
+            "stream"
+          ]
         }
       }
     },
@@ -9179,7 +9393,7 @@
     },
     "ArgonIonTicket": {
       "kind": "Msg",
-      "nextIndex": 9,
+      "nextIndex": 11,
       "fields": [
         {
           "index": 0,
@@ -9225,6 +9439,16 @@
           "index": 8,
           "name": "region",
           "type": "string"
+        },
+        {
+          "index": 9,
+          "name": "credentialSessionIds",
+          "type": "Array\u003Cguid\u003E"
+        },
+        {
+          "index": 10,
+          "name": "issuedAt",
+          "type": "datetime"
         }
       ]
     },

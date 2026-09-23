@@ -26,6 +26,9 @@ msg ArgonIonTicket {
     sessionId: guid;
     machineId: string;
     region: string;
+    // What a stream connection is judged by for revocation, as the hub ticket's csid and iat claims.
+    credentialSessionIds: guid[];
+    issuedAt: datetime;
 }
 
 // The operating system a session runs on, as far as the server can tell. Reported by the client

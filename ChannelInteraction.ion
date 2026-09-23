@@ -482,6 +482,9 @@ service EventBus() {
 
 
     PickTicket(): string;
+
+    // The realtime connection: the Ion stream counterpart of the SignalR hub at /w.
+    stream Realtime(stream commands: RealtimeCommand): RealtimeFrame;
 }
 
 union InterlinkResult() {
@@ -704,6 +707,37 @@ union ArgonClientEvent() {
     IAmStopTypingEvent(channelId: guid),
     HeartBeatEvent(status: UserStatus),
     SubscribeToMySpaces()
+}
+
+// Server → client over EventBus.Realtime. `payload` is the CBOR of an ArgonEvent, kept opaque:
+// the server encodes an event once for every transport, and a web worker hands it to the page untouched.
+// TODO(open unions): make `payload` a typed `ev: ArgonEvent` once Ion unions are open. Today an
+// ArgonEvent case an older client does not know fails the whole frame, and the stream with it.
+union RealtimeFrame() {
+    // A fresh server-side session: re-send Resume, channel subscriptions and the heartbeat.
+    // A resumed Ion session does not get one.
+    Welcome(connectionId: string),
+    ForSelf(payload: bytes, entryId: string),
+    ForSpace(payload: bytes, spaceId: guid, entryId: string),
+    ForChannel(payload: bytes, channelId: guid),
+    Resumed(needFullResync: bool),
+    SessionRevoked(reason: string)
+}
+
+msg RealtimeCursor {
+    spaceId: guid;
+    entryId: string;
+}
+
+// Client → server over EventBus.Realtime.
+union RealtimeCommand() {
+    Resume(userCursor: string?, spaceCursors: RealtimeCursor[]),
+    Heartbeat(status: UserStatus),
+    GoOffline(),
+    SubscribeToChannel(channelId: guid),
+    UnsubscribeFromChannel(channelId: guid),
+    Typing(spaceId: guid, channelId: guid),
+    StopTyping(spaceId: guid, channelId: guid)
 }
 
 
