@@ -45,10 +45,19 @@ msg CatalogueCosmetic {
     // was read at, so the two can be compared and a stale profile dropped rather than all of them.
     version: i4;
 
-    payloadJson: string;
+    // What the row looks like, typed by its kind. A row whose stored document does not fit its kind
+    // is not in the catalogue at all.
+    payload: CosmeticPayload;
+
     assets: CosmeticAsset[];
     availableUntil: datetime?;
-    acquisition: CosmeticAcquisition[];
+
+    // Everybody may wear it, with nothing held.
+    free: bool;
+
+    // An active Ultima subscription covers it. Anything neither free nor covered is given to people —
+    // how it was given is the server's business, not the picker's.
+    ultima: bool;
 
     // Every language the row is named in. The client picks at render time, so switching language
     // needs no refetch; nameKey is the last resort behind these.
@@ -59,13 +68,6 @@ msg CosmeticText {
     locale: string;
     name: string;
     description: string?;
-}
-
-// How an item may be come by. More members follow as the ways of granting one arrive; appended.
-enum CosmeticAcquisition {
-    OperatorGrant,
-    UltimaTier,
-    Free
 }
 
 msg MyCosmetics {
@@ -124,14 +126,16 @@ enum CosmeticError {
 union WornCosmetic {
     WornItem(itemId: guid),
 
-    // The look of a name: the options chosen on its three axes, by catalogue row, and the wearer's own
-    // colours and setting. Every field may be absent; a name with none of them is a name not styled.
+    // The look of a name. The face and the treatment are catalogue rows, by id — a face is a file and a
+    // treatment is code on the client, neither of which a number can say. Everything else is the
+    // wearer's own, as numbers. Every field may be absent; a name with none of them is a name not
+    // styled.
     WornNickname(
         font: guid?,
         effect: guid?,
-        color: guid?,
 
-        // Up to six ARGB colours. One is a flat name; two or more are a gradient across it.
+        // Up to six ARGB colours. One is a flat name; two or more are a gradient across it. Plain
+        // int32s rather than packed pairs in an i8: a JavaScript number cannot hold an i8 exactly.
         colors: i4[]?,
 
         // Degrees clockwise from left-to-right, 0 to 360.
@@ -158,8 +162,109 @@ enum NicknameGradientShape {
 // A file a cosmetic draws with. The id only: the client builds the URL through cdnUrl(), because an
 // absolute URL is cached by whoever received it and pins a region that may not be theirs tomorrow.
 msg CosmeticAsset {
-    // primary, secondary, tertiary or quaternary — the same word a payload names its slot by, so a
-    // part asking for "primary" finds this without translating anything.
-    slot: string;
+    slot: AssetSlot;
     fileId: string;
+}
+
+// Ordinal rather than named after a role: which file is the band and which the piece hung off it is
+// the payload's to say, and a slot called "surround" would be one kind's word in a list every kind
+// shares.
+enum AssetSlot {
+    Primary,
+    Secondary,
+    Tertiary,
+    Quaternary
+}
+
+// What a catalogue row looks like, by kind. A new kind with rows is a new case, appended.
+union CosmeticPayload {
+    // How far the avatar is pulled in, in whole percent of its size (0 to 40), and whether the
+    // decoration is drawn under it rather than over it.
+    PayloadAvatarDecoration(insetPct: u2, beneath: bool),
+
+    // A frame around the profile card: its parts, drawn in the order listed.
+    PayloadProfileFrame(parts: FramePart[]),
+
+    // A face a name may be set in: the family its file is registered under, or one in the bundle.
+    PayloadFont(cssFamily: string),
+
+    // A treatment a name may be drawn with. It carries nothing: what it does is the client's file
+    // for the row's slug.
+    PayloadTextEffect()
+}
+
+// One piece of a frame. What every piece has comes first; what only one shape has is its case.
+union FramePart(
+    // Drawn over the card's own content rather than under it.
+    over: bool,
+
+    // How solid, in whole percent, 5 to 100.
+    opacityPct: u2,
+
+    // How far the piece pushes the card's own content in.
+    inset: FrameSides?,
+
+    motion: FrameMotion?) {
+
+    // The band round the card, as a nine-slice. Its shape is which sides have a width.
+    FrameSurround(slot: AssetSlot, slice: FrameSides, width: FrameSides, outset: FrameSides?, repeat: FrameRepeat, fill: bool),
+
+    // A piece at its own size hung off one of the card's nine points, nudged right and down by dx
+    // and dy.
+    FrameProp(slot: AssetSlot, anchor: FrameAnchor, w: u2, h: u2, dx: i4, dy: i4, sprite: FrameSprite?),
+
+    // A painted edge, and the only part with no file. One ARGB colour is flat; up to four make a
+    // gradient round it.
+    FrameRing(thickness: u2, colors: i4[], angle: u2, glowPct: u2)
+}
+
+// Top, right, bottom, left, in pixels.
+msg FrameSides {
+    top: u2;
+    right: u2;
+    bottom: u2;
+    left: u2;
+}
+
+// How a piece moves. The movement itself is a file on the client named by kind, so a client that has
+// no file by that name leaves the piece still.
+msg FrameMotion {
+    kind: string;
+
+    // Degrees, pixels or hundredths, depending on the movement.
+    amount: i4;
+
+    periodMs: i4;
+
+    // How far out of step the piece starts, so parts sharing a period do not move as one sheet.
+    phaseMs: i4;
+}
+
+// A piece whose picture is a strip of frames read as a grid.
+msg FrameSprite {
+    frames: u2;
+    columns: u2;
+    fps: u2;
+
+    // The frame to stand on when movement is off.
+    still: u2;
+}
+
+enum FrameRepeat {
+    Stretch,
+    Repeat,
+    Round,
+    Space
+}
+
+enum FrameAnchor {
+    TopLeft,
+    Top,
+    TopRight,
+    Left,
+    Center,
+    Right,
+    BottomLeft,
+    Bottom,
+    BottomRight
 }

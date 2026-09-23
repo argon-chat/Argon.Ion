@@ -4747,7 +4747,7 @@
     },
     "CatalogueCosmetic": {
       "kind": "Msg",
-      "nextIndex": 12,
+      "nextIndex": 13,
       "fields": [
         {
           "index": 0,
@@ -4786,8 +4786,8 @@
         },
         {
           "index": 7,
-          "name": "payloadJson",
-          "type": "string"
+          "name": "payload",
+          "type": "CosmeticPayload"
         },
         {
           "index": 8,
@@ -4801,11 +4801,16 @@
         },
         {
           "index": 10,
-          "name": "acquisition",
-          "type": "Array\u003CCosmeticAcquisition\u003E"
+          "name": "free",
+          "type": "bool"
         },
         {
           "index": 11,
+          "name": "ultima",
+          "type": "bool"
+        },
+        {
+          "index": 12,
           "name": "text",
           "type": "Array\u003CCosmeticText\u003E"
         }
@@ -4871,7 +4876,7 @@
         {
           "index": 0,
           "name": "slot",
-          "type": "string"
+          "type": "AssetSlot"
         },
         {
           "index": 1,
@@ -4880,14 +4885,83 @@
         }
       ]
     },
-    "CosmeticAcquisition": {
-      "kind": "Enum",
-      "members": {
-        "OperatorGrant": "0",
-        "UltimaTier": "1",
-        "Free": "2"
-      },
-      "baseType": "u4"
+    "FrameSides": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "top",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "right",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "bottom",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "left",
+          "type": "u2"
+        }
+      ]
+    },
+    "FrameMotion": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kind",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "amount",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "periodMs",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "phaseMs",
+          "type": "i4"
+        }
+      ]
+    },
+    "FrameSprite": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "frames",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "columns",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "fps",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "still",
+          "type": "u2"
+        }
+      ]
     },
     "CosmeticError": {
       "kind": "Enum",
@@ -4908,6 +4982,41 @@
         "Linear": "0",
         "Radial": "1",
         "Conic": "2"
+      },
+      "baseType": "u4"
+    },
+    "AssetSlot": {
+      "kind": "Enum",
+      "members": {
+        "Primary": "0",
+        "Secondary": "1",
+        "Tertiary": "2",
+        "Quaternary": "3"
+      },
+      "baseType": "u4"
+    },
+    "FrameRepeat": {
+      "kind": "Enum",
+      "members": {
+        "Stretch": "0",
+        "Repeat": "1",
+        "Round": "2",
+        "Space": "3"
+      },
+      "baseType": "u4"
+    },
+    "FrameAnchor": {
+      "kind": "Enum",
+      "members": {
+        "TopLeft": "0",
+        "Top": "1",
+        "TopRight": "2",
+        "Left": "3",
+        "Center": "4",
+        "Right": "5",
+        "BottomLeft": "6",
+        "Bottom": "7",
+        "BottomRight": "8"
       },
       "baseType": "u4"
     },
@@ -4970,40 +5079,215 @@
             },
             {
               "index": 2,
-              "name": "color",
-              "type": "Maybe\u003Cguid\u003E"
-            },
-            {
-              "index": 3,
               "name": "colors",
               "type": "Maybe\u003CArray\u003Ci4\u003E\u003E"
             },
             {
-              "index": 4,
+              "index": 3,
               "name": "angle",
               "type": "Maybe\u003Cu2\u003E"
             },
             {
-              "index": 5,
+              "index": 4,
               "name": "shape",
               "type": "Maybe\u003CNicknameGradientShape\u003E"
             },
             {
-              "index": 6,
+              "index": 5,
               "name": "animate",
               "type": "Maybe\u003Cbool\u003E"
             },
             {
-              "index": 7,
+              "index": 6,
               "name": "weight",
               "type": "Maybe\u003Cu2\u003E"
             },
             {
-              "index": 8,
+              "index": 7,
               "name": "letterSpacing",
               "type": "Maybe\u003Ci4\u003E"
             }
           ]
+        }
+      ]
+    },
+    "CosmeticPayload": {
+      "kind": "Union",
+      "nextIndex": 4,
+      "cases": [
+        {
+          "index": 0,
+          "name": "PayloadAvatarDecoration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "insetPct",
+              "type": "u2"
+            },
+            {
+              "index": 1,
+              "name": "beneath",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "PayloadProfileFrame",
+          "fields": [
+            {
+              "index": 0,
+              "name": "parts",
+              "type": "Array\u003CFramePart\u003E"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "PayloadFont",
+          "fields": [
+            {
+              "index": 0,
+              "name": "cssFamily",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "PayloadTextEffect",
+          "fields": []
+        }
+      ]
+    },
+    "FramePart": {
+      "kind": "Union",
+      "nextIndex": 3,
+      "cases": [
+        {
+          "index": 0,
+          "name": "FrameSurround",
+          "fields": [
+            {
+              "index": 4,
+              "name": "slot",
+              "type": "AssetSlot"
+            },
+            {
+              "index": 5,
+              "name": "slice",
+              "type": "FrameSides"
+            },
+            {
+              "index": 6,
+              "name": "width",
+              "type": "FrameSides"
+            },
+            {
+              "index": 7,
+              "name": "outset",
+              "type": "Maybe\u003CFrameSides\u003E"
+            },
+            {
+              "index": 8,
+              "name": "repeat",
+              "type": "FrameRepeat"
+            },
+            {
+              "index": 9,
+              "name": "fill",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FrameProp",
+          "fields": [
+            {
+              "index": 4,
+              "name": "slot",
+              "type": "AssetSlot"
+            },
+            {
+              "index": 5,
+              "name": "anchor",
+              "type": "FrameAnchor"
+            },
+            {
+              "index": 6,
+              "name": "w",
+              "type": "u2"
+            },
+            {
+              "index": 7,
+              "name": "h",
+              "type": "u2"
+            },
+            {
+              "index": 8,
+              "name": "dx",
+              "type": "i4"
+            },
+            {
+              "index": 9,
+              "name": "dy",
+              "type": "i4"
+            },
+            {
+              "index": 10,
+              "name": "sprite",
+              "type": "Maybe\u003CFrameSprite\u003E"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "FrameRing",
+          "fields": [
+            {
+              "index": 4,
+              "name": "thickness",
+              "type": "u2"
+            },
+            {
+              "index": 5,
+              "name": "colors",
+              "type": "Array\u003Ci4\u003E"
+            },
+            {
+              "index": 6,
+              "name": "angle",
+              "type": "u2"
+            },
+            {
+              "index": 7,
+              "name": "glowPct",
+              "type": "u2"
+            }
+          ]
+        }
+      ],
+      "sharedFields": [
+        {
+          "index": 0,
+          "name": "over",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "opacityPct",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "inset",
+          "type": "Maybe\u003CFrameSides\u003E"
+        },
+        {
+          "index": 3,
+          "name": "motion",
+          "type": "Maybe\u003CFrameMotion\u003E"
         }
       ]
     },
