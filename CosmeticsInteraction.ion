@@ -1,0 +1,176 @@
+// Profile cosmetics, as the person wearing them sees them: what exists, what they may wear, and
+// what they have on.
+//
+// Everybody else sees cosmetics through ArgonUserProfile.cosmetics and nothing here. Reading a
+// profile is the hot path — every member list, every message author line — so it never goes through
+// this service, and nothing in this service is on it.
+//
+// One look per person, worn everywhere. Several looks, and a different one per space, arrive later
+// and will extend these calls rather than replace them.
+service CosmeticsInteraction() {
+    // Everything published for the kinds that are switched on, in every language it has a name in.
+    //
+    // The same answer for everybody, which is what makes it cheap: the server holds one copy and
+    // every picker reads it. Whether the caller may wear an item is GetMyCosmetics' question, not
+    // this one's.
+    GetCatalogue(): CosmeticCatalogue;
+
+    // What the caller may wear beyond what is free for everybody.
+    GetMyCosmetics(): MyCosmetics;
+
+    // Puts an item on. For a kind worn one at a time, slotIndex is 0 and replaces whatever was there.
+    Equip(cosmeticId: guid, slotIndex: i4): EquipResult;
+
+    Unequip(kindKey: string, slotIndex: i4): EquipResult;
+
+    // What the wearer composes on a kind's axes, and what they tune by hand.
+    //
+    // For a kind with no catalogue rows — the look of a name — this is also how it is put on: there
+    // is no item to equip, only choices to make. Either argument may be null to leave that half as
+    // it is. tuningJson is the kind's own schema, for the same reason payloadJson is a string below.
+    Configure(kindKey: string, slotIndex: i4, choices: CosmeticChoice[]?, tuningJson: string?): EquipResult;
+}
+
+msg CosmeticCatalogue {
+    // Every kind that is switched on, whether or not it has rows. A kind with none is still one the
+    // wearer can configure, and a kind missing here is one the client must not offer.
+    enabledKinds: string[];
+
+    items: CatalogueCosmetic[];
+}
+
+msg CatalogueCosmetic {
+    cosmeticId: guid;
+    kindKey: string;
+    slug: string;
+    nameKey: string;
+    descriptionKey: string?;
+    rarity: string?;
+
+    // Bumped whenever the row is re-authored. A profile cached on the client carries the number it
+    // was read at, so the two can be compared and a stale profile dropped rather than all of them.
+    version: i4;
+
+    payloadJson: string;
+    assets: CosmeticAsset[];
+    availableUntil: datetime?;
+    acquisition: CosmeticAcquisition[];
+
+    // Every language the row is named in. The client picks at render time, so switching language
+    // needs no refetch; nameKey is the last resort behind these.
+    text: CosmeticText[];
+}
+
+msg CosmeticText {
+    locale: string;
+    name: string;
+    description: string?;
+}
+
+// How an item may be come by. More members follow as the ways of granting one arrive; appended.
+enum CosmeticAcquisition {
+    OperatorGrant,
+    UltimaTier,
+    Free
+}
+
+msg MyCosmetics {
+    // Items the caller holds a grant for, or that their subscription covers. Free items are not
+    // listed: the catalogue says which those are, and they are the same for everybody.
+    owned: OwnedCosmetic[];
+}
+
+msg OwnedCosmetic {
+    cosmeticId: guid;
+
+    // When the claim lapses on its own. Null is permanent, or as long as the subscription lasts.
+    expiresAt: datetime?;
+
+    viaSubscription: bool;
+}
+
+// One choice on one axis: the axis, and the slug of the option item chosen on it.
+msg CosmeticChoice {
+    facetId: string;
+    slug: string;
+}
+
+union EquipResult {
+    // The caller's own profile as everybody now sees it, so the wardrobe can redraw from the answer
+    // rather than read it back.
+    SuccessEquip(profile: ArgonUserProfile),
+    FailedEquip(error: CosmeticError)
+}
+
+enum CosmeticError {
+    // No catalogue row by that id, or none of that kind in that slot.
+    NOT_FOUND,
+
+    // A key this build does not declare.
+    UNKNOWN_KIND,
+
+    // The kind is switched off.
+    KIND_DISABLED,
+
+    // Unpublished, switched off, outside its window, or an option that is only ever chosen on an axis.
+    ITEM_UNAVAILABLE,
+
+    // Neither granted nor covered by a subscription.
+    NOT_OWNED,
+
+    SLOT_OUT_OF_RANGE,
+
+    // Equip on a kind that has no rows, or Configure on a kind with nothing to configure.
+    NOT_CONFIGURABLE,
+
+    // An axis the kind does not have, or an option that is not on it, not available or not owned.
+    CHOICE_INVALID,
+
+    // Tuning that does not fit the kind's schema.
+    TUNING_INVALID
+}
+
+// One cosmetic as worn, resolved: the catalogue row's content rather than a reference to look up.
+//
+// payloadJson is a string, deliberately. Ion has no open-schema value, and a typed union per kind
+// would put every kind into this contract — adding one would be a wire change, and deleting a
+// kind's file would leave a case here with nothing behind it. A kind is one file that comes and goes
+// on its own, so its payload crosses as text and the client parses it against the kind.
+msg EquippedCosmetic {
+    kindKey: string;
+    slotIndex: i4;
+
+    // The catalogue row. Null for a kind that has none, whose whole look is its options and tuning.
+    itemId: guid?;
+    slug: string?;
+    payloadJson: string?;
+    version: i4?;
+    assets: CosmeticAsset[];
+
+    // What the wearer chose on the kind's axes, already resolved to the option rows. Resolved here
+    // because the expensive reader is a member list, and a second lookup per name on screen is what
+    // makes a large space slow.
+    options: EquippedCosmeticOption[];
+
+    // What the wearer tuned by hand, in the kind's own schema.
+    tuningJson: string?;
+}
+
+msg EquippedCosmeticOption {
+    facetId: string;
+    kindKey: string;
+    itemId: guid;
+    slug: string;
+    payloadJson: string;
+    version: i4;
+    assets: CosmeticAsset[];
+}
+
+// A file a cosmetic draws with. The id only: the client builds the URL through cdnUrl(), because an
+// absolute URL is cached by whoever received it and pins a region that may not be theirs tomorrow.
+msg CosmeticAsset {
+    // primary, secondary, tertiary or quaternary — the same word a payload names its slot by, so a
+    // part asking for "primary" finds this without translating anything.
+    slot: string;
+    fileId: string;
+}

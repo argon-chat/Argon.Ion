@@ -289,6 +289,13 @@ msg ArgonUserProfile {
     // Nullable only for the wire: a client built against the previous schema fails to decode the
     // whole profile if a newly added field is required, and every user does have a registration date.
     registeredAt: datetime?;
+
+    // What this person is wearing. Appended after registeredAt and nullable, like every field added
+    // to a message that has already shipped: the message is positional, so a field inserted earlier
+    // would be read by an older client as the one it displaced.
+    //
+    // Null means this reader was not told, not that nothing is worn.
+    cosmetics: EquippedCosmetic[]?;
 }
 
 flags UserFlag : i4

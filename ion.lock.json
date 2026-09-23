@@ -4729,6 +4729,390 @@
         }
       }
     },
+    "CosmeticCatalogue": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "enabledKinds",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "items",
+          "type": "Array\u003CCatalogueCosmetic\u003E"
+        }
+      ]
+    },
+    "CatalogueCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 12,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "nameKey",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "descriptionKey",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "rarity",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "version",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "payloadJson",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "assets",
+          "type": "Array\u003CCosmeticAsset\u003E"
+        },
+        {
+          "index": 9,
+          "name": "availableUntil",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 10,
+          "name": "acquisition",
+          "type": "Array\u003CCosmeticAcquisition\u003E"
+        },
+        {
+          "index": 11,
+          "name": "text",
+          "type": "Array\u003CCosmeticText\u003E"
+        }
+      ]
+    },
+    "CosmeticText": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "MyCosmetics": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "owned",
+          "type": "Array\u003COwnedCosmetic\u003E"
+        }
+      ]
+    },
+    "OwnedCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "expiresAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 2,
+          "name": "viaSubscription",
+          "type": "bool"
+        }
+      ]
+    },
+    "CosmeticChoice": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "facetId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "slug",
+          "type": "string"
+        }
+      ]
+    },
+    "EquippedCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "slotIndex",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "itemId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 3,
+          "name": "slug",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "payloadJson",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "version",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 6,
+          "name": "assets",
+          "type": "Array\u003CCosmeticAsset\u003E"
+        },
+        {
+          "index": 7,
+          "name": "options",
+          "type": "Array\u003CEquippedCosmeticOption\u003E"
+        },
+        {
+          "index": 8,
+          "name": "tuningJson",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "EquippedCosmeticOption": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "facetId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "itemId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "payloadJson",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "version",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "assets",
+          "type": "Array\u003CCosmeticAsset\u003E"
+        }
+      ]
+    },
+    "CosmeticAsset": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "slot",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "fileId",
+          "type": "string"
+        }
+      ]
+    },
+    "CosmeticAcquisition": {
+      "kind": "Enum",
+      "members": {
+        "OperatorGrant": "0",
+        "UltimaTier": "1",
+        "Free": "2"
+      },
+      "baseType": "u4"
+    },
+    "CosmeticError": {
+      "kind": "Enum",
+      "members": {
+        "NOT_FOUND": "0",
+        "UNKNOWN_KIND": "1",
+        "KIND_DISABLED": "2",
+        "ITEM_UNAVAILABLE": "3",
+        "NOT_OWNED": "4",
+        "SLOT_OUT_OF_RANGE": "5",
+        "NOT_CONFIGURABLE": "6",
+        "CHOICE_INVALID": "7",
+        "TUNING_INVALID": "8"
+      },
+      "baseType": "u4"
+    },
+    "EquipResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "CosmeticsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetCatalogue": {
+          "args": [],
+          "returns": "CosmeticCatalogue",
+          "modifiers": []
+        },
+        "GetMyCosmetics": {
+          "args": [],
+          "returns": "MyCosmetics",
+          "modifiers": []
+        },
+        "Equip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "cosmeticId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "slotIndex",
+              "type": "i4"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "Unequip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "kindKey",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "slotIndex",
+              "type": "i4"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "Configure": {
+          "args": [
+            {
+              "index": 0,
+              "name": "kindKey",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "slotIndex",
+              "type": "i4"
+            },
+            {
+              "index": 2,
+              "name": "choices",
+              "type": "Maybe\u003CArray\u003CCosmeticChoice\u003E\u003E"
+            },
+            {
+              "index": 3,
+              "name": "tuningJson",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        }
+      }
+    },
     "FeatureFlagData": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -7997,7 +8381,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 15,
+      "nextIndex": 16,
       "fields": [
         {
           "index": 0,
@@ -8073,6 +8457,11 @@
           "index": 14,
           "name": "registeredAt",
           "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 15,
+          "name": "cosmetics",
+          "type": "Maybe\u003CArray\u003CEquippedCosmetic\u003E\u003E"
         }
       ]
     },
