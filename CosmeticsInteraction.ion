@@ -1,0 +1,270 @@
+// Profile cosmetics, as the person wearing them sees them: what exists, what they may wear, and
+// what they have on.
+//
+// Everybody else sees cosmetics through ArgonUserProfile.cosmetics — typed references, see
+// WornCosmetic — and resolves them against the catalogue below. A profile is read by the hundred,
+// every member list and every message author line, so it carries references; what a cosmetic looks
+// like is read once per session, from here.
+//
+// One look per person, worn everywhere. Several looks, and a different one per space, arrive later
+// and will extend these calls rather than replace them.
+service CosmeticsInteraction() {
+    // Everything published for the kinds that are switched on, in every language it has a name in.
+    //
+    // The same answer for everybody, which is what makes it cheap: the server holds one copy and
+    // every picker reads it. Whether the caller may wear an item is GetMyCosmetics' question, not
+    // this one's.
+    GetCatalogue(): CosmeticCatalogue;
+
+    // What the caller may wear beyond what is free for everybody.
+    GetMyCosmetics(): MyCosmetics;
+
+    // Puts something on, replacing whatever its kind had: a catalogue row, or the look of a name.
+    Equip(cosmetic: WornCosmetic): EquipResult;
+
+    Unequip(kindKey: string): EquipResult;
+}
+
+msg CosmeticCatalogue {
+    // Every kind that is switched on, whether or not it has rows. A kind with none is still one the
+    // wearer can configure, and a kind missing here is one the client must not offer.
+    enabledKinds: string[];
+
+    items: CatalogueCosmetic[];
+}
+
+msg CatalogueCosmetic {
+    cosmeticId: guid;
+    kindKey: string;
+    slug: string;
+    nameKey: string;
+    descriptionKey: string?;
+    rarity: string?;
+
+    // Bumped whenever the row is re-authored. A profile cached on the client carries the number it
+    // was read at, so the two can be compared and a stale profile dropped rather than all of them.
+    version: i4;
+
+    // What the row looks like, typed by its kind. A row whose stored document does not fit its kind
+    // is not in the catalogue at all.
+    payload: CosmeticPayload;
+
+    assets: CosmeticAsset[];
+    availableUntil: datetime?;
+
+    // Everybody may wear it, with nothing held.
+    free: bool;
+
+    // An active Ultima subscription covers it. Anything neither free nor covered is given to people —
+    // how it was given is the server's business, not the picker's.
+    ultima: bool;
+
+    // Every language the row is named in. The client picks at render time, so switching language
+    // needs no refetch; nameKey is the last resort behind these.
+    text: CosmeticText[];
+}
+
+msg CosmeticText {
+    locale: string;
+    name: string;
+    description: string?;
+}
+
+msg MyCosmetics {
+    // Items the caller holds a grant for, or that their subscription covers. Free items are not
+    // listed: the catalogue says which those are, and they are the same for everybody.
+    owned: OwnedCosmetic[];
+}
+
+msg OwnedCosmetic {
+    cosmeticId: guid;
+
+    // When the claim lapses on its own. Null is permanent, or as long as the subscription lasts.
+    expiresAt: datetime?;
+
+    viaSubscription: bool;
+}
+
+union EquipResult {
+    // The caller's own profile as everybody now sees it, so the wardrobe can redraw from the answer
+    // rather than read it back.
+    SuccessEquip(profile: ArgonUserProfile),
+    FailedEquip(error: CosmeticError)
+}
+
+enum CosmeticError {
+    // No catalogue row by that id, or none of that kind in that slot.
+    NOT_FOUND,
+
+    // A key this build does not declare.
+    UNKNOWN_KIND,
+
+    // The kind is switched off.
+    KIND_DISABLED,
+
+    // Unpublished, switched off, outside its window, or an option that is only ever chosen on an axis.
+    ITEM_UNAVAILABLE,
+
+    // Neither granted nor covered by a subscription.
+    NOT_OWNED,
+
+    // An option that is not of the axis's kind, not available or not owned.
+    CHOICE_INVALID,
+
+    // A value outside what the look allows — a seventh colour, a weight that is not a weight.
+    VALUE_OUT_OF_RANGE
+}
+
+// One thing a person is wearing, as it crosses the wire: typed, and as small as it can be.
+//
+// Most cosmetics are a catalogue row and nothing more, so most of these are sixteen bytes. What a row
+// looks like — its kind, its payload, its files — is the catalogue's to say, read once per session;
+// a profile is read by the hundred, so it carries references and never content.
+//
+// A kind whose look the wearer composes gets a case of its own, with what they chose as typed fields
+// rather than a document in a string. A new composable kind is a new case here, appended.
+union WornCosmetic {
+    WornItem(itemId: guid),
+
+    // The look of a name. The face and the treatment are catalogue rows, by id — a face is a file and a
+    // treatment is code on the client, neither of which a number can say. Everything else is the
+    // wearer's own, as numbers. Every field may be absent; a name with none of them is a name not
+    // styled.
+    WornNickname(
+        font: guid?,
+        effect: guid?,
+
+        // Up to six ARGB colours. One is a flat name; two or more are a gradient across it. Plain
+        // int32s rather than packed pairs in an i8: a JavaScript number cannot hold an i8 exactly.
+        colors: i4[]?,
+
+        // Degrees clockwise from left-to-right, 0 to 360.
+        angle: u2?,
+
+        shape: NicknameGradientShape?,
+
+        // Whether the colours travel along the name.
+        animate: bool?,
+
+        // 100 to 900.
+        weight: u2?,
+
+        // Hundredths of an em, -10 to 50.
+        letterSpacing: i4?)
+}
+
+enum NicknameGradientShape {
+    Linear,
+    Radial,
+    Conic
+}
+
+// A file a cosmetic draws with. The id only: the client builds the URL through cdnUrl(), because an
+// absolute URL is cached by whoever received it and pins a region that may not be theirs tomorrow.
+msg CosmeticAsset {
+    slot: AssetSlot;
+    fileId: string;
+}
+
+// Ordinal rather than named after a role: which file is the band and which the piece hung off it is
+// the payload's to say, and a slot called "surround" would be one kind's word in a list every kind
+// shares.
+enum AssetSlot {
+    Primary,
+    Secondary,
+    Tertiary,
+    Quaternary
+}
+
+// What a catalogue row looks like, by kind. A new kind with rows is a new case, appended.
+union CosmeticPayload {
+    // How far the avatar is pulled in, in whole percent of its size (0 to 40), and whether the
+    // decoration is drawn under it rather than over it.
+    PayloadAvatarDecoration(insetPct: u2, beneath: bool),
+
+    // A frame around the profile card: its parts, drawn in the order listed.
+    PayloadProfileFrame(parts: FramePart[]),
+
+    // A face a name may be set in: the family its file is registered under, or one in the bundle.
+    PayloadFont(cssFamily: string),
+
+    // A treatment a name may be drawn with. It carries nothing: what it does is the client's file
+    // for the row's slug.
+    PayloadTextEffect()
+}
+
+// One piece of a frame. What every piece has comes first; what only one shape has is its case.
+union FramePart(
+    // Drawn over the card's own content rather than under it.
+    over: bool,
+
+    // How solid, in whole percent, 5 to 100.
+    opacityPct: u2,
+
+    // How far the piece pushes the card's own content in.
+    inset: FrameSides?,
+
+    motion: FrameMotion?) {
+
+    // The band round the card, as a nine-slice. Its shape is which sides have a width.
+    FrameSurround(slot: AssetSlot, slice: FrameSides, width: FrameSides, outset: FrameSides?, repeat: FrameRepeat, fill: bool),
+
+    // A piece at its own size hung off one of the card's nine points, nudged right and down by dx
+    // and dy.
+    FrameProp(slot: AssetSlot, anchor: FrameAnchor, w: u2, h: u2, dx: i4, dy: i4, sprite: FrameSprite?),
+
+    // A painted edge, and the only part with no file. One ARGB colour is flat; up to four make a
+    // gradient round it.
+    FrameRing(thickness: u2, colors: i4[], angle: u2, glowPct: u2)
+}
+
+// Top, right, bottom, left, in pixels.
+msg FrameSides {
+    top: u2;
+    right: u2;
+    bottom: u2;
+    left: u2;
+}
+
+// How a piece moves. The movement itself is a file on the client named by kind, so a client that has
+// no file by that name leaves the piece still.
+msg FrameMotion {
+    kind: string;
+
+    // Degrees, pixels or hundredths, depending on the movement.
+    amount: i4;
+
+    periodMs: i4;
+
+    // How far out of step the piece starts, so parts sharing a period do not move as one sheet.
+    phaseMs: i4;
+}
+
+// A piece whose picture is a strip of frames read as a grid.
+msg FrameSprite {
+    frames: u2;
+    columns: u2;
+    fps: u2;
+
+    // The frame to stand on when movement is off.
+    still: u2;
+}
+
+enum FrameRepeat {
+    Stretch,
+    Repeat,
+    Round,
+    Space
+}
+
+enum FrameAnchor {
+    TopLeft,
+    Top,
+    TopRight,
+    Left,
+    Center,
+    Right,
+    BottomLeft,
+    Bottom,
+    BottomRight
+}

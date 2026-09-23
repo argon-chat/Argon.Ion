@@ -4729,6 +4729,605 @@
         }
       }
     },
+    "CosmeticCatalogue": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "enabledKinds",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 1,
+          "name": "items",
+          "type": "Array\u003CCatalogueCosmetic\u003E"
+        }
+      ]
+    },
+    "CatalogueCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 13,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "kindKey",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "nameKey",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "descriptionKey",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "rarity",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "version",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "payload",
+          "type": "CosmeticPayload"
+        },
+        {
+          "index": 8,
+          "name": "assets",
+          "type": "Array\u003CCosmeticAsset\u003E"
+        },
+        {
+          "index": 9,
+          "name": "availableUntil",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 10,
+          "name": "free",
+          "type": "bool"
+        },
+        {
+          "index": 11,
+          "name": "ultima",
+          "type": "bool"
+        },
+        {
+          "index": 12,
+          "name": "text",
+          "type": "Array\u003CCosmeticText\u003E"
+        }
+      ]
+    },
+    "CosmeticText": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "description",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "MyCosmetics": {
+      "kind": "Msg",
+      "nextIndex": 1,
+      "fields": [
+        {
+          "index": 0,
+          "name": "owned",
+          "type": "Array\u003COwnedCosmetic\u003E"
+        }
+      ]
+    },
+    "OwnedCosmetic": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "cosmeticId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "expiresAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 2,
+          "name": "viaSubscription",
+          "type": "bool"
+        }
+      ]
+    },
+    "CosmeticAsset": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "slot",
+          "type": "AssetSlot"
+        },
+        {
+          "index": 1,
+          "name": "fileId",
+          "type": "string"
+        }
+      ]
+    },
+    "FrameSides": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "top",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "right",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "bottom",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "left",
+          "type": "u2"
+        }
+      ]
+    },
+    "FrameMotion": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "kind",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "amount",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "periodMs",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "phaseMs",
+          "type": "i4"
+        }
+      ]
+    },
+    "FrameSprite": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "frames",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "columns",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "fps",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "still",
+          "type": "u2"
+        }
+      ]
+    },
+    "CosmeticError": {
+      "kind": "Enum",
+      "members": {
+        "NOT_FOUND": "0",
+        "UNKNOWN_KIND": "1",
+        "KIND_DISABLED": "2",
+        "ITEM_UNAVAILABLE": "3",
+        "NOT_OWNED": "4",
+        "CHOICE_INVALID": "5",
+        "VALUE_OUT_OF_RANGE": "6"
+      },
+      "baseType": "u4"
+    },
+    "NicknameGradientShape": {
+      "kind": "Enum",
+      "members": {
+        "Linear": "0",
+        "Radial": "1",
+        "Conic": "2"
+      },
+      "baseType": "u4"
+    },
+    "AssetSlot": {
+      "kind": "Enum",
+      "members": {
+        "Primary": "0",
+        "Secondary": "1",
+        "Tertiary": "2",
+        "Quaternary": "3"
+      },
+      "baseType": "u4"
+    },
+    "FrameRepeat": {
+      "kind": "Enum",
+      "members": {
+        "Stretch": "0",
+        "Repeat": "1",
+        "Round": "2",
+        "Space": "3"
+      },
+      "baseType": "u4"
+    },
+    "FrameAnchor": {
+      "kind": "Enum",
+      "members": {
+        "TopLeft": "0",
+        "Top": "1",
+        "TopRight": "2",
+        "Left": "3",
+        "Center": "4",
+        "Right": "5",
+        "BottomLeft": "6",
+        "Bottom": "7",
+        "BottomRight": "8"
+      },
+      "baseType": "u4"
+    },
+    "EquipResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "profile",
+              "type": "ArgonUserProfile"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedEquip",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CosmeticError"
+            }
+          ]
+        }
+      ]
+    },
+    "WornCosmetic": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "WornItem",
+          "fields": [
+            {
+              "index": 0,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "WornNickname",
+          "fields": [
+            {
+              "index": 0,
+              "name": "font",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 1,
+              "name": "effect",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 2,
+              "name": "colors",
+              "type": "Maybe\u003CArray\u003Ci4\u003E\u003E"
+            },
+            {
+              "index": 3,
+              "name": "angle",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 4,
+              "name": "shape",
+              "type": "Maybe\u003CNicknameGradientShape\u003E"
+            },
+            {
+              "index": 5,
+              "name": "animate",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 6,
+              "name": "weight",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 7,
+              "name": "letterSpacing",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ]
+        }
+      ]
+    },
+    "CosmeticPayload": {
+      "kind": "Union",
+      "nextIndex": 4,
+      "cases": [
+        {
+          "index": 0,
+          "name": "PayloadAvatarDecoration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "insetPct",
+              "type": "u2"
+            },
+            {
+              "index": 1,
+              "name": "beneath",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "PayloadProfileFrame",
+          "fields": [
+            {
+              "index": 0,
+              "name": "parts",
+              "type": "Array\u003CFramePart\u003E"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "PayloadFont",
+          "fields": [
+            {
+              "index": 0,
+              "name": "cssFamily",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "PayloadTextEffect",
+          "fields": []
+        }
+      ]
+    },
+    "FramePart": {
+      "kind": "Union",
+      "nextIndex": 3,
+      "cases": [
+        {
+          "index": 0,
+          "name": "FrameSurround",
+          "fields": [
+            {
+              "index": 4,
+              "name": "slot",
+              "type": "AssetSlot"
+            },
+            {
+              "index": 5,
+              "name": "slice",
+              "type": "FrameSides"
+            },
+            {
+              "index": 6,
+              "name": "width",
+              "type": "FrameSides"
+            },
+            {
+              "index": 7,
+              "name": "outset",
+              "type": "Maybe\u003CFrameSides\u003E"
+            },
+            {
+              "index": 8,
+              "name": "repeat",
+              "type": "FrameRepeat"
+            },
+            {
+              "index": 9,
+              "name": "fill",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FrameProp",
+          "fields": [
+            {
+              "index": 4,
+              "name": "slot",
+              "type": "AssetSlot"
+            },
+            {
+              "index": 5,
+              "name": "anchor",
+              "type": "FrameAnchor"
+            },
+            {
+              "index": 6,
+              "name": "w",
+              "type": "u2"
+            },
+            {
+              "index": 7,
+              "name": "h",
+              "type": "u2"
+            },
+            {
+              "index": 8,
+              "name": "dx",
+              "type": "i4"
+            },
+            {
+              "index": 9,
+              "name": "dy",
+              "type": "i4"
+            },
+            {
+              "index": 10,
+              "name": "sprite",
+              "type": "Maybe\u003CFrameSprite\u003E"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "FrameRing",
+          "fields": [
+            {
+              "index": 4,
+              "name": "thickness",
+              "type": "u2"
+            },
+            {
+              "index": 5,
+              "name": "colors",
+              "type": "Array\u003Ci4\u003E"
+            },
+            {
+              "index": 6,
+              "name": "angle",
+              "type": "u2"
+            },
+            {
+              "index": 7,
+              "name": "glowPct",
+              "type": "u2"
+            }
+          ]
+        }
+      ],
+      "sharedFields": [
+        {
+          "index": 0,
+          "name": "over",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "opacityPct",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "inset",
+          "type": "Maybe\u003CFrameSides\u003E"
+        },
+        {
+          "index": 3,
+          "name": "motion",
+          "type": "Maybe\u003CFrameMotion\u003E"
+        }
+      ]
+    },
+    "CosmeticsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetCatalogue": {
+          "args": [],
+          "returns": "CosmeticCatalogue",
+          "modifiers": []
+        },
+        "GetMyCosmetics": {
+          "args": [],
+          "returns": "MyCosmetics",
+          "modifiers": []
+        },
+        "Equip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "cosmetic",
+              "type": "WornCosmetic"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        },
+        "Unequip": {
+          "args": [
+            {
+              "index": 0,
+              "name": "kindKey",
+              "type": "string"
+            }
+          ],
+          "returns": "EquipResult",
+          "modifiers": []
+        }
+      }
+    },
     "FeatureFlagData": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -7997,7 +8596,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 15,
+      "nextIndex": 16,
       "fields": [
         {
           "index": 0,
@@ -8073,6 +8672,11 @@
           "index": 14,
           "name": "registeredAt",
           "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 15,
+          "name": "cosmetics",
+          "type": "Maybe\u003CArray\u003CWornCosmetic\u003E\u003E"
         }
       ]
     },
