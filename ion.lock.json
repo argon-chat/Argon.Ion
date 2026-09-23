@@ -4864,114 +4864,6 @@
         }
       ]
     },
-    "CosmeticChoice": {
-      "kind": "Msg",
-      "nextIndex": 2,
-      "fields": [
-        {
-          "index": 0,
-          "name": "facetId",
-          "type": "string"
-        },
-        {
-          "index": 1,
-          "name": "slug",
-          "type": "string"
-        }
-      ]
-    },
-    "EquippedCosmetic": {
-      "kind": "Msg",
-      "nextIndex": 9,
-      "fields": [
-        {
-          "index": 0,
-          "name": "kindKey",
-          "type": "string"
-        },
-        {
-          "index": 1,
-          "name": "slotIndex",
-          "type": "i4"
-        },
-        {
-          "index": 2,
-          "name": "itemId",
-          "type": "Maybe\u003Cguid\u003E"
-        },
-        {
-          "index": 3,
-          "name": "slug",
-          "type": "Maybe\u003Cstring\u003E"
-        },
-        {
-          "index": 4,
-          "name": "payloadJson",
-          "type": "Maybe\u003Cstring\u003E"
-        },
-        {
-          "index": 5,
-          "name": "version",
-          "type": "Maybe\u003Ci4\u003E"
-        },
-        {
-          "index": 6,
-          "name": "assets",
-          "type": "Array\u003CCosmeticAsset\u003E"
-        },
-        {
-          "index": 7,
-          "name": "options",
-          "type": "Array\u003CEquippedCosmeticOption\u003E"
-        },
-        {
-          "index": 8,
-          "name": "tuningJson",
-          "type": "Maybe\u003Cstring\u003E"
-        }
-      ]
-    },
-    "EquippedCosmeticOption": {
-      "kind": "Msg",
-      "nextIndex": 7,
-      "fields": [
-        {
-          "index": 0,
-          "name": "facetId",
-          "type": "string"
-        },
-        {
-          "index": 1,
-          "name": "kindKey",
-          "type": "string"
-        },
-        {
-          "index": 2,
-          "name": "itemId",
-          "type": "guid"
-        },
-        {
-          "index": 3,
-          "name": "slug",
-          "type": "string"
-        },
-        {
-          "index": 4,
-          "name": "payloadJson",
-          "type": "string"
-        },
-        {
-          "index": 5,
-          "name": "version",
-          "type": "i4"
-        },
-        {
-          "index": 6,
-          "name": "assets",
-          "type": "Array\u003CCosmeticAsset\u003E"
-        }
-      ]
-    },
     "CosmeticAsset": {
       "kind": "Msg",
       "nextIndex": 2,
@@ -5005,10 +4897,17 @@
         "KIND_DISABLED": "2",
         "ITEM_UNAVAILABLE": "3",
         "NOT_OWNED": "4",
-        "SLOT_OUT_OF_RANGE": "5",
-        "NOT_CONFIGURABLE": "6",
-        "CHOICE_INVALID": "7",
-        "TUNING_INVALID": "8"
+        "CHOICE_INVALID": "5",
+        "VALUE_OUT_OF_RANGE": "6"
+      },
+      "baseType": "u4"
+    },
+    "NicknameGradientShape": {
+      "kind": "Enum",
+      "members": {
+        "Linear": "0",
+        "Radial": "1",
+        "Conic": "2"
       },
       "baseType": "u4"
     },
@@ -5040,6 +4939,74 @@
         }
       ]
     },
+    "WornCosmetic": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "WornItem",
+          "fields": [
+            {
+              "index": 0,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "WornNickname",
+          "fields": [
+            {
+              "index": 0,
+              "name": "font",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 1,
+              "name": "effect",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 2,
+              "name": "color",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 3,
+              "name": "colors",
+              "type": "Maybe\u003CArray\u003Ci4\u003E\u003E"
+            },
+            {
+              "index": 4,
+              "name": "angle",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 5,
+              "name": "shape",
+              "type": "Maybe\u003CNicknameGradientShape\u003E"
+            },
+            {
+              "index": 6,
+              "name": "animate",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 7,
+              "name": "weight",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 8,
+              "name": "letterSpacing",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ]
+        }
+      ]
+    },
     "CosmeticsInteraction": {
       "kind": "Service",
       "methods": {
@@ -5057,13 +5024,8 @@
           "args": [
             {
               "index": 0,
-              "name": "cosmeticId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "slotIndex",
-              "type": "i4"
+              "name": "cosmetic",
+              "type": "WornCosmetic"
             }
           ],
           "returns": "EquipResult",
@@ -5075,37 +5037,6 @@
               "index": 0,
               "name": "kindKey",
               "type": "string"
-            },
-            {
-              "index": 1,
-              "name": "slotIndex",
-              "type": "i4"
-            }
-          ],
-          "returns": "EquipResult",
-          "modifiers": []
-        },
-        "Configure": {
-          "args": [
-            {
-              "index": 0,
-              "name": "kindKey",
-              "type": "string"
-            },
-            {
-              "index": 1,
-              "name": "slotIndex",
-              "type": "i4"
-            },
-            {
-              "index": 2,
-              "name": "choices",
-              "type": "Maybe\u003CArray\u003CCosmeticChoice\u003E\u003E"
-            },
-            {
-              "index": 3,
-              "name": "tuningJson",
-              "type": "Maybe\u003Cstring\u003E"
             }
           ],
           "returns": "EquipResult",
@@ -8461,7 +8392,7 @@
         {
           "index": 15,
           "name": "cosmetics",
-          "type": "Maybe\u003CArray\u003CEquippedCosmetic\u003E\u003E"
+          "type": "Maybe\u003CArray\u003CWornCosmetic\u003E\u003E"
         }
       ]
     },
