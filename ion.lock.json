@@ -1655,7 +1655,8 @@
       "kind": "Enum",
       "members": {
         "NONE": "0",
-        "CHANNEL_IS_NOT_VOICE": "1"
+        "CHANNEL_IS_NOT_VOICE": "1",
+        "INSUFFICIENT_PERMISSIONS": "2"
       },
       "baseType": "u2"
     },
@@ -1685,6 +1686,19 @@
         "Attachment": "20",
         "Gif": "21",
         "LinkPreview": "22"
+      },
+      "baseType": "u2"
+    },
+    "MoveVoiceMemberError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INSUFFICIENT_PERMISSIONS": "1",
+        "MEMBER_NOT_IN_CHANNEL": "2",
+        "TARGET_NOT_FOUND": "3",
+        "TARGET_IS_NOT_VOICE": "4",
+        "SAME_CHANNEL": "5",
+        "MEMBER_CANNOT_JOIN_TARGET": "6"
       },
       "baseType": "u2"
     },
@@ -2268,6 +2282,28 @@
         }
       ]
     },
+    "MoveVoiceMemberResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessMoveVoiceMember",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedMoveVoiceMember",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "MoveVoiceMemberError"
+            }
+          ]
+        }
+      ]
+    },
     "UpdateChannelResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -2624,7 +2660,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 68,
+      "nextIndex": 70,
       "cases": [
         {
           "index": 0,
@@ -3893,6 +3929,58 @@
               "type": "guid"
             }
           ]
+        },
+        {
+          "index": 68,
+          "name": "VoiceMemberStateChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "state",
+              "type": "ChannelMemberState"
+            }
+          ]
+        },
+        {
+          "index": 69,
+          "name": "VoiceMoveRequested",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "fromChannelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "toChannelId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "byUserId",
+              "type": "guid"
+            }
+          ]
         }
       ]
     },
@@ -4626,6 +4714,53 @@
             }
           ],
           "returns": "bool",
+          "modifiers": []
+        },
+        "MoveVoiceMember": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "memberId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "targetChannelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "MoveVoiceMemberResult",
+          "modifiers": []
+        },
+        "UpdateVoiceState": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "state",
+              "type": "ChannelMemberState"
+            }
+          ],
+          "returns": "void",
           "modifiers": []
         },
         "BeginRecord": {
@@ -8894,6 +9029,16 @@
         }
       ]
     },
+    "VoiceModerationError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INSUFFICIENT_PERMISSIONS": "1",
+        "MEMBER_NOT_FOUND": "2",
+        "CANNOT_MODERATE_OWNER": "3"
+      },
+      "baseType": "u2"
+    },
     "SpaceDeletionStatus": {
       "kind": "Enum",
       "members": {
@@ -8957,6 +9102,7 @@
         "BanMember": "4398046511104",
         "MuteMember": "8796093022208",
         "KickMember": "17592186044416",
+        "DeafenMember": "35184372088832",
         "ManageChannels": "1125899906842624",
         "ManageArchetype": "2251799813685248",
         "ManageBots": "4503599627370496",
@@ -8979,6 +9125,39 @@
         "DELETED": "32"
       },
       "baseType": "i4"
+    },
+    "VoiceModerationResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessVoiceModeration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "muted",
+              "type": "bool"
+            },
+            {
+              "index": 1,
+              "name": "deafened",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedVoiceModeration",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VoiceModerationError"
+            }
+          ]
+        }
+      ]
     },
     "RequestDeleteSpaceResult": {
       "kind": "Union",
@@ -9387,6 +9566,32 @@
             }
           ],
           "returns": "SpaceDeletionState",
+          "modifiers": []
+        },
+        "SetMemberVoiceModeration": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "memberId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "muted",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 3,
+              "name": "deafened",
+              "type": "Maybe\u003Cbool\u003E"
+            }
+          ],
+          "returns": "VoiceModerationResult",
           "modifiers": []
         }
       }
@@ -11305,18 +11510,6 @@
       },
       "baseType": "u4"
     },
-    "DialCheckFailReason": {
-      "kind": "Enum",
-      "members": {
-        "COUNTRY_NOT_SUPPORT": "0",
-        "INVALID_NUMBER_COUNTRY": "1",
-        "INSUFFICIENT_BALANCE": "2",
-        "NUMBER_NOT_AVAILABLE": "3",
-        "INSUFFICIENT_POOL": "4",
-        "UNKNOWN_ERROR": "5"
-      },
-      "baseType": "u4"
-    },
     "BeginCallResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -11393,91 +11586,6 @@
         }
       ]
     },
-    "DialCheckResult": {
-      "kind": "Union",
-      "nextIndex": 2,
-      "cases": [
-        {
-          "index": 0,
-          "name": "SuccessDialCheck",
-          "fields": [
-            {
-              "index": 0,
-              "name": "priceMin",
-              "type": "i4"
-            },
-            {
-              "index": 1,
-              "name": "corelId",
-              "type": "guid"
-            },
-            {
-              "index": 2,
-              "name": "corlId",
-              "type": "guid"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "name": "FailedDialCheck",
-          "fields": [
-            {
-              "index": 0,
-              "name": "reason",
-              "type": "DialCheckFailReason"
-            },
-            {
-              "index": 1,
-              "name": "priceMin",
-              "type": "i4"
-            }
-          ]
-        }
-      ]
-    },
-    "VoiceInteraction": {
-      "kind": "Service",
-      "methods": {
-        "DisconnectFromVoiceChannel": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "channelId",
-              "type": "guid"
-            }
-          ],
-          "returns": "bool",
-          "modifiers": []
-        },
-        "KickMemberFromChannel": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "channelId",
-              "type": "guid"
-            },
-            {
-              "index": 2,
-              "name": "memberId",
-              "type": "guid"
-            }
-          ],
-          "returns": "void",
-          "modifiers": []
-        }
-      }
-    },
     "CallInteraction": {
       "kind": "Service",
       "methods": {
@@ -11539,33 +11647,6 @@
             }
           ],
           "returns": "ServiceUssdResult",
-          "modifiers": []
-        },
-        "BeginDialCheck": {
-          "args": [
-            {
-              "index": 0,
-              "name": "phoneId",
-              "type": "guid"
-            }
-          ],
-          "returns": "DialCheckResult",
-          "modifiers": []
-        },
-        "DialUp": {
-          "args": [
-            {
-              "index": 0,
-              "name": "phoneId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "corlId",
-              "type": "guid"
-            }
-          ],
-          "returns": "BeginCallResult",
           "modifiers": []
         }
       }

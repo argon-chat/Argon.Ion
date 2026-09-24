@@ -7,7 +7,9 @@ enum ChannelType: u2
 
 enum JoinToChannelError: u2 {
     NONE,
-    CHANNEL_IS_NOT_VOICE
+    CHANNEL_IS_NOT_VOICE,
+    // The caller lacks Connect on this channel.
+    INSUFFICIENT_PERMISSIONS
 }
 
 msg CreateChannelRequest {
@@ -196,6 +198,15 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     KickMemberFromChannel(memberId: guid): bool;
 
+    // Moves a member of this voice channel into another voice channel of the same space. Needs
+    // MoveMember on both channels; the member must be allowed to connect to the target. The member's
+    // client is told to reconnect (VoiceMoveRequested) and is evicted from this room if it does not.
+    MoveVoiceMember(memberId: guid, targetChannelId: guid): MoveVoiceMemberResult;
+
+    // The caller's own voice flags — MUTED, MUTED_HEADPHONES, STREAMING — so members outside the
+    // room see them too. The *_BY_SERVER bits are ignored here; only moderation sets them.
+    UpdateVoiceState(state: ChannelMemberState);
+
 
     BeginRecord(): bool;
     StopRecord(): bool;
@@ -221,6 +232,21 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 msg MessageReactionsEntry {
     messageId: i8;
     reactions: ReactionInfo[];
+}
+
+union MoveVoiceMemberResult() {
+    SuccessMoveVoiceMember(),
+    FailedMoveVoiceMember(error: MoveVoiceMemberError)
+}
+
+enum MoveVoiceMemberError: u2 {
+    NONE,
+    INSUFFICIENT_PERMISSIONS,
+    MEMBER_NOT_IN_CHANNEL,
+    TARGET_NOT_FOUND,
+    TARGET_IS_NOT_VOICE,
+    SAME_CHANNEL,
+    MEMBER_CANNOT_JOIN_TARGET
 }
 
 union UpdateChannelResult() {
@@ -638,7 +664,16 @@ union ArgonEvent() {
     // own sessions receive them, which is how a second window learns what the first one did.
     UserIgnoredEvent(ignoredId: guid),
     UserUnignoredEvent(ignoredId: guid),
-    ChatDeletedEvent(peerId: guid)
+    ChatDeletedEvent(peerId: guid),
+
+    // Appended for the reason above. A voice member's flags changed: their own mute, deafen or
+    // stream, or a server mute/deafen. Space-wide, like JoinedToChannelUser.
+    VoiceMemberStateChanged(spaceId: guid, channelId: guid, userId: guid, state: ChannelMemberState),
+
+    // Appended for the reason above. Personal: only the moved member's sessions receive it. The
+    // client leaves fromChannelId and joins toChannelId. Self-hosted LiveKit has no MoveParticipant,
+    // so the reconnect is the client's job until the SFU can do it.
+    VoiceMoveRequested(spaceId: guid, fromChannelId: guid, toChannelId: guid, byUserId: guid)
 }
 
 msg ChannelReadState {
