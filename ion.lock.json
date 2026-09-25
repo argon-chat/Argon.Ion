@@ -2660,7 +2660,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 70,
+      "nextIndex": 71,
       "cases": [
         {
           "index": 0,
@@ -3979,6 +3979,22 @@
               "index": 3,
               "name": "byUserId",
               "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 70,
+          "name": "EntitlementsChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "userId",
+              "type": "Maybe\u003Cguid\u003E"
             }
           ]
         }
@@ -8478,6 +8494,38 @@
         }
       }
     },
+    "MemberEntitlements": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "space",
+          "type": "ArgonEntitlement"
+        },
+        {
+          "index": 1,
+          "name": "channels",
+          "type": "Array\u003CChannelEntitlements\u003E"
+        }
+      ]
+    },
+    "ChannelEntitlements": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "entitlements",
+          "type": "ArgonEntitlement"
+        }
+      ]
+    },
     "SpaceDeletionState": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -9592,6 +9640,17 @@
             }
           ],
           "returns": "VoiceModerationResult",
+          "modifiers": []
+        },
+        "GetMyEntitlements": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            }
+          ],
+          "returns": "MemberEntitlements",
           "modifiers": []
         }
       }

@@ -115,6 +115,21 @@ service ServerInteraction(spaceId: guid)
     // of the space and survives a rejoin. Null leaves a flag as it is. `muted` needs MuteMember,
     // `deafened` needs DeafenMember; the owner cannot be restricted.
     SetMemberVoiceModeration(memberId: guid, muted: bool?, deafened: bool?): VoiceModerationResult;
+
+    // What the caller may do here, as the server evaluates it: the space-level grants and, for every
+    // channel the caller can see, the grants after that channel's overwrites. Clients gate their
+    // controls on this (not on a local guess from roles) and fetch it again on EntitlementsChanged.
+    GetMyEntitlements(): MemberEntitlements;
+}
+
+msg MemberEntitlements {
+    space: ArgonEntitlement;
+    channels: ChannelEntitlements[];
+}
+
+msg ChannelEntitlements {
+    channelId: guid;
+    entitlements: ArgonEntitlement;
 }
 
 union VoiceModerationResult() {

@@ -673,7 +673,12 @@ union ArgonEvent() {
     // Appended for the reason above. Personal: only the moved member's sessions receive it. The
     // client leaves fromChannelId and joins toChannelId. Self-hosted LiveKit has no MoveParticipant,
     // so the reconnect is the client's job until the SFU can do it.
-    VoiceMoveRequested(spaceId: guid, fromChannelId: guid, toChannelId: guid, byUserId: guid)
+    VoiceMoveRequested(spaceId: guid, fromChannelId: guid, toChannelId: guid, byUserId: guid),
+
+    // Appended for the reason above. Grants in the space changed: a role's entitlements or a channel
+    // overwrite (userId null: every member fetches GetMyEntitlements again), or one member's roles
+    // (userId set: that member does).
+    EntitlementsChanged(spaceId: guid, userId: guid?)
 }
 
 msg ChannelReadState {
