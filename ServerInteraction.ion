@@ -28,6 +28,8 @@ flags ArgonEntitlement: u8 {
     Stream  = 1 << 23,
 
     CanDrawOnStream = 1 << 24,
+    // transmit on a broadcast channel; requires Speak
+    Broadcast       = 1 << 25,
 
     UseASIO           = 1 << 30,
     AdditionalStreams = 1 << 31,

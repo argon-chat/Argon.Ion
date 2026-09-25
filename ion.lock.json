@@ -852,7 +852,7 @@
     },
     "ArgonChannel": {
       "kind": "Msg",
-      "nextIndex": 10,
+      "nextIndex": 11,
       "fields": [
         {
           "index": 0,
@@ -903,6 +903,11 @@
           "index": 9,
           "name": "bitrate",
           "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 10,
+          "name": "broadcast",
+          "type": "Maybe\u003CBroadcastSettings\u003E"
         }
       ]
     },
@@ -1048,6 +1053,37 @@
           "index": 1,
           "name": "reactions",
           "type": "Array\u003CReactionInfo\u003E"
+        }
+      ]
+    },
+    "BroadcastSettings": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "targets",
+          "type": "Array\u003Cguid\u003E"
+        },
+        {
+          "index": 1,
+          "name": "overlap",
+          "type": "BroadcastOverlap"
+        },
+        {
+          "index": 2,
+          "name": "duckingDb",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "maxTransmitSeconds",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 4,
+          "name": "chirp",
+          "type": "bool"
         }
       ]
     },
@@ -1702,6 +1738,37 @@
       },
       "baseType": "u2"
     },
+    "BroadcastOverlap": {
+      "kind": "Enum",
+      "members": {
+        "MIX": "0",
+        "LOCK": "1"
+      },
+      "baseType": "u2"
+    },
+    "SetBroadcastSettingsError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "INSUFFICIENT_PERMISSIONS": "1",
+        "CHANNEL_IS_NOT_VOICE": "2",
+        "INVALID_TARGET": "3",
+        "NOT_A_BROADCAST_CHANNEL": "4"
+      },
+      "baseType": "u2"
+    },
+    "BroadcastLinksError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_IN_CHANNEL": "1",
+        "NOT_A_BROADCAST_CHANNEL": "2",
+        "INSUFFICIENT_PERMISSIONS": "3",
+        "SERVER_RESTRICTED": "4",
+        "SFU_UNAVAILABLE": "5"
+      },
+      "baseType": "u2"
+    },
     "UpdateChannelError": {
       "kind": "Enum",
       "members": {
@@ -2304,6 +2371,110 @@
         }
       ]
     },
+    "SetBroadcastSettingsResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSetBroadcastSettings",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channel",
+              "type": "ArgonChannel"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedSetBroadcastSettings",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SetBroadcastSettingsError"
+            }
+          ]
+        }
+      ]
+    },
+    "BroadcastLinksResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessBroadcastLinks",
+          "fields": [
+            {
+              "index": 0,
+              "name": "rtc",
+              "type": "RtcEndpoint"
+            },
+            {
+              "index": 1,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "identity",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "room",
+              "type": "string"
+            },
+            {
+              "index": 4,
+              "name": "settings",
+              "type": "BroadcastSettings"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedBroadcastLinks",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "BroadcastLinksError"
+            }
+          ]
+        }
+      ]
+    },
+    "ConfirmBroadcastLinksResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessConfirmBroadcastLinks",
+          "fields": [
+            {
+              "index": 0,
+              "name": "forwardedTargets",
+              "type": "i4"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedConfirmBroadcastLinks",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "BroadcastLinksError"
+            }
+          ]
+        }
+      ]
+    },
     "UpdateChannelResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -2660,7 +2831,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 71,
+      "nextIndex": 72,
       "cases": [
         {
           "index": 0,
@@ -3997,6 +4168,27 @@
               "type": "Maybe\u003Cguid\u003E"
             }
           ]
+        },
+        {
+          "index": 71,
+          "name": "ChannelModifiedV2",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "patch",
+              "type": "Partial\u003CArgonChannel\u003E"
+            }
+          ]
         }
       ]
     },
@@ -5028,6 +5220,80 @@
             }
           ],
           "returns": "Array\u003CMessageReactionsEntry\u003E",
+          "modifiers": []
+        },
+        "SetBroadcastMode": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "returns": "SetBroadcastSettingsResult",
+          "modifiers": []
+        },
+        "PatchBroadcastSettings": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "patch",
+              "type": "Partial\u003CBroadcastSettings\u003E"
+            }
+          ],
+          "returns": "SetBroadcastSettingsResult",
+          "modifiers": []
+        },
+        "GetBroadcastLinks": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "BroadcastLinksResult",
+          "modifiers": []
+        },
+        "ConfirmBroadcastLinks": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ConfirmBroadcastLinksResult",
           "modifiers": []
         }
       }
@@ -9143,6 +9409,7 @@
         "Video": "4194304",
         "Stream": "8388608",
         "CanDrawOnStream": "16777216",
+        "Broadcast": "33554432",
         "UseASIO": "1073741824",
         "AdditionalStreams": "2147483648",
         "DisconnectMember": "1099511627776",

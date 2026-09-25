@@ -41,6 +41,8 @@ msg ArgonChannel {
     // Voice only: the audio bitrate members publish at, in kbps. Null means the client's default;
     // 0 is never stored, the same way slow mode treats "off". Applied when a member joins the room.
     bitrate: i4?;
+    // Voice only: set when the channel is a broadcast ("radio") channel, null on an ordinary one.
+    broadcast: BroadcastSettings?;
 }
 
 flags ChannelMemberState
@@ -227,6 +229,19 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     RemoveReaction(messageId: i8, emoji: string): RemoveReactionResult;
 
     BatchGetReactions(messageIds: i8[]): MessageReactionsEntry[];
+
+    // Turn broadcast ("radio") mode on with default settings, or off. Needs ManageChannels.
+    SetBroadcastMode(enabled: bool): SetBroadcastSettingsResult;
+    // Sparse update: absent fields stay, null clears (maxTransmitSeconds: null = no limit,
+    // targets: null = no targets, other fields back to their default). Needs ManageChannels.
+    PatchBroadcastSettings(patch: BroadcastSettings~): SetBroadcastSettingsResult;
+
+    // The radio token for a member of this broadcast channel: identity bc:{userId} in room
+    // radio/{space}/{channel}, connected beside the member's normal room and muted until the key.
+    GetBroadcastLinks(): BroadcastLinksResult;
+
+    // Told once the radio participant is connected, so the server forwards it into the targets.
+    ConfirmBroadcastLinks(): ConfirmBroadcastLinksResult;
 }
 
 msg MessageReactionsEntry {
@@ -247,6 +262,57 @@ enum MoveVoiceMemberError: u2 {
     TARGET_IS_NOT_VOICE,
     SAME_CHANNEL,
     MEMBER_CANNOT_JOIN_TARGET
+}
+
+// Broadcast ("radio") channels: what a broadcast channel transmits is forwarded into its targets.
+enum BroadcastOverlap: u2 {
+    // Overlapping speakers are mixed; the second one sees "Busy".
+    MIX,
+    // The key is refused while someone else is on air.
+    LOCK
+}
+
+msg BroadcastSettings {
+    // Voice channels of the same space that hear this channel; never a broadcast channel.
+    targets: guid[];
+    overlap: BroadcastOverlap;
+    // Attenuation of the listeners' channel bus while radio plays, -40..0.
+    duckingDb: i4;
+    // Stuck-key guard, 10..3600; null is no limit.
+    maxTransmitSeconds: i4?;
+    chirp: bool;
+}
+
+union SetBroadcastSettingsResult() {
+    SuccessSetBroadcastSettings(channel: ArgonChannel),
+    FailedSetBroadcastSettings(error: SetBroadcastSettingsError)
+}
+
+enum SetBroadcastSettingsError: u2 {
+    NONE,
+    INSUFFICIENT_PERMISSIONS,
+    CHANNEL_IS_NOT_VOICE,
+    INVALID_TARGET,
+    NOT_A_BROADCAST_CHANNEL
+}
+
+union BroadcastLinksResult() {
+    SuccessBroadcastLinks(rtc: RtcEndpoint, token: string, identity: string, room: string, settings: BroadcastSettings),
+    FailedBroadcastLinks(error: BroadcastLinksError)
+}
+
+enum BroadcastLinksError: u2 {
+    NONE,
+    NOT_IN_CHANNEL,
+    NOT_A_BROADCAST_CHANNEL,
+    INSUFFICIENT_PERMISSIONS,
+    SERVER_RESTRICTED,
+    SFU_UNAVAILABLE
+}
+
+union ConfirmBroadcastLinksResult() {
+    SuccessConfirmBroadcastLinks(forwardedTargets: i4),
+    FailedConfirmBroadcastLinks(error: BroadcastLinksError)
 }
 
 union UpdateChannelResult() {
@@ -560,6 +626,8 @@ union ArgonEvent() {
     ArchetypeChanged(spaceId: guid, data: Archetype),
     ArchetypeCreated(spaceId: guid, data: Archetype),
     ChannelCreated(spaceId: guid, data: ArgonChannel),
+    // Superseded by ChannelModifiedV2, which carries the change itself; the server no longer emits this.
+    @deprecated
     ChannelModified(spaceId: guid, channelId: guid, bag: string[]),
     ChannelRemoved(spaceId: guid, channelId: guid),
     UserTypingEvent(spaceId: guid, channelId: guid, userId: guid, kind: TypingKind?),
@@ -678,7 +746,11 @@ union ArgonEvent() {
     // Appended for the reason above. Grants in the space changed: a role's entitlements or a channel
     // overwrite (userId null: every member fetches GetMyEntitlements again), or one member's roles
     // (userId set: that member does).
-    EntitlementsChanged(spaceId: guid, userId: guid?)
+    EntitlementsChanged(spaceId: guid, userId: guid?),
+
+    // Appended for the reason above. Sparse update of the channel: absent fields unchanged, null =
+    // cleared (e.g. broadcast off). Replaces ChannelModified's bag of names with the change itself.
+    ChannelModifiedV2(spaceId: guid, channelId: guid, patch: ArgonChannel~)
 }
 
 msg ChannelReadState {
