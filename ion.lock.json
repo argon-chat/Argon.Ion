@@ -3786,7 +3786,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 76,
+      "nextIndex": 77,
       "cases": [
         {
           "index": 0,
@@ -5241,6 +5241,32 @@
               "index": 2,
               "name": "post",
               "type": "ScheduledPost"
+            }
+          ]
+        },
+        {
+          "index": 76,
+          "name": "ChannelMarkRetracted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "lastMessageId",
+              "type": "i8"
             }
           ]
         }

@@ -811,7 +811,11 @@ union ArgonEvent() {
     MessagePublished(spaceId: guid, channelId: guid, messageId: i8, publishedAt: datetime),
     // Appended: one of the recipient's scheduled posts changed — scheduled, rescheduled, cancelled,
     // published or failed. Personal: only the author's sessions receive it.
-    ScheduledPostUpdated(spaceId: guid, channelId: guid, post: ScheduledPost)
+    ScheduledPostUpdated(spaceId: guid, channelId: guid, post: ScheduledPost),
+    // Appended: the channel's newest message was deleted and its high-water mark went back to the
+    // newest one left (0: none). Space-scoped, like MessageSent, since it moves unread state. A client
+    // lowers its lastMessageId only while it is still at or below messageId.
+    ChannelMarkRetracted(spaceId: guid, channelId: guid, messageId: i8, lastMessageId: i8)
 }
 
 msg ChannelReadState {
