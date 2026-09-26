@@ -359,7 +359,8 @@ enum UserStatus
     InGame,
     Listen,
     TouchGrass,
-    DoNotDisturb
+    DoNotDisturb,
+    Snooze
 }
 
 enum SpaceManageError: u2 {

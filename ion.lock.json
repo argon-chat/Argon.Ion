@@ -10978,7 +10978,8 @@
         "InGame": "3",
         "Listen": "4",
         "TouchGrass": "5",
-        "DoNotDisturb": "6"
+        "DoNotDisturb": "6",
+        "Snooze": "7"
       },
       "baseType": "u4"
     },
