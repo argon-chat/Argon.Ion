@@ -17,7 +17,9 @@ enum ScheduledPostFailure: u2 {
     INSUFFICIENT_PERMISSIONS,
     // Slow mode kept holding the post for longer than the retry window.
     SLOW_MODE,
-    SEND_FAILED
+    SEND_FAILED,
+    // Appended: the author's account was restricted by platform moderation before the post was due.
+    ACCOUNT_RESTRICTED
 }
 
 msg ScheduledPost {

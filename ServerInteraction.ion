@@ -66,12 +66,12 @@ service ServerInteraction(spaceId: guid)
     GetMembers(): RealtimeServerMember[];
     GetMember(userId: guid): RealtimeServerMember;
 
-    GetInviteCodes(): ServerInvites;
-    CreateInviteCode(expireMinutes: i4, maxUses: i4): InviteCode;
-    RevokeInviteCode(code: InviteCode);
+    GetInviteCodes(): GetInviteCodesResult;
+    CreateInviteCode(expireMinutes: i4, maxUses: i4): CreateInviteCodeResult;
+    RevokeInviteCode(code: InviteCode): SpaceManageResult;
 
-    UpdateSpaceInfo(name: string, description: string);
-    SetBoostStripHidden(hidden: bool);
+    UpdateSpaceInfo(name: string, description: string): SpaceManageResult;
+    SetBoostStripHidden(hidden: bool): SpaceManageResult;
     GetSpaceStats(): SpaceStats;
 
     PrefetchUser(userId: guid): ArgonUser;
@@ -92,13 +92,13 @@ service ServerInteraction(spaceId: guid)
     GetDetailedServerArchetypes(): ArchetypeGroup[];
 
     BeginUploadSpaceProfileHeader(): UploadFileResult;
-    CompleteUploadSpaceProfileHeader(blobId: guid);
+    CompleteUploadSpaceProfileHeader(blobId: guid): SpaceManageResult;
 
     BeginUploadSpaceAvatar(): UploadFileResult;
-    CompleteUploadSpaceAvatar(blobId: guid);
+    CompleteUploadSpaceAvatar(blobId: guid): SpaceManageResult;
 
     BeginUploadInviteImage(): UploadFileResult;
-    CompleteUploadInviteImage(blobId: guid);
+    CompleteUploadInviteImage(blobId: guid): SpaceManageResult;
 
     GetChannelGroups(): ChannelGroup[];
 
@@ -360,4 +360,28 @@ enum UserStatus
     Listen,
     TouchGrass,
     DoNotDisturb
+}
+
+enum SpaceManageError: u2 {
+    NONE,
+    NO_PERMISSION,
+    NOT_FOUND,
+    INVALID_DATA,
+    CONTENT_REJECTED,
+    INTERNAL_ERROR
+}
+
+union SpaceManageResult {
+    SuccessSpaceManage(),
+    FailedSpaceManage(error: SpaceManageError)
+}
+
+union GetInviteCodesResult {
+    SuccessGetInviteCodes(invites: ServerInvites),
+    FailedGetInviteCodes(error: SpaceManageError)
+}
+
+union CreateInviteCodeResult {
+    SuccessCreateInviteCode(code: InviteCode),
+    FailedCreateInviteCode(error: SpaceManageError)
 }

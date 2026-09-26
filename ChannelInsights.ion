@@ -5,7 +5,9 @@ enum ReadCountError: u2 {
     NONE,
     MESSAGE_NOT_FOUND,
     INSUFFICIENT_PERMISSIONS,
-    NOT_AN_ANNOUNCEMENT_CHANNEL
+    NOT_AN_ANNOUNCEMENT_CHANNEL,
+    // Appended: the space is too small for a count that would not single out who read it.
+    TOO_FEW_MEMBERS
 }
 
 union ReadCountResult() {
@@ -15,6 +17,15 @@ union ReadCountResult() {
     FailedReadCount(error: ReadCountError)
 }
 
+// One entry per requested message the caller may see a count for; others are left out.
+msg ReadCountEntry {
+    messageId: i8;
+    readers: i4;
+    members: i4;
+}
+
 service ChannelInsightsInteraction(spaceId: guid, channelId: guid) {
     GetReadCount(messageId: i8): ReadCountResult;
+    // Up to 50 messages in one call, for every visible post at once.
+    GetReadCounts(messageIds: i8[]): ReadCountEntry[];
 }

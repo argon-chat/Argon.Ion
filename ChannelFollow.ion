@@ -13,6 +13,8 @@ msg CrosspostInfo {
     sourceSpaceName: string;
     sourceChannelName: string;
     sourceSpaceAvatarFileId: string?;
+    // Appended: the source posts as the space without naming the author; the copy hides them too.
+    hideAuthor: bool;
 }
 
 // One source→target link, as both sides list it.

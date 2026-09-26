@@ -145,9 +145,66 @@
         "IS_LOCKED": "4",
         "IN_USE": "5",
         "INCOMPLETE_ORDER": "6",
-        "INTERNAL_ERROR": "7"
+        "INTERNAL_ERROR": "7",
+        "INVALID_DATA": "8"
       },
       "baseType": "u2"
+    },
+    "CreateArchetypeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateArchetype",
+          "fields": [
+            {
+              "index": 0,
+              "name": "archetype",
+              "type": "Archetype"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateArchetype",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ArchetypeError"
+            }
+          ]
+        }
+      ]
+    },
+    "UpdateArchetypeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUpdateArchetype",
+          "fields": [
+            {
+              "index": 0,
+              "name": "archetype",
+              "type": "Archetype"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedUpdateArchetype",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ArchetypeError"
+            }
+          ]
+        }
+      ]
     },
     "DeleteArchetypeResult": {
       "kind": "Union",
@@ -226,7 +283,7 @@
               "type": "string"
             }
           ],
-          "returns": "Archetype",
+          "returns": "CreateArchetypeResult",
           "modifiers": []
         },
         "UpdateArchetype": {
@@ -242,7 +299,7 @@
               "type": "Archetype"
             }
           ],
-          "returns": "Archetype",
+          "returns": "UpdateArchetypeResult",
           "modifiers": []
         },
         "SetArchetypeToMember": {
@@ -928,7 +985,8 @@
         "CHANNEL_NOT_FOUND": "1",
         "INSUFFICIENT_PERMISSIONS": "2",
         "SLOW_MODE": "3",
-        "SEND_FAILED": "4"
+        "SEND_FAILED": "4",
+        "ACCOUNT_RESTRICTED": "5"
       },
       "baseType": "u2"
     },
@@ -1122,7 +1180,7 @@
     },
     "CrosspostInfo": {
       "kind": "Msg",
-      "nextIndex": 6,
+      "nextIndex": 7,
       "fields": [
         {
           "index": 0,
@@ -1153,6 +1211,11 @@
           "index": 5,
           "name": "sourceSpaceAvatarFileId",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 6,
+          "name": "hideAuthor",
+          "type": "bool"
         }
       ]
     },
@@ -1458,13 +1521,35 @@
         }
       }
     },
+    "ReadCountEntry": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "messageId",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "readers",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "members",
+          "type": "i4"
+        }
+      ]
+    },
     "ReadCountError": {
       "kind": "Enum",
       "members": {
         "NONE": "0",
         "MESSAGE_NOT_FOUND": "1",
         "INSUFFICIENT_PERMISSIONS": "2",
-        "NOT_AN_ANNOUNCEMENT_CHANNEL": "3"
+        "NOT_AN_ANNOUNCEMENT_CHANNEL": "3",
+        "TOO_FEW_MEMBERS": "4"
       },
       "baseType": "u2"
     },
@@ -1523,6 +1608,27 @@
             }
           ],
           "returns": "ReadCountResult",
+          "modifiers": []
+        },
+        "GetReadCounts": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageIds",
+              "type": "Array\u003Ci8\u003E"
+            }
+          ],
+          "returns": "Array\u003CReadCountEntry\u003E",
           "modifiers": []
         }
       }
@@ -2565,7 +2671,8 @@
         "MESSAGE_NOT_FOUND": "1",
         "NOT_AUTHOR": "2",
         "EMPTY_MESSAGE": "3",
-        "MESSAGE_TOO_LONG": "4"
+        "MESSAGE_TOO_LONG": "4",
+        "INSUFFICIENT_PERMISSIONS": "5"
       },
       "baseType": "u2"
     },
@@ -2747,6 +2854,34 @@
         "LISTEN": "3"
       },
       "baseType": "u4"
+    },
+    "ChannelLayoutError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NO_PERMISSION": "1",
+        "NOT_FOUND": "2",
+        "INVALID_DATA": "3",
+        "INTERNAL_ERROR": "4"
+      },
+      "baseType": "u2"
+    },
+    "SendMessageError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NO_PERMISSION": "1",
+        "NOT_TEXT_CHANNEL": "2",
+        "BOTS_NOT_ALLOWED": "3",
+        "TEXT_TOO_LONG": "4",
+        "NO_ATTACH_PERMISSION": "5",
+        "TOO_MANY_ATTACHMENTS": "6",
+        "SLOW_MODE": "7",
+        "CHANNEL_CAP": "8",
+        "INVALID_DATA": "9",
+        "INTERNAL_ERROR": "10"
+      },
+      "baseType": "u2"
     },
     "ChannelMemberState": {
       "kind": "Flags",
@@ -5311,6 +5446,56 @@
         }
       ]
     },
+    "ChannelLayoutResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessChannelLayout",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedChannelLayout",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ChannelLayoutError"
+            }
+          ]
+        }
+      ]
+    },
+    "SendMessageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSendMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "readback",
+              "type": "SendMessageReadback"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedSendMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SendMessageError"
+            }
+          ]
+        }
+      ]
+    },
     "ChannelInteraction": {
       "kind": "Service",
       "methods": {
@@ -5332,7 +5517,7 @@
               "type": "CreateChannelRequest"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "MoveChannel": {
@@ -5363,7 +5548,7 @@
               "type": "Maybe\u003Cguid\u003E"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "DeleteChannelGroup": {
@@ -5389,7 +5574,7 @@
               "type": "bool"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "CreateChannelGroup": {
@@ -5415,7 +5600,7 @@
               "type": "Maybe\u003Cstring\u003E"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "MoveChannelGroup": {
@@ -5441,7 +5626,7 @@
               "type": "Maybe\u003Cguid\u003E"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "DeleteChannel": {
@@ -5457,7 +5642,7 @@
               "type": "guid"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "GetChannels": {
@@ -5504,7 +5689,7 @@
               "type": "Maybe\u003Cstring\u003E"
             }
           ],
-          "returns": "void",
+          "returns": "ChannelLayoutResult",
           "modifiers": []
         },
         "UpdateChannel": {
@@ -5665,43 +5850,7 @@
               "type": "Maybe\u003Ci8\u003E"
             }
           ],
-          "returns": "i8",
-          "modifiers": []
-        },
-        "SendMessageWithReadback": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "channelId",
-              "type": "guid"
-            },
-            {
-              "index": 2,
-              "name": "text",
-              "type": "string"
-            },
-            {
-              "index": 3,
-              "name": "entities",
-              "type": "Array\u003CMessageEntity\u003E"
-            },
-            {
-              "index": 4,
-              "name": "randomId",
-              "type": "i8"
-            },
-            {
-              "index": 5,
-              "name": "replyTo",
-              "type": "Maybe\u003Ci8\u003E"
-            }
-          ],
-          "returns": "SendMessageReadback",
+          "returns": "SendMessageResult",
           "modifiers": []
         },
         "DeleteMessage": {
@@ -6556,7 +6705,8 @@
         "NAME_EMPTY": "4",
         "NAME_TOO_LONG": "5",
         "LIMIT_REACHED": "6",
-        "WEBHOOK_NOT_FOUND": "7"
+        "WEBHOOK_NOT_FOUND": "7",
+        "NAME_NOT_ALLOWED": "8"
       },
       "baseType": "u2"
     },
@@ -10773,6 +10923,18 @@
       },
       "baseType": "u4"
     },
+    "SpaceManageError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NO_PERMISSION": "1",
+        "NOT_FOUND": "2",
+        "INVALID_DATA": "3",
+        "CONTENT_REJECTED": "4",
+        "INTERNAL_ERROR": "5"
+      },
+      "baseType": "u2"
+    },
     "ArgonEntitlement": {
       "kind": "Flags",
       "members": {
@@ -10910,6 +11072,84 @@
         }
       ]
     },
+    "SpaceManageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSpaceManage",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedSpaceManage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SpaceManageError"
+            }
+          ]
+        }
+      ]
+    },
+    "GetInviteCodesResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessGetInviteCodes",
+          "fields": [
+            {
+              "index": 0,
+              "name": "invites",
+              "type": "ServerInvites"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedGetInviteCodes",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SpaceManageError"
+            }
+          ]
+        }
+      ]
+    },
+    "CreateInviteCodeResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateInviteCode",
+          "fields": [
+            {
+              "index": 0,
+              "name": "code",
+              "type": "InviteCode"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateInviteCode",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SpaceManageError"
+            }
+          ]
+        }
+      ]
+    },
     "ServerInteraction": {
       "kind": "Service",
       "methods": {
@@ -10975,7 +11215,7 @@
               "type": "guid"
             }
           ],
-          "returns": "ServerInvites",
+          "returns": "GetInviteCodesResult",
           "modifiers": []
         },
         "CreateInviteCode": {
@@ -10996,7 +11236,7 @@
               "type": "i4"
             }
           ],
-          "returns": "InviteCode",
+          "returns": "CreateInviteCodeResult",
           "modifiers": []
         },
         "RevokeInviteCode": {
@@ -11012,7 +11252,7 @@
               "type": "InviteCode"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "UpdateSpaceInfo": {
@@ -11033,7 +11273,7 @@
               "type": "string"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "SetBoostStripHidden": {
@@ -11049,7 +11289,7 @@
               "type": "bool"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "GetSpaceStats": {
@@ -11168,7 +11408,7 @@
               "type": "guid"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "BeginUploadSpaceAvatar": {
@@ -11195,7 +11435,7 @@
               "type": "guid"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "BeginUploadInviteImage": {
@@ -11222,7 +11462,7 @@
               "type": "guid"
             }
           ],
-          "returns": "void",
+          "returns": "SpaceManageResult",
           "modifiers": []
         },
         "GetChannelGroups": {

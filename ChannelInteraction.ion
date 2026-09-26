@@ -166,14 +166,14 @@ msg AttachmentInfo {
 }
 
 service ChannelInteraction(spaceId: guid, channelId: guid) {
-    CreateChannel(request: CreateChannelRequest): void;
-    MoveChannel(targetGroupId: guid?, afterChannelId: guid?, beforeChannelId: guid?);
-    DeleteChannelGroup(groupId: guid, deleteChannels: bool);
-    CreateChannelGroup(name: string, desk: string?);
-    MoveChannelGroup(afterGroupId: guid?, beforeGroupId: guid?);
-    DeleteChannel();
+    CreateChannel(request: CreateChannelRequest): ChannelLayoutResult;
+    MoveChannel(targetGroupId: guid?, afterChannelId: guid?, beforeChannelId: guid?): ChannelLayoutResult;
+    DeleteChannelGroup(groupId: guid, deleteChannels: bool): ChannelLayoutResult;
+    CreateChannelGroup(name: string, desk: string?): ChannelLayoutResult;
+    MoveChannelGroup(afterGroupId: guid?, beforeGroupId: guid?): ChannelLayoutResult;
+    DeleteChannel(): ChannelLayoutResult;
     GetChannels(): RealtimeChannel[];
-    UpdateChannelGroup(groupId: guid, name: string?, description: string?);
+    UpdateChannelGroup(groupId: guid, name: string?, description: string?): ChannelLayoutResult;
 
     // Name, topic, slow mode and bitrate share one settings sheet in the client, so they share one
     // call — a method per field would cost a round-trip per toggle. Null means "leave as is",
@@ -197,8 +197,7 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
 
     QueryMessages(from: i8?, limit: i4): ArgonMessage[];
-    SendMessage(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
-    SendMessageWithReadback(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): SendMessageReadback;
+    SendMessage(text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): SendMessageResult;
 
     // Authors may always retract their own message; taking down somebody else's needs ManageMessages.
     DeleteMessage(messageId: i8): DeleteMessageResult;
@@ -404,7 +403,9 @@ enum EditMessageError: u2 {
     MESSAGE_NOT_FOUND,
     NOT_AUTHOR,
     EMPTY_MESSAGE,
-    MESSAGE_TOO_LONG
+    MESSAGE_TOO_LONG,
+    // Appended: the author is no longer allowed to post in the channel (left, banned, lost SendMessages).
+    INSUFFICIENT_PERMISSIONS
 }
 
 union DeleteMessageResult() {
@@ -929,4 +930,35 @@ msg ChannelGroup {
     desc: string?;
     isCollapsed: bool;
     fractionalIndex: string?;
+}
+enum ChannelLayoutError: u2 {
+    NONE,
+    NO_PERMISSION,
+    NOT_FOUND,
+    INVALID_DATA,
+    INTERNAL_ERROR
+}
+
+union ChannelLayoutResult {
+    SuccessChannelLayout(),
+    FailedChannelLayout(error: ChannelLayoutError)
+}
+
+enum SendMessageError: u2 {
+    NONE,
+    NO_PERMISSION,
+    NOT_TEXT_CHANNEL,
+    BOTS_NOT_ALLOWED,
+    TEXT_TOO_LONG,
+    NO_ATTACH_PERMISSION,
+    TOO_MANY_ATTACHMENTS,
+    SLOW_MODE,
+    CHANNEL_CAP,
+    INVALID_DATA,
+    INTERNAL_ERROR
+}
+
+union SendMessageResult {
+    SuccessSendMessage(readback: SendMessageReadback),
+    FailedSendMessage(error: SendMessageError)
 }

@@ -3,8 +3,8 @@
 
 service ArchetypeInteraction(spaceId: guid) {
     GetServerArchetypes(): Archetype[];
-    CreateArchetype(name: string): Archetype;
-    UpdateArchetype(data: Archetype): Archetype;
+    CreateArchetype(name: string): CreateArchetypeResult;
+    UpdateArchetype(data: Archetype): UpdateArchetypeResult;
     SetArchetypeToMember(memberId: guid, archetypeId: guid, isGrant: bool): bool;
     GetDetailedServerArchetypes(): ArchetypeGroup[];
     UpsertArchetypeEntitlementForChannel(channelId: guid, archetypeId: guid,
@@ -24,7 +24,18 @@ enum ArchetypeError: u2 {
     IS_LOCKED,
     IN_USE,
     INCOMPLETE_ORDER,
-    INTERNAL_ERROR
+    INTERNAL_ERROR,
+    INVALID_DATA
+}
+
+union CreateArchetypeResult {
+    SuccessCreateArchetype(archetype: Archetype),
+    FailedCreateArchetype(error: ArchetypeError)
+}
+
+union UpdateArchetypeResult {
+    SuccessUpdateArchetype(archetype: Archetype),
+    FailedUpdateArchetype(error: ArchetypeError)
 }
 
 union DeleteArchetypeResult {

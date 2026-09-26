@@ -32,7 +32,9 @@ enum ChannelWebhookError: u2 {
     NAME_TOO_LONG,
     // At most 10 webhooks per channel.
     LIMIT_REACHED,
-    WEBHOOK_NOT_FOUND
+    WEBHOOK_NOT_FOUND,
+    // Appended: the name is reserved (Argon, system, moderator…) or empty once invisible characters are removed.
+    NAME_NOT_ALLOWED
 }
 
 union CreateWebhookResult() {
