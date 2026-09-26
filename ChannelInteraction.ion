@@ -264,6 +264,12 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // Appended: announcement channels only (NOT_AN_ANNOUNCEMENT_CHANNEL otherwise). Needs ManageChannels.
     // The change goes out as ChannelModifiedV2 carrying the announcement field.
     SetAnnouncementSettings(reactions: bool, postAsSpace: bool, showAuthor: bool): UpdateChannelResult;
+
+    // Appended: the stretch of history around a message: up to `older` messages at or before it (the
+    // message itself first) and up to `newer` after it. Opens the history around a message that is
+    // not loaded (both), and pages down from there towards the present (older 0). The same rights
+    // as QueryMessages; a refusal reads as an empty window.
+    QueryMessagesAround(messageId: i8, older: i4, newer: i4): MessageWindow;
 }
 
 msg MessageReactionsEntry {
@@ -961,4 +967,16 @@ enum SendMessageError: u2 {
 union SendMessageResult {
     SuccessSendMessage(readback: SendMessageReadback),
     FailedSendMessage(error: SendMessageError)
+}
+
+// Appended: a stretch of a channel's history, as QueryMessagesAround returns it.
+msg MessageWindow {
+    // Newest first, as QueryMessages.
+    messages: ArgonMessage[];
+    // More messages exist before the oldest one here: paging up can go on.
+    hasOlder: bool;
+    // More messages exist after the newest one here; false: the window reaches the present.
+    hasNewer: bool;
+    // The message the window was asked around is in it: it exists and was not deleted.
+    containsAnchor: bool;
 }
