@@ -1302,7 +1302,9 @@
         "INSUFFICIENT_PERMISSIONS": "6",
         "SAME_CHANNEL": "7",
         "ALREADY_FOLLOWING": "8",
-        "TOO_MANY_FOLLOWS": "9"
+        "TOO_MANY_FOLLOWS": "9",
+        "SOURCE_PRIVATE": "10",
+        "SOURCE_FOLLOWER_LIMIT": "11"
       },
       "baseType": "u2"
     },

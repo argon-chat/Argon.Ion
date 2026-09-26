@@ -49,7 +49,7 @@ enum SchedulePostError: u2 {
     PUBLISH_TOO_SOON,
     // publishAt is later than thirty days from now.
     PUBLISH_TOO_LATE,
-    // The channel already holds the maximum of pending posts (25).
+    // The author already has 10 pending posts in the channel, or the channel holds 100.
     TOO_MANY_SCHEDULED,
     POST_NOT_FOUND,
     // Only the author reschedules a post.

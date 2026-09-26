@@ -36,10 +36,12 @@ msg ChannelFollowLink {
 
 enum FollowChannelError: u2 {
     NONE,
+    // No longer returned: a missing source answers NO_ACCESS_TO_SOURCE.
     SOURCE_NOT_FOUND,
     // Only announcement channels can be followed.
     NOT_AN_ANNOUNCEMENT_CHANNEL,
-    // The caller cannot read the source (ViewChannel and ReadHistory).
+    // The source does not exist or the caller cannot read it (ViewChannel and ReadHistory); the same
+    // answer for both, so private channels cannot be probed for.
     NO_ACCESS_TO_SOURCE,
     TARGET_NOT_FOUND,
     // The target is a voice channel.
@@ -49,7 +51,12 @@ enum FollowChannelError: u2 {
     SAME_CHANNEL,
     ALREADY_FOLLOWING,
     // The target already follows the maximum number of sources (20).
-    TOO_MANY_FOLLOWS
+    TOO_MANY_FOLLOWS,
+    // Appended: the source is private (one that "everyone" cannot read) and the caller lacks
+    // ManageChannels there.
+    SOURCE_PRIVATE,
+    // Appended: the source already has the maximum number of followers (5000).
+    SOURCE_FOLLOWER_LIMIT
 }
 
 union FollowChannelResult {
@@ -73,7 +80,7 @@ enum PublishMessageError: u2 {
     NONE,
     MESSAGE_NOT_FOUND,
     NOT_AN_ANNOUNCEMENT_CHANNEL,
-    // Neither the author nor holding ManageMessages in the channel.
+    // Neither the author with SendMessages nor holding ManageMessages in the channel.
     INSUFFICIENT_PERMISSIONS,
     ALREADY_PUBLISHED,
     // More than 10 publishes in the last hour from this channel.
@@ -83,24 +90,28 @@ enum PublishMessageError: u2 {
 }
 
 union PublishMessageResult {
-    // deliveredCount of targetCount channels received the copy; a failing target does not fail the publish.
+    // targetCount: the live followers the post was handed to. Delivery runs after the reply, so
+    // deliveredCount (delivered before it) is 0; a follow whose creator lost access is dropped then.
     SuccessPublishMessage(publishedAt: datetime, deliveredCount: i4, targetCount: i4),
     FailedPublishMessage(error: PublishMessageError)
 }
 
 service ChannelFollowInteraction(spaceId: guid, channelId: guid) {
-    // Called on the SOURCE channel. Needs ViewChannel and ReadHistory here, and ManageChannels in the target.
+    // Called on the SOURCE channel. Needs ViewChannel and ReadHistory here (and ManageChannels here when
+    // "everyone" cannot read it), and ManageChannels in the target. The creator keeps needing them:
+    // a follow they no longer pass for is dropped at the next publish, and leaving the source space ends it.
     FollowChannel(targetSpaceId: guid, targetChannelId: guid): FollowChannelResult;
 
-    // Source side: who follows this channel. Needs ManageChannels.
+    // Source side: who follows this channel. Needs ManageChannels. Capped at the newest 200.
     GetFollowers(): ChannelFollowLink[];
 
-    // Target side: which channels this channel follows. Needs ViewChannel.
+    // Target side: which channels this channel follows. Needs ViewChannel. Capped at the newest 200.
     GetFollowedSources(): ChannelFollowLink[];
 
     // Either side may cut a link that involves this channel, with ManageChannels here.
     RemoveFollow(followId: guid): RemoveFollowResult;
 
-    // Sends a copy of the message to every follower. For its author, or ManageMessages; once per message.
+    // Sends a copy of the message to every follower, in the background after the reply. For its author
+    // while they hold SendMessages here, or ManageMessages; once per message.
     PublishMessage(messageId: i8): PublishMessageResult;
 }
