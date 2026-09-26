@@ -1,0 +1,104 @@
+#feature "orleans"
+
+// Following an announcement channel: a SOURCE announcement channel feeds the posts it publishes into
+// TARGET text or announcement channels, in any space, the source's own included. Publishing is by
+// hand, per message; what lands in a target is a copy that lives there like any other message.
+
+// Where a crossposted copy came from, as it was when it was published. Carried on the copy
+// (ArgonMessage.crosspost) so a reader who is not in the source space still sees its name.
+msg CrosspostInfo {
+    sourceSpaceId: guid;
+    sourceChannelId: guid;
+    sourceMessageId: i8;
+    sourceSpaceName: string;
+    sourceChannelName: string;
+    sourceSpaceAvatarFileId: string?;
+}
+
+// One source→target link, as both sides list it.
+msg ChannelFollowLink {
+    followId: guid;
+    sourceSpaceId: guid;
+    sourceChannelId: guid;
+    sourceSpaceName: string;
+    sourceChannelName: string;
+    targetSpaceId: guid;
+    targetChannelId: guid;
+    targetSpaceName: string;
+    targetChannelName: string;
+    createdAt: datetime;
+    creatorId: guid;
+    sourceSpaceAvatarFileId: string?;
+    targetSpaceAvatarFileId: string?;
+}
+
+enum FollowChannelError: u2 {
+    NONE,
+    SOURCE_NOT_FOUND,
+    // Only announcement channels can be followed.
+    NOT_AN_ANNOUNCEMENT_CHANNEL,
+    // The caller cannot read the source (ViewChannel and ReadHistory).
+    NO_ACCESS_TO_SOURCE,
+    TARGET_NOT_FOUND,
+    // The target is a voice channel.
+    TARGET_NOT_TEXT,
+    // The caller lacks ManageChannels in the target channel.
+    INSUFFICIENT_PERMISSIONS,
+    SAME_CHANNEL,
+    ALREADY_FOLLOWING,
+    // The target already follows the maximum number of sources (20).
+    TOO_MANY_FOLLOWS
+}
+
+union FollowChannelResult {
+    SuccessFollowChannel(link: ChannelFollowLink),
+    FailedFollowChannel(error: FollowChannelError)
+}
+
+enum RemoveFollowError: u2 {
+    NONE,
+    // No such follow, or it does not involve this channel.
+    FOLLOW_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS
+}
+
+union RemoveFollowResult {
+    SuccessRemoveFollow(),
+    FailedRemoveFollow(error: RemoveFollowError)
+}
+
+enum PublishMessageError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    NOT_AN_ANNOUNCEMENT_CHANNEL,
+    // Neither the author nor holding ManageMessages in the channel.
+    INSUFFICIENT_PERMISSIONS,
+    ALREADY_PUBLISHED,
+    // More than 10 publishes in the last hour from this channel.
+    PUBLISH_RATE_LIMITED,
+    // System messages and crossposted copies are not published again.
+    NOT_PUBLISHABLE
+}
+
+union PublishMessageResult {
+    // deliveredCount of targetCount channels received the copy; a failing target does not fail the publish.
+    SuccessPublishMessage(publishedAt: datetime, deliveredCount: i4, targetCount: i4),
+    FailedPublishMessage(error: PublishMessageError)
+}
+
+service ChannelFollowInteraction(spaceId: guid, channelId: guid) {
+    // Called on the SOURCE channel. Needs ViewChannel and ReadHistory here, and ManageChannels in the target.
+    FollowChannel(targetSpaceId: guid, targetChannelId: guid): FollowChannelResult;
+
+    // Source side: who follows this channel. Needs ManageChannels.
+    GetFollowers(): ChannelFollowLink[];
+
+    // Target side: which channels this channel follows. Needs ViewChannel.
+    GetFollowedSources(): ChannelFollowLink[];
+
+    // Either side may cut a link that involves this channel, with ManageChannels here.
+    RemoveFollow(followId: guid): RemoveFollowResult;
+
+    // Sends a copy of the message to every follower. For its author, or ManageMessages; once per message.
+    PublishMessage(messageId: i8): PublishMessageResult;
+}

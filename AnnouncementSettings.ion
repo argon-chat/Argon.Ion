@@ -1,0 +1,10 @@
+// How an announcement channel presents its posts. Carried on ArgonChannel.announcement, which is set
+// only on announcement channels; a text channel keeps its stored values for when it converts back.
+msg AnnouncementSettings {
+    // Off: nobody adds a reaction. Existing reactions stay and can still be taken back.
+    reactions: bool;
+    // Posts render under the space's name and avatar. The server keeps the real author.
+    postAsSpace: bool;
+    // With postAsSpace: a "by <author>" line under the space's name.
+    showAuthor: bool;
+}

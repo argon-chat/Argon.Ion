@@ -1,0 +1,85 @@
+// Author tools for text and announcement channels: posts scheduled for later and a draft kept on
+// the server per (user, channel). The preview is the client's own business.
+
+enum ScheduledPostStatus: u2 {
+    PENDING,
+    PUBLISHED,
+    FAILED,
+    CANCELLED
+}
+
+// Why a post that came due was not published. Decided at publish time, not when it was scheduled.
+enum ScheduledPostFailure: u2 {
+    NONE,
+    // Deleted, or no longer a text or announcement channel.
+    CHANNEL_NOT_FOUND,
+    // The author left the space or lost SendMessages (AttachFiles for a post with files or a GIF).
+    INSUFFICIENT_PERMISSIONS,
+    // Slow mode kept holding the post for longer than the retry window.
+    SLOW_MODE,
+    SEND_FAILED
+}
+
+msg ScheduledPost {
+    postId: guid;
+    spaceId: guid;
+    channelId: guid;
+    authorId: guid;
+    text: string;
+    entities: MessageEntity[];
+    publishAt: datetime;
+    createdAt: datetime;
+    status: ScheduledPostStatus;
+    failure: ScheduledPostFailure;
+    // Set once published.
+    messageId: i8?;
+}
+
+enum SchedulePostError: u2 {
+    NONE,
+    CHANNEL_NOT_FOUND,
+    NOT_A_TEXT_CHANNEL,
+    INSUFFICIENT_PERMISSIONS,
+    EMPTY_MESSAGE,
+    MESSAGE_TOO_LONG,
+    TOO_MANY_ATTACHMENTS,
+    // publishAt is earlier than a minute from now.
+    PUBLISH_TOO_SOON,
+    // publishAt is later than thirty days from now.
+    PUBLISH_TOO_LATE,
+    // The channel already holds the maximum of pending posts (25).
+    TOO_MANY_SCHEDULED,
+    POST_NOT_FOUND,
+    // Only the author reschedules a post.
+    NOT_AUTHOR,
+    // Published or cancelled: nothing left to reschedule.
+    NOT_PENDING
+}
+
+union SchedulePostResult {
+    SuccessSchedulePost(post: ScheduledPost),
+    FailedSchedulePost(error: SchedulePostError)
+}
+
+msg MessageDraft {
+    channelId: guid;
+    text: string;
+    entities: MessageEntity[];
+    updatedAt: datetime;
+}
+
+service ChannelComposerInteraction(spaceId: guid, channelId: guid) {
+    // Anyone who may send in the channel. Validated like SendMessage; published through it, as the
+    // author, within about a minute of publishAt.
+    SchedulePost(text: string, entities: MessageEntity[], publishAt: datetime): SchedulePostResult;
+    // The author's own pending or failed post; a failed one goes back to pending.
+    ReschedulePost(postId: guid, publishAt: datetime): SchedulePostResult;
+    // The author's own pending or failed post, or any pending post for ManageMessages.
+    CancelScheduledPost(postId: guid): bool;
+    // The caller's pending and failed posts, plus everyone's pending posts for ManageMessages.
+    GetScheduledPosts(): ScheduledPost[];
+
+    // Last write wins; empty text deletes the draft.
+    SaveDraft(text: string, entities: MessageEntity[]): void;
+    GetDraft(): MessageDraft?;
+}

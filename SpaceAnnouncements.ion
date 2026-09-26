@@ -1,0 +1,22 @@
+#feature "orleans"
+
+// A space's main announcement channel: its latest message is shown to members who have not read it.
+// The choice travels on ArgonSpaceBase.mainAnnouncementChannelId (SpaceDetailsUpdated on change) and
+// is cleared by the server when that channel is deleted or turned back into a text channel.
+service SpaceAnnouncementInteraction(spaceId: guid) {
+    // Null clears it. Needs ManageServer; the channel must be an announcement channel of this space.
+    SetMainAnnouncementChannel(channelId: guid?): SetMainAnnouncementChannelResult;
+}
+
+enum SetMainAnnouncementChannelError : u2
+{
+    NONE,
+    NO_PERMISSION,
+    CHANNEL_NOT_FOUND,
+    NOT_ANNOUNCEMENT_CHANNEL
+}
+
+union SetMainAnnouncementChannelResult {
+    SuccessSetMainAnnouncementChannel(channelId: guid?),
+    FailedSetMainAnnouncementChannel(error: SetMainAnnouncementChannelError)
+}

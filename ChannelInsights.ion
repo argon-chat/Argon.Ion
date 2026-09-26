@@ -1,0 +1,20 @@
+// How far an announcement has reached. Only the message's author and members with ManageMessages in
+// the channel may ask.
+
+enum ReadCountError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    NOT_AN_ANNOUNCEMENT_CHANNEL
+}
+
+union ReadCountResult() {
+    // readers: members other than the author whose read mark is at or past the message.
+    // members: everyone in the space, for context.
+    SuccessReadCount(readers: i4, members: i4),
+    FailedReadCount(error: ReadCountError)
+}
+
+service ChannelInsightsInteraction(spaceId: guid, channelId: guid) {
+    GetReadCount(messageId: i8): ReadCountResult;
+}

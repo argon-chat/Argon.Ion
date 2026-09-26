@@ -2,6 +2,27 @@
   "version": 2,
   "module": "ArgonContracts",
   "definitions": {
+    "AnnouncementSettings": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "reactions",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "postAsSpace",
+          "type": "bool"
+        },
+        {
+          "index": 2,
+          "name": "showAuthor",
+          "type": "bool"
+        }
+      ]
+    },
     "ChannelEntitlementOverwrite": {
       "kind": "Msg",
       "nextIndex": 7,
@@ -803,6 +824,709 @@
         }
       }
     },
+    "ScheduledPost": {
+      "kind": "Msg",
+      "nextIndex": 11,
+      "fields": [
+        {
+          "index": 0,
+          "name": "postId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "authorId",
+          "type": "guid"
+        },
+        {
+          "index": 4,
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "entities",
+          "type": "Array\u003CMessageEntity\u003E"
+        },
+        {
+          "index": 6,
+          "name": "publishAt",
+          "type": "datetime"
+        },
+        {
+          "index": 7,
+          "name": "createdAt",
+          "type": "datetime"
+        },
+        {
+          "index": 8,
+          "name": "status",
+          "type": "ScheduledPostStatus"
+        },
+        {
+          "index": 9,
+          "name": "failure",
+          "type": "ScheduledPostFailure"
+        },
+        {
+          "index": 10,
+          "name": "messageId",
+          "type": "Maybe\u003Ci8\u003E"
+        }
+      ]
+    },
+    "MessageDraft": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "entities",
+          "type": "Array\u003CMessageEntity\u003E"
+        },
+        {
+          "index": 3,
+          "name": "updatedAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "ScheduledPostStatus": {
+      "kind": "Enum",
+      "members": {
+        "PENDING": "0",
+        "PUBLISHED": "1",
+        "FAILED": "2",
+        "CANCELLED": "3"
+      },
+      "baseType": "u2"
+    },
+    "ScheduledPostFailure": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "SLOW_MODE": "3",
+        "SEND_FAILED": "4"
+      },
+      "baseType": "u2"
+    },
+    "SchedulePostError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "NOT_A_TEXT_CHANNEL": "2",
+        "INSUFFICIENT_PERMISSIONS": "3",
+        "EMPTY_MESSAGE": "4",
+        "MESSAGE_TOO_LONG": "5",
+        "TOO_MANY_ATTACHMENTS": "6",
+        "PUBLISH_TOO_SOON": "7",
+        "PUBLISH_TOO_LATE": "8",
+        "TOO_MANY_SCHEDULED": "9",
+        "POST_NOT_FOUND": "10",
+        "NOT_AUTHOR": "11",
+        "NOT_PENDING": "12"
+      },
+      "baseType": "u2"
+    },
+    "SchedulePostResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSchedulePost",
+          "fields": [
+            {
+              "index": 0,
+              "name": "post",
+              "type": "ScheduledPost"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedSchedulePost",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SchedulePostError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChannelComposerInteraction": {
+      "kind": "Service",
+      "methods": {
+        "SchedulePost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "entities",
+              "type": "Array\u003CMessageEntity\u003E"
+            },
+            {
+              "index": 4,
+              "name": "publishAt",
+              "type": "datetime"
+            }
+          ],
+          "returns": "SchedulePostResult",
+          "modifiers": []
+        },
+        "ReschedulePost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "postId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "publishAt",
+              "type": "datetime"
+            }
+          ],
+          "returns": "SchedulePostResult",
+          "modifiers": []
+        },
+        "CancelScheduledPost": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "postId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "GetScheduledPosts": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CScheduledPost\u003E",
+          "modifiers": []
+        },
+        "SaveDraft": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "entities",
+              "type": "Array\u003CMessageEntity\u003E"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetDraft": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Maybe\u003CMessageDraft\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "CrosspostInfo": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "sourceSpaceId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "sourceChannelId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "sourceMessageId",
+          "type": "i8"
+        },
+        {
+          "index": 3,
+          "name": "sourceSpaceName",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "sourceChannelName",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "sourceSpaceAvatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "ChannelFollowLink": {
+      "kind": "Msg",
+      "nextIndex": 13,
+      "fields": [
+        {
+          "index": 0,
+          "name": "followId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "sourceSpaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "sourceChannelId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "sourceSpaceName",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "sourceChannelName",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "targetSpaceId",
+          "type": "guid"
+        },
+        {
+          "index": 6,
+          "name": "targetChannelId",
+          "type": "guid"
+        },
+        {
+          "index": 7,
+          "name": "targetSpaceName",
+          "type": "string"
+        },
+        {
+          "index": 8,
+          "name": "targetChannelName",
+          "type": "string"
+        },
+        {
+          "index": 9,
+          "name": "createdAt",
+          "type": "datetime"
+        },
+        {
+          "index": 10,
+          "name": "creatorId",
+          "type": "guid"
+        },
+        {
+          "index": 11,
+          "name": "sourceSpaceAvatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 12,
+          "name": "targetSpaceAvatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "FollowChannelError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "SOURCE_NOT_FOUND": "1",
+        "NOT_AN_ANNOUNCEMENT_CHANNEL": "2",
+        "NO_ACCESS_TO_SOURCE": "3",
+        "TARGET_NOT_FOUND": "4",
+        "TARGET_NOT_TEXT": "5",
+        "INSUFFICIENT_PERMISSIONS": "6",
+        "SAME_CHANNEL": "7",
+        "ALREADY_FOLLOWING": "8",
+        "TOO_MANY_FOLLOWS": "9"
+      },
+      "baseType": "u2"
+    },
+    "RemoveFollowError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "FOLLOW_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2"
+      },
+      "baseType": "u2"
+    },
+    "PublishMessageError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "NOT_AN_ANNOUNCEMENT_CHANNEL": "2",
+        "INSUFFICIENT_PERMISSIONS": "3",
+        "ALREADY_PUBLISHED": "4",
+        "PUBLISH_RATE_LIMITED": "5",
+        "NOT_PUBLISHABLE": "6"
+      },
+      "baseType": "u2"
+    },
+    "FollowChannelResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessFollowChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "link",
+              "type": "ChannelFollowLink"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedFollowChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "FollowChannelError"
+            }
+          ]
+        }
+      ]
+    },
+    "RemoveFollowResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRemoveFollow",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedRemoveFollow",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "RemoveFollowError"
+            }
+          ]
+        }
+      ]
+    },
+    "PublishMessageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPublishMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "publishedAt",
+              "type": "datetime"
+            },
+            {
+              "index": 1,
+              "name": "deliveredCount",
+              "type": "i4"
+            },
+            {
+              "index": 2,
+              "name": "targetCount",
+              "type": "i4"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedPublishMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PublishMessageError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChannelFollowInteraction": {
+      "kind": "Service",
+      "methods": {
+        "FollowChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "targetSpaceId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "targetChannelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "FollowChannelResult",
+          "modifiers": []
+        },
+        "GetFollowers": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CChannelFollowLink\u003E",
+          "modifiers": []
+        },
+        "GetFollowedSources": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CChannelFollowLink\u003E",
+          "modifiers": []
+        },
+        "RemoveFollow": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "followId",
+              "type": "guid"
+            }
+          ],
+          "returns": "RemoveFollowResult",
+          "modifiers": []
+        },
+        "PublishMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "PublishMessageResult",
+          "modifiers": []
+        }
+      }
+    },
+    "ReadCountError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "NOT_AN_ANNOUNCEMENT_CHANNEL": "3"
+      },
+      "baseType": "u2"
+    },
+    "ReadCountResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessReadCount",
+          "fields": [
+            {
+              "index": 0,
+              "name": "readers",
+              "type": "i4"
+            },
+            {
+              "index": 1,
+              "name": "members",
+              "type": "i4"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedReadCount",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ReadCountError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChannelInsightsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetReadCount": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "ReadCountResult",
+          "modifiers": []
+        }
+      }
+    },
     "CreateChannelRequest": {
       "kind": "Msg",
       "nextIndex": 5,
@@ -852,7 +1576,7 @@
     },
     "ArgonChannel": {
       "kind": "Msg",
-      "nextIndex": 11,
+      "nextIndex": 12,
       "fields": [
         {
           "index": 0,
@@ -908,6 +1632,11 @@
           "index": 10,
           "name": "broadcast",
           "type": "Maybe\u003CBroadcastSettings\u003E"
+        },
+        {
+          "index": 11,
+          "name": "announcement",
+          "type": "Maybe\u003CAnnouncementSettings\u003E"
         }
       ]
     },
@@ -939,7 +1668,7 @@
     },
     "ArgonMessage": {
       "kind": "Msg",
-      "nextIndex": 11,
+      "nextIndex": 14,
       "fields": [
         {
           "index": 0,
@@ -995,6 +1724,21 @@
           "index": 10,
           "name": "editedAt",
           "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 11,
+          "name": "crosspost",
+          "type": "Maybe\u003CCrosspostInfo\u003E"
+        },
+        {
+          "index": 12,
+          "name": "publishedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        },
+        {
+          "index": 13,
+          "name": "webhook",
+          "type": "Maybe\u003CWebhookAuthor\u003E"
         }
       ]
     },
@@ -1787,7 +2531,9 @@
         "SLOW_MODE_NOT_ALLOWED": "6",
         "NOT_A_TEXT_CHANNEL": "7",
         "BITRATE_OUT_OF_RANGE": "8",
-        "NOT_A_VOICE_CHANNEL": "9"
+        "NOT_A_VOICE_CHANNEL": "9",
+        "TYPE_NOT_CONVERTIBLE": "10",
+        "NOT_AN_ANNOUNCEMENT_CHANNEL": "11"
       },
       "baseType": "u2"
     },
@@ -1894,7 +2640,8 @@
         "MESSAGE_NOT_FOUND": "1",
         "REACTION_LIMIT_REACHED": "2",
         "ALREADY_REACTED": "3",
-        "INSUFFICIENT_PERMISSIONS": "4"
+        "INSUFFICIENT_PERMISSIONS": "4",
+        "REACTIONS_DISABLED": "5"
       },
       "baseType": "u2"
     },
@@ -2876,7 +3623,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 72,
+      "nextIndex": 76,
       "cases": [
         {
           "index": 0,
@@ -4234,6 +4981,105 @@
               "type": "Partial\u003CArgonChannel\u003E"
             }
           ]
+        },
+        {
+          "index": 72,
+          "name": "MessagePinned",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "byUserId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 73,
+          "name": "MessageUnpinned",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "byUserId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 74,
+          "name": "MessagePublished",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "publishedAt",
+              "type": "datetime"
+            }
+          ]
+        },
+        {
+          "index": 75,
+          "name": "ScheduledPostUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "post",
+              "type": "ScheduledPost"
+            }
+          ]
         }
       ]
     },
@@ -4692,6 +5538,27 @@
               "index": 5,
               "name": "bitrate",
               "type": "Maybe\u003Ci4\u003E"
+            }
+          ],
+          "returns": "UpdateChannelResult",
+          "modifiers": []
+        },
+        "SetChannelType": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "type",
+              "type": "ChannelType"
             }
           ],
           "returns": "UpdateChannelResult",
@@ -5371,6 +6238,37 @@
           ],
           "returns": "ConfirmBroadcastLinksResult",
           "modifiers": []
+        },
+        "SetAnnouncementSettings": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "reactions",
+              "type": "bool"
+            },
+            {
+              "index": 3,
+              "name": "postAsSpace",
+              "type": "bool"
+            },
+            {
+              "index": 4,
+              "name": "showAuthor",
+              "type": "bool"
+            }
+          ],
+          "returns": "UpdateChannelResult",
+          "modifiers": []
         }
       }
     },
@@ -5433,6 +6331,408 @@
           "modifiers": [
             "stream"
           ]
+        }
+      }
+    },
+    "PinnedMessage": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "message",
+          "type": "ArgonMessage"
+        },
+        {
+          "index": 1,
+          "name": "pinnedBy",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "pinnedAt",
+          "type": "datetime"
+        }
+      ]
+    },
+    "PinMessageError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "MESSAGE_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "PIN_LIMIT_REACHED": "3",
+        "NOT_A_TEXT_CHANNEL": "4"
+      },
+      "baseType": "u2"
+    },
+    "PinMessageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPinMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "pin",
+              "type": "PinnedMessage"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedPinMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PinMessageError"
+            }
+          ]
+        }
+      ]
+    },
+    "UnpinMessageResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUnpinMessage",
+          "fields": []
+        },
+        {
+          "index": 1,
+          "name": "FailedUnpinMessage",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PinMessageError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChannelPinsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "PinMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "PinMessageResult",
+          "modifiers": []
+        },
+        "UnpinMessage": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            }
+          ],
+          "returns": "UnpinMessageResult",
+          "modifiers": []
+        },
+        "GetPinnedMessages": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CPinnedMessage\u003E",
+          "modifiers": []
+        }
+      }
+    },
+    "ChannelWebhook": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "webhookId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "channelId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "creatorId",
+          "type": "guid"
+        },
+        {
+          "index": 6,
+          "name": "createdAt",
+          "type": "datetime"
+        },
+        {
+          "index": 7,
+          "name": "lastUsedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        }
+      ]
+    },
+    "WebhookAuthor": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "webhookId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "avatarFileId",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "ChannelWebhookError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "CHANNEL_NOT_FOUND": "1",
+        "INSUFFICIENT_PERMISSIONS": "2",
+        "NOT_A_TEXT_CHANNEL": "3",
+        "NAME_EMPTY": "4",
+        "NAME_TOO_LONG": "5",
+        "LIMIT_REACHED": "6",
+        "WEBHOOK_NOT_FOUND": "7"
+      },
+      "baseType": "u2"
+    },
+    "CreateWebhookResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCreateWebhook",
+          "fields": [
+            {
+              "index": 0,
+              "name": "webhook",
+              "type": "ChannelWebhook"
+            },
+            {
+              "index": 1,
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "url",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedCreateWebhook",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ChannelWebhookError"
+            }
+          ]
+        }
+      ]
+    },
+    "UpdateWebhookResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUpdateWebhook",
+          "fields": [
+            {
+              "index": 0,
+              "name": "webhook",
+              "type": "ChannelWebhook"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedUpdateWebhook",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ChannelWebhookError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChannelWebhookInteraction": {
+      "kind": "Service",
+      "methods": {
+        "CreateWebhook": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "CreateWebhookResult",
+          "modifiers": []
+        },
+        "GetWebhooks": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CChannelWebhook\u003E",
+          "modifiers": []
+        },
+        "RenameWebhook": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "webhookId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returns": "UpdateWebhookResult",
+          "modifiers": []
+        },
+        "RegenerateWebhookToken": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "webhookId",
+              "type": "guid"
+            }
+          ],
+          "returns": "CreateWebhookResult",
+          "modifiers": []
+        },
+        "DeleteWebhook": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "webhookId",
+              "type": "guid"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
         }
       }
     },
@@ -8896,7 +10196,7 @@
     },
     "ArgonSpaceBase": {
       "kind": "Msg",
-      "nextIndex": 12,
+      "nextIndex": 13,
       "fields": [
         {
           "index": 0,
@@ -8957,12 +10257,17 @@
           "index": 11,
           "name": "isCommunity",
           "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 12,
+          "name": "mainAnnouncementChannelId",
+          "type": "Maybe\u003Cguid\u003E"
         }
       ]
     },
     "ArgonSpace": {
       "kind": "Msg",
-      "nextIndex": 13,
+      "nextIndex": 14,
       "fields": [
         {
           "index": 0,
@@ -9028,6 +10333,11 @@
           "index": 12,
           "name": "isCommunity",
           "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 13,
+          "name": "mainAnnouncementChannelId",
+          "type": "Maybe\u003Cguid\u003E"
         }
       ]
     },
@@ -10090,6 +11400,65 @@
         "IOS": "5"
       },
       "baseType": "u4"
+    },
+    "SetMainAnnouncementChannelError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NO_PERMISSION": "1",
+        "CHANNEL_NOT_FOUND": "2",
+        "NOT_ANNOUNCEMENT_CHANNEL": "3"
+      },
+      "baseType": "u2"
+    },
+    "SetMainAnnouncementChannelResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSetMainAnnouncementChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "channelId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedSetMainAnnouncementChannel",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "SetMainAnnouncementChannelError"
+            }
+          ]
+        }
+      ]
+    },
+    "SpaceAnnouncementInteraction": {
+      "kind": "Service",
+      "methods": {
+        "SetMainAnnouncementChannel": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "Maybe\u003Cguid\u003E"
+            }
+          ],
+          "returns": "SetMainAnnouncementChannelResult",
+          "modifiers": []
+        }
+      }
     },
     "UltimaPricing": {
       "kind": "Msg",

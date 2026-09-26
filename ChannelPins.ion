@@ -1,0 +1,36 @@
+// Pinned messages of text and announcement channels. Pinning and unpinning need ManageMessages in the
+// channel; whoever may read the channel's history sees its pins. At most 50 pins per channel. A deleted
+// message loses its pin. Changes reach the channel's viewers as MessagePinned / MessageUnpinned.
+
+msg PinnedMessage {
+    message: ArgonMessage;
+    pinnedBy: guid;
+    pinnedAt: datetime;
+}
+
+enum PinMessageError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    PIN_LIMIT_REACHED,
+    NOT_A_TEXT_CHANNEL
+}
+
+// Pinning a message that is already pinned succeeds and returns the existing pin.
+union PinMessageResult() {
+    SuccessPinMessage(pin: PinnedMessage),
+    FailedPinMessage(error: PinMessageError)
+}
+
+// Unpinning a message that is not pinned succeeds and changes nothing.
+union UnpinMessageResult() {
+    SuccessUnpinMessage(),
+    FailedUnpinMessage(error: PinMessageError)
+}
+
+service ChannelPinsInteraction(spaceId: guid, channelId: guid) {
+    PinMessage(messageId: i8): PinMessageResult;
+    UnpinMessage(messageId: i8): UnpinMessageResult;
+    // Newest pin first. Empty for a caller who cannot read the channel's history.
+    GetPinnedMessages(): PinnedMessage[];
+}

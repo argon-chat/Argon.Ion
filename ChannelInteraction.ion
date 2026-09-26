@@ -43,6 +43,8 @@ msg ArgonChannel {
     bitrate: i4?;
     // Voice only: set when the channel is a broadcast ("radio") channel, null on an ordinary one.
     broadcast: BroadcastSettings?;
+    // Appended: announcement channels only; null on every other type.
+    announcement: AnnouncementSettings?;
 }
 
 flags ChannelMemberState
@@ -142,6 +144,12 @@ msg ArgonMessage {
     controls: ControlRow[]?;
     // Appended: when the author last edited the text. Null for a message never edited.
     editedAt: datetime?;
+    // Appended: set on a copy that a followed announcement channel published into this channel.
+    crosspost: CrosspostInfo?;
+    // Appended: set on the source message once it was published to the channel's followers.
+    publishedAt: datetime?;
+    // Appended: set when an incoming webhook posted the message; the sender is then the system user.
+    webhook: WebhookAuthor?;
 }
 
 msg RealtimeChannelUser {
@@ -172,6 +180,11 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // matching UpdateChannelGroup; slowModeSeconds: 0 and bitrate: 0 are the values that clear
     // rather than skip.
     UpdateChannel(name: string?, description: string?, slowModeSeconds: i4?, bitrate: i4?): UpdateChannelResult;
+
+    // Text and announcement channels convert into each other, keeping their history. Becoming an
+    // announcement channel denies SendMessages to everyone, as a new one does, and drops slow mode;
+    // becoming a text channel lifts that deny. Needs what editing the channel's overwrites needs.
+    SetChannelType(type: ChannelType): UpdateChannelResult;
 
     // A copy of this channel — same type, name, topic, cooldown, bitrate and permission overwrites —
     // placed right after it in the same group. Messages are not copied: it is a new room, not a fork.
@@ -248,6 +261,10 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
 
     // Told once the radio participant is connected, so the server forwards it into the targets.
     ConfirmBroadcastLinks(): ConfirmBroadcastLinksResult;
+
+    // Appended: announcement channels only (NOT_AN_ANNOUNCEMENT_CHANNEL otherwise). Needs ManageChannels.
+    // The change goes out as ChannelModifiedV2 carrying the announcement field.
+    SetAnnouncementSettings(reactions: bool, postAsSpace: bool, showAuthor: bool): UpdateChannelResult;
 }
 
 msg MessageReactionsEntry {
@@ -344,7 +361,11 @@ enum UpdateChannelError: u2 {
     // Appended: enum cases are wire values. Bitrate is a range (8–320 kbps), not a picker, because
     // the useful value depends on the room's bandwidth rather than on a design choice.
     BITRATE_OUT_OF_RANGE,
-    NOT_A_VOICE_CHANNEL
+    NOT_A_VOICE_CHANNEL,
+    // Appended: SetChannelType on a voice channel, or asking for a voice channel.
+    TYPE_NOT_CONVERTIBLE,
+    // Appended: SetAnnouncementSettings on a channel that is not an announcement channel.
+    NOT_AN_ANNOUNCEMENT_CHANNEL
 }
 
 union DuplicateChannelResult() {
@@ -505,7 +526,9 @@ enum AddReactionError: u2 {
     MESSAGE_NOT_FOUND,
     REACTION_LIMIT_REACHED,
     ALREADY_REACTED,
-    INSUFFICIENT_PERMISSIONS
+    INSUFFICIENT_PERMISSIONS,
+    // Appended: the announcement channel has reactions turned off. Taking one back still works.
+    REACTIONS_DISABLED
 }
 
 enum RemoveReactionError: u2 {
@@ -770,7 +793,18 @@ union ArgonEvent() {
 
     // Appended for the reason above. Sparse update of the channel: absent fields unchanged, null =
     // cleared (e.g. broadcast off). Replaces ChannelModified's bag of names with the change itself.
-    ChannelModifiedV2(spaceId: guid, channelId: guid, patch: ArgonChannel~)
+    ChannelModifiedV2(spaceId: guid, channelId: guid, patch: ArgonChannel~),
+
+    // Appended: pinned messages (ChannelPins.ion). Channel-scoped like reactions. A deleted message's
+    // pin goes with it as MessageUnpinned, byUserId being whoever deleted it.
+    MessagePinned(spaceId: guid, channelId: guid, messageId: i8, byUserId: guid),
+    MessageUnpinned(spaceId: guid, channelId: guid, messageId: i8, byUserId: guid),
+    // Appended: a message of an announcement channel was published to its followers (ChannelFollow.ion);
+    // channel-scoped, like edits.
+    MessagePublished(spaceId: guid, channelId: guid, messageId: i8, publishedAt: datetime),
+    // Appended: one of the recipient's scheduled posts changed — scheduled, rescheduled, cancelled,
+    // published or failed. Personal: only the author's sessions receive it.
+    ScheduledPostUpdated(spaceId: guid, channelId: guid, post: ScheduledPost)
 }
 
 msg ChannelReadState {

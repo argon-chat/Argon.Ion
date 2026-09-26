@@ -198,6 +198,8 @@ msg ArgonSpaceBase {
     // against the previous schema cannot decode a message that grew a required field. Absent means
     // false — the server always sends it.
     isCommunity: bool?;
+    // Appended: the space's main announcement channel, null when none is set.
+    mainAnnouncementChannelId: guid?;
 }
 
 msg ArgonSpace {
@@ -214,6 +216,8 @@ msg ArgonSpace {
     hideBoostStrip: bool;
     inviteImageFileId: string?;
     isCommunity: bool?;
+    // Appended: the space's main announcement channel, null when none is set.
+    mainAnnouncementChannelId: guid?;
 }
 
 msg ArchetypeGroup {

@@ -1,0 +1,58 @@
+// Incoming webhooks: a URL that posts into one text or announcement channel. Anyone holding the URL
+// posts, so the token is shown once, at creation or regeneration, and only its hash is stored.
+// External services post with POST /api/webhooks/{webhookId}/{token} and { content, username? }.
+
+msg ChannelWebhook {
+    webhookId: guid;
+    spaceId: guid;
+    channelId: guid;
+    // 1..32 characters.
+    name: string;
+    avatarFileId: string?;
+    creatorId: guid;
+    createdAt: datetime;
+    lastUsedAt: datetime?;
+}
+
+// Who posted a webhook message, carried on ArgonMessage.webhook. The sender of such a message is the
+// system user; name is the webhook's name at the time, or the username the request supplied.
+msg WebhookAuthor {
+    webhookId: guid;
+    name: string;
+    avatarFileId: string?;
+}
+
+enum ChannelWebhookError: u2 {
+    NONE,
+    CHANNEL_NOT_FOUND,
+    INSUFFICIENT_PERMISSIONS,
+    // Webhooks exist in text and announcement channels only.
+    NOT_A_TEXT_CHANNEL,
+    NAME_EMPTY,
+    NAME_TOO_LONG,
+    // At most 10 webhooks per channel.
+    LIMIT_REACHED,
+    WEBHOOK_NOT_FOUND
+}
+
+union CreateWebhookResult() {
+    // url is the full endpoint with the token in it; neither is retrievable later.
+    SuccessCreateWebhook(webhook: ChannelWebhook, token: string, url: string),
+    FailedCreateWebhook(error: ChannelWebhookError)
+}
+
+union UpdateWebhookResult() {
+    SuccessUpdateWebhook(webhook: ChannelWebhook),
+    FailedUpdateWebhook(error: ChannelWebhookError)
+}
+
+// Every call needs ManageChannels in the channel.
+service ChannelWebhookInteraction(spaceId: guid, channelId: guid) {
+    CreateWebhook(name: string): CreateWebhookResult;
+    // Empty when the caller may not manage the channel.
+    GetWebhooks(): ChannelWebhook[];
+    RenameWebhook(webhookId: guid, name: string): UpdateWebhookResult;
+    // The old URL stops working at once.
+    RegenerateWebhookToken(webhookId: guid): CreateWebhookResult;
+    DeleteWebhook(webhookId: guid): bool;
+}
