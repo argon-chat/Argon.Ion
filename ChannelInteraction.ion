@@ -140,6 +140,8 @@ msg ArgonMessage {
     sender: guid;
     reactions: ReactionInfo[];
     controls: ControlRow[]?;
+    // Appended: when the author last edited the text. Null for a message never edited.
+    editedAt: datetime?;
 }
 
 msg RealtimeChannelUser {
@@ -188,6 +190,10 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // Authors may always retract their own message; taking down somebody else's needs ManageMessages.
     DeleteMessage(messageId: i8): DeleteMessageResult;
 
+    // Authors change the text and formatting of their own message; nobody edits anyone else's. The
+    // message goes out again as MessageUpdated, with editedAt set. Editing never pings anyone again.
+    EditMessage(messageId: i8, text: string, entities: MessageEntity[]): EditMessageResult;
+
     DisconnectFromVoiceChannel();
 
     Interlink(): InterlinkResult;
@@ -201,8 +207,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     KickMemberFromChannel(memberId: guid): bool;
 
     // Moves a member of this voice channel into another voice channel of the same space. Needs
-    // MoveMember on both channels; the member must be allowed to connect to the target. The member's
-    // client is told to reconnect (VoiceMoveRequested) and is evicted from this room if it does not.
+    // MoveMember on both channels; the member must be allowed to connect to the target. The SFU moves
+    // the participant on its existing connection (the client sees RoomMoved); SFU_UNAVAILABLE when it cannot.
     MoveVoiceMember(memberId: guid, targetChannelId: guid): MoveVoiceMemberResult;
 
     // The caller's own voice flags — MUTED, MUTED_HEADPHONES, STREAMING — so members outside the
@@ -261,7 +267,9 @@ enum MoveVoiceMemberError: u2 {
     TARGET_NOT_FOUND,
     TARGET_IS_NOT_VOICE,
     SAME_CHANNEL,
-    MEMBER_CANNOT_JOIN_TARGET
+    MEMBER_CANNOT_JOIN_TARGET,
+    // The SFU cannot move participants (no Move capability) or refused this one; the member was taken out of voice.
+    SFU_UNAVAILABLE
 }
 
 // Broadcast ("radio") channels: what a broadcast channel transmits is forwarded into its targets.
@@ -363,6 +371,19 @@ enum VoiceInviteError: u2 {
     CHANNEL_IS_NOT_VOICE,
     INSUFFICIENT_PERMISSIONS,
     INTERNAL_ERROR
+}
+
+union EditMessageResult() {
+    SuccessEditMessage(message: ArgonMessage),
+    FailedEditMessage(error: EditMessageError)
+}
+
+enum EditMessageError: u2 {
+    NONE,
+    MESSAGE_NOT_FOUND,
+    NOT_AUTHOR,
+    EMPTY_MESSAGE,
+    MESSAGE_TOO_LONG
 }
 
 union DeleteMessageResult() {
@@ -738,9 +759,8 @@ union ArgonEvent() {
     // stream, or a server mute/deafen. Space-wide, like JoinedToChannelUser.
     VoiceMemberStateChanged(spaceId: guid, channelId: guid, userId: guid, state: ChannelMemberState),
 
-    // Appended for the reason above. Personal: only the moved member's sessions receive it. The
-    // client leaves fromChannelId and joins toChannelId. Self-hosted LiveKit has no MoveParticipant,
-    // so the reconnect is the client's job until the SFU can do it.
+    // Superseded by the SFU moving the participant itself (the client sees RoomMoved); the server no longer emits this.
+    @deprecated
     VoiceMoveRequested(spaceId: guid, fromChannelId: guid, toChannelId: guid, byUserId: guid),
 
     // Appended for the reason above. Grants in the space changed: a role's entitlements or a channel
