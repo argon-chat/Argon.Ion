@@ -52,8 +52,8 @@ enum FollowChannelError: u2 {
     ALREADY_FOLLOWING,
     // The target already follows the maximum number of sources (20).
     TOO_MANY_FOLLOWS,
-    // Appended: the source is private (one that "everyone" cannot read) and the caller lacks
-    // ManageChannels there.
+    // Appended: the source is private (one that "everyone" cannot read); only public channels can
+    // be followed.
     SOURCE_PRIVATE,
     // Appended: the source already has the maximum number of followers (5000).
     SOURCE_FOLLOWER_LIMIT
