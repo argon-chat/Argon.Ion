@@ -27,7 +27,7 @@ msg ExpressionItem {
     width: i4;
     height: i4;
     fileSize: i4;
-    // 1..20 associated unicode emoji.
+    // 0..20 associated unicode emoji.
     emoji: string[];
     // 0..20, at most 64 characters in total.
     keywords: string[];
@@ -39,6 +39,8 @@ msg ExpressionItem {
     // Filled by the server when read.
     downloadUrl: string?;
     thumbUrl: string?;
+    // Who added it.
+    creatorId: guid?;
 }
 
 msg ExpressionPack {
@@ -51,6 +53,17 @@ msg ExpressionPack {
     sortOrder: i4;
     version: i8;
     items: ExpressionItem[];
+    creatorId: guid?;
+}
+
+// A custom emoji worn in a custom status (ArgonUserProfile.customStatusEmoji). A copy taken when the
+// status was set, so it still renders after the item is deleted.
+msg StatusEmoji {
+    itemId: guid;
+    spaceId: guid;
+    fileId: guid;
+    format: ExpressionFormat;
+    name: string;
 }
 
 // Every pack of a space. packs is null when the caller's known version is still current.

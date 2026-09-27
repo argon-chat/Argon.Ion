@@ -113,7 +113,8 @@ enum UpdateMeError {
     INVALID_PRESET_ID,
     DISPLAY_NAME_TOO_LONG,
     DISPLAY_NAME_EMPTY,
-    BIO_TOO_LONG
+    BIO_TOO_LONG,
+    INVALID_STATUS_EMOJI
 }
 
 msg FeatureFlag {

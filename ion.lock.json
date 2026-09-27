@@ -11067,7 +11067,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 16,
+      "nextIndex": 17,
       "fields": [
         {
           "index": 0,
@@ -11148,6 +11148,11 @@
           "index": 15,
           "name": "cosmetics",
           "type": "Maybe\u003CArray\u003CWornCosmetic\u003E\u003E"
+        },
+        {
+          "index": 16,
+          "name": "customStatusEmoji",
+          "type": "Maybe\u003CStatusEmoji\u003E"
         }
       ]
     },
@@ -11977,7 +11982,7 @@
     },
     "ExpressionItem": {
       "kind": "Msg",
-      "nextIndex": 18,
+      "nextIndex": 19,
       "fields": [
         {
           "index": 0,
@@ -12068,12 +12073,17 @@
           "index": 17,
           "name": "thumbUrl",
           "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 18,
+          "name": "creatorId",
+          "type": "Maybe\u003Cguid\u003E"
         }
       ]
     },
     "ExpressionPack": {
       "kind": "Msg",
-      "nextIndex": 9,
+      "nextIndex": 10,
       "fields": [
         {
           "index": 0,
@@ -12119,6 +12129,42 @@
           "index": 8,
           "name": "items",
           "type": "Array\u003CExpressionItem\u003E"
+        },
+        {
+          "index": 9,
+          "name": "creatorId",
+          "type": "Maybe\u003Cguid\u003E"
+        }
+      ]
+    },
+    "StatusEmoji": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "itemId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "format",
+          "type": "ExpressionFormat"
+        },
+        {
+          "index": 4,
+          "name": "name",
+          "type": "string"
         }
       ]
     },
@@ -13673,7 +13719,8 @@
         "INVALID_PRESET_ID": "3",
         "DISPLAY_NAME_TOO_LONG": "4",
         "DISPLAY_NAME_EMPTY": "5",
-        "BIO_TOO_LONG": "6"
+        "BIO_TOO_LONG": "6",
+        "INVALID_STATUS_EMOJI": "7"
       },
       "baseType": "u4"
     },

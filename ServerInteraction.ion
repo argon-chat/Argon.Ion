@@ -341,6 +341,9 @@ msg ArgonUserProfile {
     // shipped: the message is positional, so a field inserted earlier would be read by an older
     // client as the one it displaced. Null means this reader was not told, not that nothing is worn.
     cosmetics: WornCosmetic[]?;
+
+    // Set when customStatusIconId is "ce:<itemId>"; any other icon id is a unicode emoji.
+    customStatusEmoji: StatusEmoji?;
 }
 
 flags UserFlag : i4
