@@ -2604,7 +2604,9 @@
         "SystemUserJoined": "19",
         "Attachment": "20",
         "Gif": "21",
-        "LinkPreview": "22"
+        "LinkPreview": "22",
+        "Sticker": "23",
+        "CustomEmoji": "24"
       },
       "baseType": "u2"
     },
@@ -2925,7 +2927,7 @@
     },
     "MessageEntity": {
       "kind": "Union",
-      "nextIndex": 23,
+      "nextIndex": 25,
       "cases": [
         {
           "index": 0,
@@ -3248,6 +3250,108 @@
             {
               "index": 9,
               "name": "canonicalUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
+        },
+        {
+          "index": 23,
+          "name": "MessageEntitySticker",
+          "fields": [
+            {
+              "index": 4,
+              "name": "itemId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 6,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 7,
+              "name": "format",
+              "type": "ExpressionFormat"
+            },
+            {
+              "index": 8,
+              "name": "fileId",
+              "type": "guid"
+            },
+            {
+              "index": 9,
+              "name": "thumbFileId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 10,
+              "name": "width",
+              "type": "i4"
+            },
+            {
+              "index": 11,
+              "name": "height",
+              "type": "i4"
+            },
+            {
+              "index": 12,
+              "name": "outline",
+              "type": "Maybe\u003Cbytes\u003E"
+            },
+            {
+              "index": 13,
+              "name": "downloadUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 14,
+              "name": "thumbUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
+        },
+        {
+          "index": 24,
+          "name": "MessageEntityCustomEmoji",
+          "fields": [
+            {
+              "index": 4,
+              "name": "itemId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 6,
+              "name": "format",
+              "type": "ExpressionFormat"
+            },
+            {
+              "index": 7,
+              "name": "fileId",
+              "type": "guid"
+            },
+            {
+              "index": 8,
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "index": 9,
+              "name": "textColor",
+              "type": "bool"
+            },
+            {
+              "index": 10,
+              "name": "downloadUrl",
               "type": "Maybe\u003Cstring\u003E"
             }
           ]
@@ -3786,7 +3890,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 77,
+      "nextIndex": 78,
       "cases": [
         {
           "index": 0,
@@ -4763,6 +4867,11 @@
               "index": 4,
               "name": "emoji",
               "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "customEmojiId",
+              "type": "Maybe\u003Cguid\u003E"
             }
           ]
         },
@@ -5267,6 +5376,32 @@
               "index": 3,
               "name": "lastMessageId",
               "type": "i8"
+            }
+          ]
+        },
+        {
+          "index": 77,
+          "name": "SpaceExpressionsChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "baseVersion",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 3,
+              "name": "delta",
+              "type": "Maybe\u003CExpressionDelta\u003E"
             }
           ]
         }
@@ -6502,6 +6637,58 @@
             }
           ],
           "returns": "MessageWindow",
+          "modifiers": []
+        },
+        "AddCustomReaction": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ],
+          "returns": "AddReactionResult",
+          "modifiers": []
+        },
+        "RemoveCustomReaction": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "messageId",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ],
+          "returns": "RemoveReactionResult",
           "modifiers": []
         }
       }
@@ -11038,6 +11225,7 @@
         "ExternalStickers": "4096",
         "UseCommands": "8192",
         "PostEmbeddedLinks": "16384",
+        "CreateExpressions": "32768",
         "Connect": "1048576",
         "Speak": "2097152",
         "Video": "4194304",
@@ -11058,7 +11246,8 @@
         "ManageEvents": "9007199254740992",
         "ManageBehaviour": "18014398509481984",
         "ManageServer": "36028797018963968",
-        "ManageMessages": "72057594037927936"
+        "ManageMessages": "72057594037927936",
+        "ManageExpressions": "144115188075855872"
       },
       "baseType": "u8"
     },
@@ -11782,6 +11971,612 @@
             }
           ],
           "returns": "SetMainAnnouncementChannelResult",
+          "modifiers": []
+        }
+      }
+    },
+    "ExpressionItem": {
+      "kind": "Msg",
+      "nextIndex": 18,
+      "fields": [
+        {
+          "index": 0,
+          "name": "itemId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "packId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 3,
+          "name": "kind",
+          "type": "ExpressionKind"
+        },
+        {
+          "index": 4,
+          "name": "format",
+          "type": "ExpressionFormat"
+        },
+        {
+          "index": 5,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 6,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 7,
+          "name": "thumbFileId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 8,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 9,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 10,
+          "name": "fileSize",
+          "type": "i4"
+        },
+        {
+          "index": 11,
+          "name": "emoji",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 12,
+          "name": "keywords",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 13,
+          "name": "outline",
+          "type": "Maybe\u003Cbytes\u003E"
+        },
+        {
+          "index": 14,
+          "name": "textColor",
+          "type": "bool"
+        },
+        {
+          "index": 15,
+          "name": "sortOrder",
+          "type": "i4"
+        },
+        {
+          "index": 16,
+          "name": "downloadUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 17,
+          "name": "thumbUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "ExpressionPack": {
+      "kind": "Msg",
+      "nextIndex": 9,
+      "fields": [
+        {
+          "index": 0,
+          "name": "packId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "spaceId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "kind",
+          "type": "ExpressionKind"
+        },
+        {
+          "index": 3,
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "slug",
+          "type": "string"
+        },
+        {
+          "index": 5,
+          "name": "coverItemId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 6,
+          "name": "sortOrder",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "version",
+          "type": "i8"
+        },
+        {
+          "index": 8,
+          "name": "items",
+          "type": "Array\u003CExpressionItem\u003E"
+        }
+      ]
+    },
+    "ExpressionsSnapshot": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "packs",
+          "type": "Maybe\u003CArray\u003CExpressionPack\u003E\u003E"
+        }
+      ]
+    },
+    "ExpressionKind": {
+      "kind": "Enum",
+      "members": {
+        "Sticker": "0",
+        "Emoji": "1"
+      },
+      "baseType": "u1"
+    },
+    "ExpressionFormat": {
+      "kind": "Enum",
+      "members": {
+        "Static": "0",
+        "Lottie": "1",
+        "Video": "2"
+      },
+      "baseType": "u1"
+    },
+    "ExpressionError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_FOUND": "1",
+        "FORBIDDEN": "2",
+        "QUOTA_EXCEEDED": "3",
+        "INVALID_FORMAT": "4",
+        "TOO_LARGE": "5",
+        "NAME_TAKEN": "6",
+        "CONTENT_REJECTED": "7",
+        "RATE_LIMITED": "8"
+      },
+      "baseType": "u2"
+    },
+    "PackResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessPack",
+          "fields": [
+            {
+              "index": 0,
+              "name": "pack",
+              "type": "ExpressionPack"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedPack",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ExpressionError"
+            }
+          ]
+        }
+      ]
+    },
+    "ItemResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessItem",
+          "fields": [
+            {
+              "index": 0,
+              "name": "item",
+              "type": "ExpressionItem"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedItem",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ExpressionError"
+            }
+          ]
+        }
+      ]
+    },
+    "ReorderResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessReorder",
+          "fields": [
+            {
+              "index": 0,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedReorder",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ExpressionError"
+            }
+          ]
+        }
+      ]
+    },
+    "ExpressionDelta": {
+      "kind": "Union",
+      "nextIndex": 6,
+      "cases": [
+        {
+          "index": 0,
+          "name": "PackUpserted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "pack",
+              "type": "ExpressionPack"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "PackDeleted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "packId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "ItemUpserted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "item",
+              "type": "ExpressionItem"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "ItemDeleted",
+          "fields": [
+            {
+              "index": 0,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "name": "PacksReordered",
+          "fields": [
+            {
+              "index": 0,
+              "name": "kind",
+              "type": "ExpressionKind"
+            },
+            {
+              "index": 1,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "name": "ItemsReordered",
+          "fields": [
+            {
+              "index": 0,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ]
+        }
+      ]
+    },
+    "SpaceExpressionInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetExpressions": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "known",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "ExpressionsSnapshot",
+          "modifiers": []
+        },
+        "CreatePack": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "kind",
+              "type": "ExpressionKind"
+            },
+            {
+              "index": 2,
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "index": 3,
+              "name": "slug",
+              "type": "string"
+            }
+          ],
+          "returns": "PackResult",
+          "modifiers": []
+        },
+        "UpdatePack": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "patch",
+              "type": "Partial\u003CExpressionPack\u003E"
+            }
+          ],
+          "returns": "PackResult",
+          "modifiers": []
+        },
+        "DeletePack": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "packId",
+              "type": "guid"
+            }
+          ],
+          "returns": "PackResult",
+          "modifiers": []
+        },
+        "ReorderPacks": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "kind",
+              "type": "ExpressionKind"
+            },
+            {
+              "index": 2,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "ReorderResult",
+          "modifiers": []
+        },
+        "BeginUploadExpression": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "kind",
+              "type": "ExpressionKind"
+            },
+            {
+              "index": 2,
+              "name": "format",
+              "type": "ExpressionFormat"
+            },
+            {
+              "index": 3,
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "index": 4,
+              "name": "size",
+              "type": "i8"
+            }
+          ],
+          "returns": "UploadFileResult",
+          "modifiers": []
+        },
+        "AddItem": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "blobId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "thumbBlobId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 4,
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "emoji",
+              "type": "Array\u003Cstring\u003E"
+            },
+            {
+              "index": 6,
+              "name": "keywords",
+              "type": "Array\u003Cstring\u003E"
+            },
+            {
+              "index": 7,
+              "name": "outline",
+              "type": "Maybe\u003Cbytes\u003E"
+            }
+          ],
+          "returns": "ItemResult",
+          "modifiers": []
+        },
+        "UpdateItem": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "itemId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "patch",
+              "type": "Partial\u003CExpressionItem\u003E"
+            }
+          ],
+          "returns": "ItemResult",
+          "modifiers": []
+        },
+        "DeleteItem": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "itemId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ItemResult",
+          "modifiers": []
+        },
+        "ReorderItems": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "packId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "ordered",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ],
+          "returns": "ReorderResult",
           "modifiers": []
         }
       }

@@ -89,7 +89,12 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     // fills the rest from the crawler and delivers it either with the message or, when the page was not
     // cached in time, through MessageUpdated. A page that yields nothing has its stub removed. Only the
     // first stub in a message is honoured. Appended, never inserted: the case position is the wire tag.
-    MessageEntityLinkPreview(url: string, title: string?, description: string?, siteName: string?, imageUrl: string?, canonicalUrl: string?)
+    MessageEntityLinkPreview(url: string, title: string?, description: string?, siteName: string?, imageUrl: string?, canonicalUrl: string?),
+
+    // Appended: a sticker or custom emoji of a space (SpaceExpressions.ion). A client that predates these
+    // cannot decode a message carrying one.
+    MessageEntitySticker(itemId: guid, packId: guid, spaceId: guid, format: ExpressionFormat, fileId: guid, thumbFileId: guid?, width: i4, height: i4, outline: bytes?, downloadUrl: string?, thumbUrl: string?),
+    MessageEntityCustomEmoji(itemId: guid, spaceId: guid, format: ExpressionFormat, fileId: guid, name: string, textColor: bool, downloadUrl: string?)
 }
 
 enum EntityType : u2
@@ -121,7 +126,10 @@ enum EntityType : u2
 
     Gif,
 
-    LinkPreview
+    LinkPreview,
+
+    Sticker,
+    CustomEmoji
 }
 
 msg ReactionInfo {
@@ -270,6 +278,12 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // not loaded (both), and pages down from there towards the present (older 0). The same rights
     // as QueryMessages; a refusal reads as an empty window.
     QueryMessagesAround(messageId: i8, older: i4, newer: i4): MessageWindow;
+
+    // Appended: reacting with a custom emoji of a space, by its item id. New methods rather than an
+    // argument on AddReaction/RemoveReaction: the server reads a method's arguments as a fixed-arity
+    // array, so an older client's shorter call would fail.
+    AddCustomReaction(messageId: i8, itemId: guid): AddReactionResult;
+    RemoveCustomReaction(messageId: i8, itemId: guid): RemoveReactionResult;
 }
 
 msg MessageReactionsEntry {
@@ -743,7 +757,8 @@ union ArgonEvent() {
     ShowModal(interactionId: guid, modal: IonModalDefinition),
 
     ReactionAdded(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string, customEmojiId: guid?),
-    ReactionRemoved(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string),
+    // customEmojiId appended: set when the reaction removed was a custom emoji (its item id), as on ReactionAdded.
+    ReactionRemoved(spaceId: guid, channelId: guid, messageId: i8, userId: guid, emoji: string, customEmojiId: guid?),
 
 
     SpaceBoostUpdated(spaceId: guid, boostCount: i4, boostLevel: i4),
@@ -815,7 +830,10 @@ union ArgonEvent() {
     // Appended: the channel's newest message was deleted and its high-water mark went back to the
     // newest one left (0: none). Space-scoped, like MessageSent, since it moves unread state. A client
     // lowers its lastMessageId only while it is still at or below messageId.
-    ChannelMarkRetracted(spaceId: guid, channelId: guid, messageId: i8, lastMessageId: i8)
+    ChannelMarkRetracted(spaceId: guid, channelId: guid, messageId: i8, lastMessageId: i8),
+    // Appended: the space's stickers or custom emoji changed. Space-scoped. A client at baseVersion
+    // applies delta; one at any other version (or given no delta) calls GetExpressions again.
+    SpaceExpressionsChanged(spaceId: guid, version: string, baseVersion: string?, delta: ExpressionDelta?)
 }
 
 msg ChannelReadState {

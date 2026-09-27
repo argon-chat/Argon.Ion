@@ -1,0 +1,115 @@
+#feature "orleans"
+
+// Stickers and custom emoji: packs that belong to a space, items inside them.
+
+enum ExpressionKind : u1 {
+    Sticker,
+    Emoji
+}
+
+enum ExpressionFormat : u1 {
+    Static,
+    Lottie,
+    Video
+}
+
+msg ExpressionItem {
+    itemId: guid;
+    packId: guid;
+    spaceId: guid;
+    kind: ExpressionKind;
+    format: ExpressionFormat;
+    // Emoji: the :name:. Sticker: its caption.
+    name: string;
+    fileId: guid;
+    // First frame (webp) of a lottie or video item.
+    thumbFileId: guid?;
+    width: i4;
+    height: i4;
+    fileSize: i4;
+    // 1..20 associated unicode emoji.
+    emoji: string[];
+    // 0..20, at most 64 characters in total.
+    keywords: string[];
+    // Telegram photoPathSize byte format, 512x512 viewBox.
+    outline: bytes?;
+    // Repainted in the text colour (needs_repainting).
+    textColor: bool;
+    sortOrder: i4;
+    // Filled by the server when read.
+    downloadUrl: string?;
+    thumbUrl: string?;
+}
+
+msg ExpressionPack {
+    packId: guid;
+    spaceId: guid;
+    kind: ExpressionKind;
+    title: string;
+    slug: string;
+    coverItemId: guid?;
+    sortOrder: i4;
+    version: i8;
+    items: ExpressionItem[];
+}
+
+// Every pack of a space. packs is null when the caller's known version is still current.
+msg ExpressionsSnapshot {
+    version: string;
+    packs: ExpressionPack[]?;
+}
+
+enum ExpressionError : u2 {
+    NONE,
+    NOT_FOUND,
+    FORBIDDEN,
+    QUOTA_EXCEEDED,
+    INVALID_FORMAT,
+    TOO_LARGE,
+    NAME_TAKEN,
+    CONTENT_REJECTED,
+    RATE_LIMITED
+}
+
+union PackResult {
+    SuccessPack(pack: ExpressionPack),
+    FailedPack(error: ExpressionError)
+}
+
+union ItemResult {
+    SuccessItem(item: ExpressionItem),
+    FailedItem(error: ExpressionError)
+}
+
+union ReorderResult {
+    SuccessReorder(ordered: guid[]),
+    FailedReorder(error: ExpressionError)
+}
+
+// Carried by ArgonEvent.SpaceExpressionsChanged.
+union ExpressionDelta {
+    // items is empty: items travel as ItemUpserted.
+    PackUpserted(pack: ExpressionPack),
+    PackDeleted(packId: guid),
+    ItemUpserted(item: ExpressionItem),
+    ItemDeleted(packId: guid, itemId: guid),
+    PacksReordered(kind: ExpressionKind, ordered: guid[]),
+    ItemsReordered(packId: guid, ordered: guid[])
+}
+
+service SpaceExpressionInteraction(spaceId: guid) {
+    // Outside GetSpaceSnapshot: SpaceVersions is sent back by the client, so a field added to it would
+    // break every shipped client's snapshot call.
+    GetExpressions(known: string?): ExpressionsSnapshot;
+
+    CreatePack(kind: ExpressionKind, title: string, slug: string): PackResult;
+    UpdatePack(packId: guid, patch: ExpressionPack~): PackResult;
+    DeletePack(packId: guid): PackResult;
+    ReorderPacks(kind: ExpressionKind, ordered: guid[]): ReorderResult;
+
+    BeginUploadExpression(kind: ExpressionKind, format: ExpressionFormat, contentType: string, size: i8): UploadFileResult;
+    AddItem(packId: guid, blobId: guid, thumbBlobId: guid?, name: string, emoji: string[], keywords: string[], outline: bytes?): ItemResult;
+    UpdateItem(itemId: guid, patch: ExpressionItem~): ItemResult;
+    DeleteItem(itemId: guid): ItemResult;
+    ReorderItems(packId: guid, ordered: guid[]): ReorderResult;
+}

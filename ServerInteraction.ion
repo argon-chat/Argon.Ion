@@ -4,6 +4,7 @@
 // mode. It sits above ManageServer rather than in the 1 << 4x moderation block because that block is
 // full, and renumbering a flag that is already persisted on archetype rows would silently re-grant
 // every existing role something it never had.
+// CreateExpressions: adding stickers and emoji to the space; ManageExpressions: editing or removing anybody's.
 flags ArgonEntitlement: u8 {
     None = 0,
 
@@ -21,6 +22,7 @@ flags ArgonEntitlement: u8 {
     ExternalStickers  = 1 << 12,
     UseCommands       = 1 << 13,
     PostEmbeddedLinks = 1 << 14,
+    CreateExpressions = 1 << 15,
 
     Connect = 1 << 20,
     Speak   = 1 << 21,
@@ -47,7 +49,8 @@ flags ArgonEntitlement: u8 {
     ManageEvents    = 1 << 53,
     ManageBehaviour = 1 << 54,
     ManageServer    = 1 << 55,
-    ManageMessages  = 1 << 56
+    ManageMessages  = 1 << 56,
+    ManageExpressions = 1 << 57
 }
 
 service ServerInteraction(spaceId: guid)
