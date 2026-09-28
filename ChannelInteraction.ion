@@ -284,6 +284,17 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // array, so an older client's shorter call would fail.
     AddCustomReaction(messageId: i8, itemId: guid): AddReactionResult;
     RemoveCustomReaction(messageId: i8, itemId: guid): RemoveReactionResult;
+
+    // Appended: a copy of an existing file as an attachment of this channel, without uploading it
+    // again — the caller's own file, or one posted in a channel the caller can view. Needs AttachFiles
+    // here, as an upload does; the copy is held to this channel's size limit and content types.
+    AttachExistingFile(sourceFileId: guid, fileName: string?): AttachExistingFileResult;
+
+    // Appended: BeginUploadAttachment with the file described up front — its hash, size, type and
+    // name. AlreadyStored when the caller can already see a file with these bytes (a copy is made and
+    // nothing is uploaded); otherwise the ticket, with an over-limit size refused before anything is
+    // signed and the real type and name kept on the file. Needs AttachFiles, as an upload does.
+    PrepareUploadAttachment(sha256: bytes, size: i8, contentType: string, fileName: string): PrepareUploadResult;
 }
 
 msg MessageReactionsEntry {

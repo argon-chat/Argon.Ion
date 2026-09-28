@@ -6690,6 +6690,68 @@
           ],
           "returns": "RemoveReactionResult",
           "modifiers": []
+        },
+        "AttachExistingFile": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "sourceFileId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "fileName",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "AttachExistingFileResult",
+          "modifiers": []
+        },
+        "PrepareUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "sha256",
+              "type": "bytes"
+            },
+            {
+              "index": 3,
+              "name": "size",
+              "type": "i8"
+            },
+            {
+              "index": 4,
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "index": 5,
+              "name": "fileName",
+              "type": "string"
+            }
+          ],
+          "returns": "PrepareUploadResult",
+          "modifiers": []
         }
       }
     },
@@ -8297,6 +8359,58 @@
             }
           ],
           "returns": "Array\u003CDirectMessage\u003E",
+          "modifiers": []
+        },
+        "AttachExistingFile": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "sourceFileId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "fileName",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ],
+          "returns": "AttachExistingFileResult",
+          "modifiers": []
+        },
+        "PrepareUploadAttachment": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "sha256",
+              "type": "bytes"
+            },
+            {
+              "index": 2,
+              "name": "size",
+              "type": "i8"
+            },
+            {
+              "index": 3,
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "index": 4,
+              "name": "fileName",
+              "type": "string"
+            }
+          ],
+          "returns": "PrepareUploadResult",
           "modifiers": []
         }
       }
@@ -13702,6 +13816,28 @@
       },
       "baseType": "u4"
     },
+    "AttachExistingFileError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_AUTHORIZED": "1",
+        "SOURCE_NOT_FOUND": "2",
+        "TOO_LARGE": "3",
+        "CONTENT_TYPE_REJECTED": "4",
+        "INTERNAL_ERROR": "5"
+      },
+      "baseType": "u4"
+    },
+    "PrepareUploadError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_AUTHORIZED": "1",
+        "TOO_LARGE": "2",
+        "INTERNAL_ERROR": "3"
+      },
+      "baseType": "u4"
+    },
     "CreateSpaceError": {
       "kind": "Enum",
       "members": {
@@ -13839,6 +13975,88 @@
               "index": 0,
               "name": "error",
               "type": "UploadFileError"
+            }
+          ]
+        }
+      ]
+    },
+    "AttachExistingFileResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessAttachExistingFile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "info",
+              "type": "AttachmentInfo"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedAttachExistingFile",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "AttachExistingFileError"
+            }
+          ]
+        }
+      ]
+    },
+    "PrepareUploadResult": {
+      "kind": "Union",
+      "nextIndex": 3,
+      "cases": [
+        {
+          "index": 0,
+          "name": "UploadRequired",
+          "fields": [
+            {
+              "index": 0,
+              "name": "blobId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "uploadUrl",
+              "type": "string"
+            },
+            {
+              "index": 2,
+              "name": "formFields",
+              "type": "Array\u003CFormField\u003E"
+            },
+            {
+              "index": 3,
+              "name": "ttlSeconds",
+              "type": "i4"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "AlreadyStored",
+          "fields": [
+            {
+              "index": 0,
+              "name": "info",
+              "type": "AttachmentInfo"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "FailedPrepareUpload",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "PrepareUploadError"
             }
           ]
         }

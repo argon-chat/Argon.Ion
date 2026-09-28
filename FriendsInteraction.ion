@@ -90,4 +90,12 @@ service UserChatInteractions() {
     CompleteUploadAttachment(peerId: guid, blobId: guid): AttachmentInfo;
     SendDirectMessage(receiverId: guid, text: string, entities: MessageEntity[], randomId: i8, replyTo: i8?): i8;
     QueryDirectMessages(peerId: guid, from: i8?, limit: i4): DirectMessage[];
+
+    // Appended: the channel method's twin for a direct chat (ChannelInteraction.AttachExistingFile).
+    // Refused when the peer has blocked the sender, and when the source is somebody else's direct-chat
+    // file — a direct-chat file does not record its conversation, so there is nothing to check against.
+    AttachExistingFile(peerId: guid, sourceFileId: guid, fileName: string?): AttachExistingFileResult;
+
+    // Appended: BeginUploadAttachment with the file described up front (ChannelInteraction.PrepareUploadAttachment).
+    PrepareUploadAttachment(peerId: guid, sha256: bytes, size: i8, contentType: string, fileName: string): PrepareUploadResult;
 }

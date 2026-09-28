@@ -75,6 +75,40 @@ union UploadFileResult {
     FailedUploadFile(error: UploadFileError)
 }
 
+enum AttachExistingFileError {
+    NONE,
+    NOT_AUTHORIZED,
+    SOURCE_NOT_FOUND,
+    TOO_LARGE,
+    CONTENT_TYPE_REJECTED,
+    INTERNAL_ERROR
+}
+
+// A copy of a file the caller can already see — its own, or one posted in a channel it can view — as
+// a new attachment, without the bytes moving. The copy is a file of its own: new id, the caller as
+// owner, its own name. What the copy is checked against is the target's size limit and content types.
+union AttachExistingFileResult {
+    SuccessAttachExistingFile(info: AttachmentInfo),
+    FailedAttachExistingFile(error: AttachExistingFileError)
+}
+
+enum PrepareUploadError {
+    NONE,
+    NOT_AUTHORIZED,
+    TOO_LARGE,
+    INTERNAL_ERROR
+}
+
+// BeginUpload with the file described up front. AlreadyStored when the caller can already see a file
+// with these bytes — its own, or one posted where it can read — in which case a copy is made and
+// nothing is uploaded; otherwise a ticket, and the hash rides along to the finalize step. An unknown
+// hash gets the same answer as new bytes, so the method says nothing about files the caller cannot see.
+union PrepareUploadResult {
+    UploadRequired(blobId: guid, uploadUrl: string, formFields: FormField[], ttlSeconds: i4),
+    AlreadyStored(info: AttachmentInfo),
+    FailedPrepareUpload(error: PrepareUploadError)
+}
+
 union CreateSpaceResult {
     SuccessCreateSpace(space: ArgonSpaceBase),
     FailedCreateSpace(error: CreateSpaceError)
