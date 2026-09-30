@@ -66,6 +66,9 @@ msg SessionInfo {
     // City the edge placed the address in, English name, or "".
     city: string;
     startedAt: datetime;
+    // Connected right now. A signed-in device that is not connected is still listed, with the
+    // lastSeenAt it was last heard from, and can still be signed out.
+    online: bool;
 }
 
 union RevokeSessionResult {

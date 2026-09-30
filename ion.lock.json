@@ -9758,7 +9758,7 @@
     },
     "SessionInfo": {
       "kind": "Msg",
-      "nextIndex": 14,
+      "nextIndex": 15,
       "fields": [
         {
           "index": 0,
@@ -9829,6 +9829,11 @@
           "index": 13,
           "name": "startedAt",
           "type": "datetime"
+        },
+        {
+          "index": 14,
+          "name": "online",
+          "type": "bool"
         }
       ]
     },
