@@ -1,0 +1,206 @@
+// Linked external accounts — what Discord calls Connections. See
+// docs/internal/architecture/connections.md in the server repository.
+
+enum ConnectionProvider: u2 {
+    GITHUB,
+    STEAM,
+    SPOTIFY,
+    TWITTER,
+    TWITCH,
+    YOUTUBE,
+    TELEGRAM
+}
+
+// What a provider can do beyond proving who the account belongs to.
+flags ConnectionCapability : i4
+{
+    NONE = 0,
+    DETAILS = 1 << 0,
+    STATUS = 1 << 1,
+    LISTEN_ALONG = 1 << 2,
+    TROPHY = 1 << 3
+}
+
+enum ConnectionStatus: u2 {
+    ACTIVE,
+    NEEDS_REAUTH,
+    SUSPENDED
+}
+
+enum ConnectionDetailKind: u2 {
+    TEXT,
+    NUMBER,
+    DATE,
+    URL,
+    FLAG
+}
+
+msg ConnectionProviderInfo {
+    provider: ConnectionProvider;
+    capabilities: ConnectionCapability;
+}
+
+// One fact the provider knows. The key is stable and the client translates it
+// ("steam.games", "since", "spotify.premium"); a new fact is a server change and a translation.
+msg ConnectionDetail {
+    key: string;
+    value: string;
+    kind: ConnectionDetailKind;
+}
+
+msg ConnectionOptions {
+    displayOnProfile: bool;
+    showDetails: bool;
+    displayAsStatus: bool;
+    allowListenAlong: bool;
+}
+
+// The owner's view. No token; the external id is what the provider shows publicly anyway.
+msg UserConnection {
+    provider: ConnectionProvider;
+    externalId: string;
+    name: string;
+    url: string?;
+    avatarUrl: string?;
+    verified: bool;
+    status: ConnectionStatus;
+    options: ConnectionOptions;
+    details: ConnectionDetail[];
+    linkedAt: datetime;
+    detailsRefreshedAt: datetime?;
+}
+
+// Everyone else's view, after the options and the privacy rule have had their say.
+msg ProfileConnection {
+    provider: ConnectionProvider;
+    name: string;
+    url: string?;
+    verified: bool;
+    details: ConnectionDetail[];
+}
+
+enum ConnectReturnKind: u2 {
+    DESKTOP,
+    WEB
+}
+
+// Who produced a UserActivityPresence: the client itself, or a provider the server polls for the user.
+enum ActivitySource: u2 {
+    CLIENT,
+    SPOTIFY,
+    TWITCH
+}
+
+// What is playing on Spotify, as the server last read it. The client derives the progress bar from
+// progressMs at observedAt and durationMs; url opens the track or episode in Spotify.
+msg SpotifyTrack {
+    trackId: string;
+    title: string;
+    artists: string[];
+    album: string;
+    albumArtUrl: string?;
+    durationMs: i4;
+    progressMs: i4;
+    observedAt: datetime;
+    isPlaying: bool;
+    contextUri: string?;
+    url: string?;
+    // The host allows listen-along and is playing right now.
+    listenAlongOpen: bool;
+}
+
+union BeginConnectResult {
+    SuccessBeginConnect(url: string, handshakeId: guid, expiresAt: datetime),
+    FailedBeginConnect(error: BeginConnectError)
+}
+
+enum BeginConnectError: u2 {
+    NONE,
+    PROVIDER_DISABLED,
+    PROVIDER_ALREADY_LINKED,
+    RATE_LIMITED,
+    INTERNAL_ERROR,
+    // Appended: an operator suspended this user's connection of the provider.
+    CONNECTION_SUSPENDED
+}
+
+union UpdateConnectionResult {
+    SuccessUpdateConnection(connection: UserConnection),
+    FailedUpdateConnection(error: ConnectionError)
+}
+
+union RefreshConnectionResult {
+    SuccessRefreshConnection(connection: UserConnection),
+    FailedRefreshConnection(error: ConnectionError)
+}
+
+enum ConnectionError: u2 {
+    NONE,
+    NOT_LINKED,
+    NEEDS_REAUTH,
+    COOLDOWN,
+    OPTION_NOT_SUPPORTED,
+    PROVIDER_ERROR,
+    INTERNAL_ERROR
+}
+
+// Listening along: the server keeps the listener's Spotify on the host's track. Both sides need
+// Spotify linked; the listener needs Premium, the playback scope and an open Spotify device.
+union ListenAlongResult {
+    SuccessListenAlong(state: ListenAlongState),
+    FailedListenAlong(error: ListenAlongError)
+}
+
+enum ListenAlongError: u2 {
+    NONE,
+    SPOTIFY_NOT_LINKED,
+    PREMIUM_REQUIRED,
+    SCOPE_MISSING,
+    NO_ACTIVE_DEVICE,
+    HOST_NOT_PLAYING,
+    HOST_DISALLOWS,
+    NOT_VISIBLE,
+    ALREADY_LISTENING,
+    FULL,
+    RATE_LIMITED,
+    PROVIDER_ERROR
+}
+
+enum ListenAlongEndReason: u2 {
+    LEFT,
+    HOST_STOPPED,
+    HOST_OFFLINE,
+    HOST_DISALLOWED,
+    NO_ACTIVE_DEVICE,
+    PROVIDER_ERROR
+}
+
+msg ListenAlongState {
+    hostUserId: guid;
+    listeners: guid[];
+    track: SpotifyTrack?;
+}
+
+service ConnectionsInteraction() {
+    // Configured providers the caller's feature flags allow.
+    GetProviders(): ConnectionProviderInfo[];
+    GetMyConnections(): UserConnection[];
+
+    // The authorize URL to open in a browser. replace: the caller already has this provider linked
+    // to another external account and wants it swapped; without it that case is refused.
+    BeginConnect(provider: ConnectionProvider, returnTo: ConnectReturnKind, replace: bool): BeginConnectResult;
+    Disconnect(provider: ConnectionProvider): bool;
+    UpdateOptions(provider: ConnectionProvider, patch: ConnectionOptions~): UpdateConnectionResult;
+    // Fetch the provider's facts again. Once per ten minutes per connection.
+    RefreshConnection(provider: ConnectionProvider): RefreshConnectionResult;
+
+    // The same list the profile carries, on demand.
+    GetUserConnections(userId: guid): ProfileConnection[];
+
+    // Listen along with a host whose Spotify activity the caller can see. Joining another host
+    // leaves the current one.
+    JoinListenAlong(hostUserId: guid): ListenAlongResult;
+    LeaveListenAlong();
+    // The party the caller is in — as a listener, or as a host with listeners — or null.
+    GetListenAlongState(): ListenAlongState?;
+}

@@ -844,7 +844,17 @@ union ArgonEvent() {
     ChannelMarkRetracted(spaceId: guid, channelId: guid, messageId: i8, lastMessageId: i8),
     // Appended: the space's stickers or custom emoji changed. Space-scoped. A client at baseVersion
     // applies delta; one at any other version (or given no delta) calls GetExpressions again.
-    SpaceExpressionsChanged(spaceId: guid, version: string, baseVersion: string?, delta: ExpressionDelta?)
+    SpaceExpressionsChanged(spaceId: guid, version: string, baseVersion: string?, delta: ExpressionDelta?),
+    // Appended: the recipient's own linked accounts changed — linked, unlinked, options, a status flip
+    // to NEEDS_REAUTH (ConnectionsInteraction.ion). Personal: only the owner's sessions receive it.
+    // The whole list rather than a delta; it is a handful of rows.
+    UserConnectionsUpdated(userId: guid, connections: UserConnection[]),
+    // Appended: who is listening along with whom, and to what. Personal to the host and to each
+    // listener; the full listener list each time, since it is a handful of ids.
+    ListenAlongChanged(hostUserId: guid, listeners: guid[], track: SpotifyTrack?),
+    // Appended: the recipient's listen-along ended — they left, or the host stopped, went offline,
+    // turned the option off, or the recipient's own Spotify stopped taking commands. Personal.
+    ListenAlongEnded(hostUserId: guid, reason: ListenAlongEndReason)
 }
 
 msg ChannelReadState {
@@ -952,6 +962,14 @@ msg UserActivityPresence
     kind: ActivityPresenceKind;
     startTimestampSeconds: u8;
     titleName: string;
+    // Appended, nullable (ConnectionsInteraction.ion). A provider-backed activity carries its
+    // source and details; a bare client activity — a running game, an OS media title — has all
+    // three null. endTimestampSeconds is the progress bar's other end.
+    source: ActivitySource?;
+    endTimestampSeconds: u8?;
+    spotify: SpotifyTrack?;
+    // Appended: where the activity leads — the Twitch channel for a stream. Spotify's link is in its own record.
+    url: string?;
 }
 
 enum ActivityPresenceKind

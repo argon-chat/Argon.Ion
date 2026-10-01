@@ -344,6 +344,11 @@ msg ArgonUserProfile {
 
     // Set when customStatusIconId is "ce:<itemId>"; any other icon id is a unicode emoji.
     customStatusEmoji: StatusEmoji?;
+
+    // Appended, nullable: the linked accounts this reader may see (ConnectionsInteraction.ion),
+    // after the owner's per-connection options and their connections.visibility rule have had
+    // their say. Null means this reader was not told, not that nothing is linked.
+    connections: ProfileConnection[]?;
 }
 
 flags UserFlag : i4

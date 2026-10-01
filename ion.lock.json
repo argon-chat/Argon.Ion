@@ -2480,7 +2480,7 @@
     },
     "UserActivityPresence": {
       "kind": "Msg",
-      "nextIndex": 3,
+      "nextIndex": 7,
       "fields": [
         {
           "index": 0,
@@ -2496,6 +2496,26 @@
           "index": 2,
           "name": "titleName",
           "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "source",
+          "type": "Maybe\u003CActivitySource\u003E"
+        },
+        {
+          "index": 4,
+          "name": "endTimestampSeconds",
+          "type": "Maybe\u003Cu8\u003E"
+        },
+        {
+          "index": 5,
+          "name": "spotify",
+          "type": "Maybe\u003CSpotifyTrack\u003E"
+        },
+        {
+          "index": 6,
+          "name": "url",
+          "type": "Maybe\u003Cstring\u003E"
         }
       ]
     },
@@ -3890,7 +3910,7 @@
     },
     "ArgonEvent": {
       "kind": "Union",
-      "nextIndex": 78,
+      "nextIndex": 81,
       "cases": [
         {
           "index": 0,
@@ -5402,6 +5422,59 @@
               "index": 3,
               "name": "delta",
               "type": "Maybe\u003CExpressionDelta\u003E"
+            }
+          ]
+        },
+        {
+          "index": 78,
+          "name": "UserConnectionsUpdated",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "connections",
+              "type": "Array\u003CUserConnection\u003E"
+            }
+          ]
+        },
+        {
+          "index": 79,
+          "name": "ListenAlongChanged",
+          "fields": [
+            {
+              "index": 0,
+              "name": "hostUserId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "listeners",
+              "type": "Array\u003Cguid\u003E"
+            },
+            {
+              "index": 2,
+              "name": "track",
+              "type": "Maybe\u003CSpotifyTrack\u003E"
+            }
+          ]
+        },
+        {
+          "index": 80,
+          "name": "ListenAlongEnded",
+          "fields": [
+            {
+              "index": 0,
+              "name": "hostUserId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "reason",
+              "type": "ListenAlongEndReason"
             }
           ]
         }
@@ -7216,6 +7289,592 @@
             }
           ],
           "returns": "bool",
+          "modifiers": []
+        }
+      }
+    },
+    "ConnectionProviderInfo": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "provider",
+          "type": "ConnectionProvider"
+        },
+        {
+          "index": 1,
+          "name": "capabilities",
+          "type": "ConnectionCapability"
+        }
+      ]
+    },
+    "ConnectionDetail": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "kind",
+          "type": "ConnectionDetailKind"
+        }
+      ]
+    },
+    "ConnectionOptions": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "displayOnProfile",
+          "type": "bool"
+        },
+        {
+          "index": 1,
+          "name": "showDetails",
+          "type": "bool"
+        },
+        {
+          "index": 2,
+          "name": "displayAsStatus",
+          "type": "bool"
+        },
+        {
+          "index": 3,
+          "name": "allowListenAlong",
+          "type": "bool"
+        }
+      ]
+    },
+    "UserConnection": {
+      "kind": "Msg",
+      "nextIndex": 11,
+      "fields": [
+        {
+          "index": 0,
+          "name": "provider",
+          "type": "ConnectionProvider"
+        },
+        {
+          "index": 1,
+          "name": "externalId",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 3,
+          "name": "url",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 4,
+          "name": "avatarUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "verified",
+          "type": "bool"
+        },
+        {
+          "index": 6,
+          "name": "status",
+          "type": "ConnectionStatus"
+        },
+        {
+          "index": 7,
+          "name": "options",
+          "type": "ConnectionOptions"
+        },
+        {
+          "index": 8,
+          "name": "details",
+          "type": "Array\u003CConnectionDetail\u003E"
+        },
+        {
+          "index": 9,
+          "name": "linkedAt",
+          "type": "datetime"
+        },
+        {
+          "index": 10,
+          "name": "detailsRefreshedAt",
+          "type": "Maybe\u003Cdatetime\u003E"
+        }
+      ]
+    },
+    "ProfileConnection": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "provider",
+          "type": "ConnectionProvider"
+        },
+        {
+          "index": 1,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "url",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "verified",
+          "type": "bool"
+        },
+        {
+          "index": 4,
+          "name": "details",
+          "type": "Array\u003CConnectionDetail\u003E"
+        }
+      ]
+    },
+    "SpotifyTrack": {
+      "kind": "Msg",
+      "nextIndex": 12,
+      "fields": [
+        {
+          "index": 0,
+          "name": "trackId",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "artists",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "album",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "albumArtUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "durationMs",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "progressMs",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "observedAt",
+          "type": "datetime"
+        },
+        {
+          "index": 8,
+          "name": "isPlaying",
+          "type": "bool"
+        },
+        {
+          "index": 9,
+          "name": "contextUri",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 10,
+          "name": "url",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 11,
+          "name": "listenAlongOpen",
+          "type": "bool"
+        }
+      ]
+    },
+    "ListenAlongState": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "hostUserId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "listeners",
+          "type": "Array\u003Cguid\u003E"
+        },
+        {
+          "index": 2,
+          "name": "track",
+          "type": "Maybe\u003CSpotifyTrack\u003E"
+        }
+      ]
+    },
+    "ConnectionProvider": {
+      "kind": "Enum",
+      "members": {
+        "GITHUB": "0",
+        "STEAM": "1",
+        "SPOTIFY": "2",
+        "TWITTER": "3",
+        "TWITCH": "4",
+        "YOUTUBE": "5",
+        "TELEGRAM": "6"
+      },
+      "baseType": "u2"
+    },
+    "ConnectionStatus": {
+      "kind": "Enum",
+      "members": {
+        "ACTIVE": "0",
+        "NEEDS_REAUTH": "1",
+        "SUSPENDED": "2"
+      },
+      "baseType": "u2"
+    },
+    "ConnectionDetailKind": {
+      "kind": "Enum",
+      "members": {
+        "TEXT": "0",
+        "NUMBER": "1",
+        "DATE": "2",
+        "URL": "3",
+        "FLAG": "4"
+      },
+      "baseType": "u2"
+    },
+    "ConnectReturnKind": {
+      "kind": "Enum",
+      "members": {
+        "DESKTOP": "0",
+        "WEB": "1"
+      },
+      "baseType": "u2"
+    },
+    "ActivitySource": {
+      "kind": "Enum",
+      "members": {
+        "CLIENT": "0",
+        "SPOTIFY": "1",
+        "TWITCH": "2"
+      },
+      "baseType": "u2"
+    },
+    "BeginConnectError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "PROVIDER_DISABLED": "1",
+        "PROVIDER_ALREADY_LINKED": "2",
+        "RATE_LIMITED": "3",
+        "INTERNAL_ERROR": "4",
+        "CONNECTION_SUSPENDED": "5"
+      },
+      "baseType": "u2"
+    },
+    "ConnectionError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_LINKED": "1",
+        "NEEDS_REAUTH": "2",
+        "COOLDOWN": "3",
+        "OPTION_NOT_SUPPORTED": "4",
+        "PROVIDER_ERROR": "5",
+        "INTERNAL_ERROR": "6"
+      },
+      "baseType": "u2"
+    },
+    "ListenAlongError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "SPOTIFY_NOT_LINKED": "1",
+        "PREMIUM_REQUIRED": "2",
+        "SCOPE_MISSING": "3",
+        "NO_ACTIVE_DEVICE": "4",
+        "HOST_NOT_PLAYING": "5",
+        "HOST_DISALLOWS": "6",
+        "NOT_VISIBLE": "7",
+        "ALREADY_LISTENING": "8",
+        "FULL": "9",
+        "RATE_LIMITED": "10",
+        "PROVIDER_ERROR": "11"
+      },
+      "baseType": "u2"
+    },
+    "ListenAlongEndReason": {
+      "kind": "Enum",
+      "members": {
+        "LEFT": "0",
+        "HOST_STOPPED": "1",
+        "HOST_OFFLINE": "2",
+        "HOST_DISALLOWED": "3",
+        "NO_ACTIVE_DEVICE": "4",
+        "PROVIDER_ERROR": "5"
+      },
+      "baseType": "u2"
+    },
+    "ConnectionCapability": {
+      "kind": "Flags",
+      "members": {
+        "NONE": "0",
+        "DETAILS": "1",
+        "STATUS": "2",
+        "LISTEN_ALONG": "4",
+        "TROPHY": "8"
+      },
+      "baseType": "i4"
+    },
+    "BeginConnectResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessBeginConnect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "url",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "handshakeId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "expiresAt",
+              "type": "datetime"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedBeginConnect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "BeginConnectError"
+            }
+          ]
+        }
+      ]
+    },
+    "UpdateConnectionResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessUpdateConnection",
+          "fields": [
+            {
+              "index": 0,
+              "name": "connection",
+              "type": "UserConnection"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedUpdateConnection",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ConnectionError"
+            }
+          ]
+        }
+      ]
+    },
+    "RefreshConnectionResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessRefreshConnection",
+          "fields": [
+            {
+              "index": 0,
+              "name": "connection",
+              "type": "UserConnection"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedRefreshConnection",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ConnectionError"
+            }
+          ]
+        }
+      ]
+    },
+    "ListenAlongResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessListenAlong",
+          "fields": [
+            {
+              "index": 0,
+              "name": "state",
+              "type": "ListenAlongState"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedListenAlong",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "ListenAlongError"
+            }
+          ]
+        }
+      ]
+    },
+    "ConnectionsInteraction": {
+      "kind": "Service",
+      "methods": {
+        "GetProviders": {
+          "args": [],
+          "returns": "Array\u003CConnectionProviderInfo\u003E",
+          "modifiers": []
+        },
+        "GetMyConnections": {
+          "args": [],
+          "returns": "Array\u003CUserConnection\u003E",
+          "modifiers": []
+        },
+        "BeginConnect": {
+          "args": [
+            {
+              "index": 0,
+              "name": "provider",
+              "type": "ConnectionProvider"
+            },
+            {
+              "index": 1,
+              "name": "returnTo",
+              "type": "ConnectReturnKind"
+            },
+            {
+              "index": 2,
+              "name": "replace",
+              "type": "bool"
+            }
+          ],
+          "returns": "BeginConnectResult",
+          "modifiers": []
+        },
+        "Disconnect": {
+          "args": [
+            {
+              "index": 0,
+              "name": "provider",
+              "type": "ConnectionProvider"
+            }
+          ],
+          "returns": "bool",
+          "modifiers": []
+        },
+        "UpdateOptions": {
+          "args": [
+            {
+              "index": 0,
+              "name": "provider",
+              "type": "ConnectionProvider"
+            },
+            {
+              "index": 1,
+              "name": "patch",
+              "type": "Partial\u003CConnectionOptions\u003E"
+            }
+          ],
+          "returns": "UpdateConnectionResult",
+          "modifiers": []
+        },
+        "RefreshConnection": {
+          "args": [
+            {
+              "index": 0,
+              "name": "provider",
+              "type": "ConnectionProvider"
+            }
+          ],
+          "returns": "RefreshConnectionResult",
+          "modifiers": []
+        },
+        "GetUserConnections": {
+          "args": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ],
+          "returns": "Array\u003CProfileConnection\u003E",
+          "modifiers": []
+        },
+        "JoinListenAlong": {
+          "args": [
+            {
+              "index": 0,
+              "name": "hostUserId",
+              "type": "guid"
+            }
+          ],
+          "returns": "ListenAlongResult",
+          "modifiers": []
+        },
+        "LeaveListenAlong": {
+          "args": [],
+          "returns": "void",
+          "modifiers": []
+        },
+        "GetListenAlongState": {
+          "args": [],
+          "returns": "Maybe\u003CListenAlongState\u003E",
           "modifiers": []
         }
       }
@@ -11186,7 +11845,7 @@
     },
     "ArgonUserProfile": {
       "kind": "Msg",
-      "nextIndex": 17,
+      "nextIndex": 18,
       "fields": [
         {
           "index": 0,
@@ -11272,6 +11931,11 @@
           "index": 16,
           "name": "customStatusEmoji",
           "type": "Maybe\u003CStatusEmoji\u003E"
+        },
+        {
+          "index": 17,
+          "name": "connections",
+          "type": "Maybe\u003CArray\u003CProfileConnection\u003E\u003E"
         }
       ]
     },
