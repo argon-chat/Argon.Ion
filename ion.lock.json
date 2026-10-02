@@ -14476,6 +14476,43 @@
         }
       ]
     },
+    "AppTexts": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "version",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "texts",
+          "type": "Maybe\u003CArray\u003CLocalizedText\u003E\u003E"
+        }
+      ]
+    },
+    "LocalizedText": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
     "UploadFileError": {
       "kind": "Enum",
       "members": {
@@ -14980,6 +15017,62 @@
         }
       ]
     },
+    "AppRef": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "AppById",
+          "fields": [
+            {
+              "index": 0,
+              "name": "appId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "AppByBotUser",
+          "fields": [
+            {
+              "index": 0,
+              "name": "userId",
+              "type": "guid"
+            }
+          ]
+        }
+      ]
+    },
+    "LookupAppTextsResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessLookupAppTexts",
+          "fields": [
+            {
+              "index": 0,
+              "name": "texts",
+              "type": "AppTexts"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedLookupAppTexts",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "LookupError"
+            }
+          ]
+        }
+      ]
+    },
     "UserInteraction": {
       "kind": "Service",
       "methods": {
@@ -15231,6 +15324,27 @@
             }
           ],
           "returns": "LegalState",
+          "modifiers": []
+        },
+        "LookupAppTexts": {
+          "args": [
+            {
+              "index": 0,
+              "name": "app",
+              "type": "AppRef"
+            },
+            {
+              "index": 1,
+              "name": "keys",
+              "type": "Array\u003Cstring\u003E"
+            },
+            {
+              "index": 2,
+              "name": "known",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ],
+          "returns": "LookupAppTextsResult",
           "modifiers": []
         }
       }

@@ -43,6 +43,11 @@ service UserInteraction() {
 
     GetMyLegalState(): LegalState;
     AcceptLegal(request: AcceptLegalInput): LegalState;
+
+    // An application's localized strings for the keys asked, in every language its developer wrote
+    // them in. known is the version the caller holds of those keys; texts comes back null while it
+    // is current. NOT_FOUND: no such application.
+    LookupAppTexts(app: AppRef, keys: string[], known: i4?): LookupAppTextsResult;
 }
 
 msg TodayStats {
@@ -319,4 +324,30 @@ union LookupUserResult {
 union LookupProfileResult {
     SuccessLookupProfile(profile: ArgonUserProfile),
     FailedLookupProfile(error: LookupError)
+}
+
+// An application by its id, or a bot by the user it acts as — all a DM peer knows of it.
+union AppRef {
+    AppById(appId: guid),
+    AppByBotUser(userId: guid)
+}
+
+// version moves on any change to any of the application's strings; 0 means it never had one. The
+// client picks a locale at render time: its own, then without the variant (ru_pt -> ru), then en,
+// which every key with a value has.
+msg AppTexts {
+    version: i4;
+    texts: LocalizedText[]?;
+}
+
+// Keys: "motd" — a bot's line under the DM header. Reserved: "description".
+msg LocalizedText {
+    key: string;
+    locale: string;
+    value: string;
+}
+
+union LookupAppTextsResult {
+    SuccessLookupAppTexts(texts: AppTexts),
+    FailedLookupAppTexts(error: LookupError)
 }
