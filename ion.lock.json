@@ -2265,32 +2265,6 @@
         }
       ]
     },
-    "DrawingSession": {
-      "kind": "Msg",
-      "nextIndex": 4,
-      "fields": [
-        {
-          "index": 0,
-          "name": "sessionId",
-          "type": "string"
-        },
-        {
-          "index": 1,
-          "name": "ownerId",
-          "type": "guid"
-        },
-        {
-          "index": 2,
-          "name": "allowedDrawers",
-          "type": "Array\u003Cguid\u003E"
-        },
-        {
-          "index": 3,
-          "name": "defaultTtlMs",
-          "type": "i4"
-        }
-      ]
-    },
     "ChannelReadState": {
       "kind": "Msg",
       "nextIndex": 4,
@@ -2846,17 +2820,6 @@
         "NONE": "0",
         "BAD_PARAMS": "1",
         "INTERNAL_ERROR": "2"
-      },
-      "baseType": "u2"
-    },
-    "DrawingDenyReason": {
-      "kind": "Enum",
-      "members": {
-        "NONE": "0",
-        "FEATURE_DISABLED": "1",
-        "NOT_STREAMING": "2",
-        "NO_PERMISSION": "3",
-        "INTERNAL_ERROR": "4"
       },
       "baseType": "u2"
     },
@@ -3875,34 +3838,6 @@
               "index": 0,
               "name": "error",
               "type": "StartStreamError"
-            }
-          ]
-        }
-      ]
-    },
-    "StartDrawingResult": {
-      "kind": "Union",
-      "nextIndex": 2,
-      "cases": [
-        {
-          "index": 0,
-          "name": "DrawingStarted",
-          "fields": [
-            {
-              "index": 0,
-              "name": "session",
-              "type": "DrawingSession"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "name": "DrawingDenied",
-          "fields": [
-            {
-              "index": 0,
-              "name": "error",
-              "type": "DrawingDenyReason"
             }
           ]
         }
@@ -6218,43 +6153,6 @@
             }
           ],
           "returns": "InterlinkStreamResult",
-          "modifiers": []
-        },
-        "StartDrawingSession": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "channelId",
-              "type": "guid"
-            }
-          ],
-          "returns": "StartDrawingResult",
-          "modifiers": []
-        },
-        "StopDrawingSession": {
-          "args": [
-            {
-              "index": 0,
-              "name": "spaceId",
-              "type": "guid"
-            },
-            {
-              "index": 1,
-              "name": "channelId",
-              "type": "guid"
-            },
-            {
-              "index": 2,
-              "name": "sessionId",
-              "type": "string"
-            }
-          ],
-          "returns": "bool",
           "modifiers": []
         },
         "KickMemberFromChannel": {

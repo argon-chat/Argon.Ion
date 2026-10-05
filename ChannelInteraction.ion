@@ -219,11 +219,6 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     Interlink(): InterlinkResult;
     InterlinkStream(density: i4): InterlinkStreamResult;
 
-    // Screencast drawing: the streamer opens a drawing session for their active share;
-    // the server computes who may draw (entitlement + privacy) and broadcasts it.
-    StartDrawingSession(): StartDrawingResult;
-    StopDrawingSession(sessionId: string): bool;
-
     KickMemberFromChannel(memberId: guid): bool;
 
     // Moves a member of this voice channel into another voice channel of the same space. Needs
@@ -671,26 +666,6 @@ enum StartStreamError: u2 {
     INTERNAL_ERROR
 }
 
-msg DrawingSession {
-    sessionId: string;
-    ownerId: guid;
-    allowedDrawers: guid[];
-    defaultTtlMs: i4;
-}
-
-enum DrawingDenyReason: u2 {
-    NONE,
-    FEATURE_DISABLED,
-    NOT_STREAMING,
-    NO_PERMISSION,
-    INTERNAL_ERROR
-}
-
-union StartDrawingResult() {
-    DrawingStarted(session: DrawingSession),
-    DrawingDenied(error: DrawingDenyReason)
-}
-
 enum TypingKind {
     TYPING,
     THINKING,
@@ -779,6 +754,8 @@ union ArgonEvent() {
 
     FeatureFlagActivated(userId: guid, flagId: string, isEnabled: bool, variant: string?),
 
+    // Retired: a host now offers drawing through a LiveKit participant capability and the server
+    // broadcasts nothing. Kept because a union case's position is its wire tag.
     DrawingSessionStarted(spaceId: guid, channelId: guid, sessionId: string, ownerId: guid, allowedDrawers: guid[], defaultTtlMs: i4),
     DrawingSessionEnded(spaceId: guid, channelId: guid, sessionId: string),
 
