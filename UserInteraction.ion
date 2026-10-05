@@ -121,7 +121,10 @@ union CreateSpaceResult {
 
 enum CreateSpaceError {
     UNKNOWN,
-    LIMIT_REACHED
+    LIMIT_REACHED,
+    NAME_EMPTY,
+    NAME_TOO_LONG,
+    DESCRIPTION_TOO_LONG
 }
 
 msg UserEditInput {

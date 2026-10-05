@@ -14548,7 +14548,10 @@
       "kind": "Enum",
       "members": {
         "UNKNOWN": "0",
-        "LIMIT_REACHED": "1"
+        "LIMIT_REACHED": "1",
+        "NAME_EMPTY": "2",
+        "NAME_TOO_LONG": "3",
+        "DESCRIPTION_TOO_LONG": "4"
       },
       "baseType": "u4"
     },
