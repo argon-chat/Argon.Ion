@@ -112,3 +112,11 @@ union VideoUploadResult {
     VideoStored(info: VideoInfo),
     FailedVideoUpload(error: VideoUploadError)
 }
+
+// What the caller may upload here, by its tier (Ultima, boost level): the client plans a video's
+// quality against videoMaxBytes before it transcodes, instead of learning TOO_LARGE afterwards.
+msg UploadLimits {
+    attachmentMaxBytes: i8;
+    videoMaxBytes: i8;
+    videoMaxDurationMs: i8;
+}

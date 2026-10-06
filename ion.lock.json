@@ -6888,6 +6888,22 @@
           ],
           "returns": "void",
           "modifiers": []
+        },
+        "GetUploadLimits": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadLimits",
+          "modifiers": []
         }
       }
     },
@@ -9186,6 +9202,17 @@
             }
           ],
           "returns": "void",
+          "modifiers": []
+        },
+        "GetUploadLimits": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            }
+          ],
+          "returns": "UploadLimits",
           "modifiers": []
         }
       }
@@ -16062,6 +16089,27 @@
           "index": 1,
           "name": "etag",
           "type": "string"
+        }
+      ]
+    },
+    "UploadLimits": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "attachmentMaxBytes",
+          "type": "i8"
+        },
+        {
+          "index": 1,
+          "name": "videoMaxBytes",
+          "type": "i8"
+        },
+        {
+          "index": 2,
+          "name": "videoMaxDurationMs",
+          "type": "i8"
         }
       ]
     },

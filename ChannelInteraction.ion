@@ -314,6 +314,8 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     CompleteVideoUpload(ticketId: guid, parts: UploadedPart[]): VideoUploadResult;
     // Appended: gives up a ticket early so its parts are dropped now rather than at expiry.
     AbortVideoUpload(ticketId: guid);
+    // Appended: the size limits that apply to uploads in this channel (VideoUpload.ion).
+    GetUploadLimits(): UploadLimits;
 }
 
 msg MessageReactionsEntry {

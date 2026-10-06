@@ -104,4 +104,6 @@ service UserChatInteractions() {
     PrepareVideoUpload(peerId: guid, declaration: VideoUploadDeclaration): VideoUploadResult;
     CompleteVideoUpload(peerId: guid, ticketId: guid, parts: UploadedPart[]): VideoUploadResult;
     AbortVideoUpload(peerId: guid, ticketId: guid);
+    // Appended: the size limits that apply to uploads in this chat (ChannelInteraction.GetUploadLimits).
+    GetUploadLimits(peerId: guid): UploadLimits;
 }
