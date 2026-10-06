@@ -1,8 +1,17 @@
 
 
 service SecurityInteraction() {
-    RequestEmailChange(newEmail: string, password: string): RequestEmailChangeResult;
-    ConfirmEmailChange(verificationCode: string): ConfirmEmailChangeResult;
+    // Proof that the caller holds the account right now, for one sensitive action: begin, satisfy
+    // every requirement, then pass flowId to the action. One flow per account; a new one replaces it.
+    BeginVerification(action: SensitiveAction): BeginVerificationResult;
+    // Sends the code for EMAIL_CODE, or returns WebAuthn options for PASSKEY.
+    ChallengeVerification(flowId: guid, factor: VerificationFactor): ChallengeVerificationResult;
+    SubmitVerification(flowId: guid, factor: VerificationFactor, proof: string): SubmitVerificationResult;
+    CancelVerification(flowId: guid);
+
+    // Needs a verified CHANGE_EMAIL flow. Calling it again resends to the latest address.
+    RequestEmailChange(flowId: guid, newEmail: string): RequestEmailChangeResult;
+    ConfirmEmailChange(flowId: guid, verificationCode: string): ConfirmEmailChangeResult;
 
     RequestPhoneChange(newPhone: string, password: string): RequestPhoneChangeResult;
     ConfirmPhoneChange(verificationCode: string): ConfirmPhoneChangeResult;
@@ -92,8 +101,67 @@ msg SecurityDetails {
 }
 
 
+enum SensitiveAction {
+    CHANGE_EMAIL
+}
+
+enum VerificationFactor {
+    PASSWORD,
+    // A code sent to the account's current address.
+    EMAIL_CODE,
+    TOTP,
+    PASSKEY
+}
+
+msg VerificationRequirement {
+    // Any one of these satisfies it; the first is the one to offer.
+    factors: VerificationFactor[];
+    satisfied: bool;
+}
+
+msg VerificationFlow {
+    flowId: guid;
+    action: SensitiveAction;
+    requirements: VerificationRequirement[];
+    verified: bool;
+    expiresAt: datetime;
+    // Wrong answers left, across every step, before the flow is thrown away.
+    attemptsLeft: i4;
+}
+
+enum VerificationError {
+    NONE,
+    // Expired, finished, replaced, or begun from another session.
+    FLOW_EXPIRED,
+    FACTOR_NOT_ALLOWED,
+    INVALID_PROOF,
+    // Nothing was sent for this factor yet, or what was sent has expired.
+    CHALLENGE_REQUIRED,
+    // The last attempt was wrong; the flow is gone and has to be begun again.
+    TOO_MANY_ATTEMPTS,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}
+
+union BeginVerificationResult {
+    SuccessBeginVerification(flow: VerificationFlow),
+    FailedBeginVerification(error: VerificationError)
+}
+
+union ChallengeVerificationResult {
+    // destination is masked.
+    VerificationCodeSent(destination: string, resendAt: datetime),
+    VerificationPasskeyOptions(optionsJson: string),
+    FailedChallengeVerification(error: VerificationError, resendAt: datetime?)
+}
+
+union SubmitVerificationResult {
+    SuccessSubmitVerification(flow: VerificationFlow),
+    FailedSubmitVerification(error: VerificationError, attemptsLeft: i4)
+}
+
 union RequestEmailChangeResult {
-    SuccessRequestEmailChange(),
+    SuccessRequestEmailChange(resendAt: datetime),
     FailedRequestEmailChange(error: EmailChangeError)
 }
 
@@ -110,7 +178,9 @@ enum EmailChangeError {
     INVALID_VERIFICATION_CODE,
     VERIFICATION_CODE_EXPIRED,
     RATE_LIMITED,
-    INTERNAL_ERROR
+    INTERNAL_ERROR,
+    // No verified CHANGE_EMAIL flow behind the call: begin one.
+    VERIFICATION_REQUIRED
 }
 
 union RequestPhoneChangeResult {

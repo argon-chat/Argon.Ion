@@ -10425,6 +10425,58 @@
         }
       ]
     },
+    "VerificationRequirement": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "factors",
+          "type": "Array\u003CVerificationFactor\u003E"
+        },
+        {
+          "index": 1,
+          "name": "satisfied",
+          "type": "bool"
+        }
+      ]
+    },
+    "VerificationFlow": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "flowId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "action",
+          "type": "SensitiveAction"
+        },
+        {
+          "index": 2,
+          "name": "requirements",
+          "type": "Array\u003CVerificationRequirement\u003E"
+        },
+        {
+          "index": 3,
+          "name": "verified",
+          "type": "bool"
+        },
+        {
+          "index": 4,
+          "name": "expiresAt",
+          "type": "datetime"
+        },
+        {
+          "index": 5,
+          "name": "attemptsLeft",
+          "type": "i4"
+        }
+      ]
+    },
     "Passkey": {
       "kind": "Msg",
       "nextIndex": 6,
@@ -10523,6 +10575,37 @@
       },
       "baseType": "u4"
     },
+    "SensitiveAction": {
+      "kind": "Enum",
+      "members": {
+        "CHANGE_EMAIL": "0"
+      },
+      "baseType": "u4"
+    },
+    "VerificationFactor": {
+      "kind": "Enum",
+      "members": {
+        "PASSWORD": "0",
+        "EMAIL_CODE": "1",
+        "TOTP": "2",
+        "PASSKEY": "3"
+      },
+      "baseType": "u4"
+    },
+    "VerificationError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "FLOW_EXPIRED": "1",
+        "FACTOR_NOT_ALLOWED": "2",
+        "INVALID_PROOF": "3",
+        "CHALLENGE_REQUIRED": "4",
+        "TOO_MANY_ATTEMPTS": "5",
+        "RATE_LIMITED": "6",
+        "INTERNAL_ERROR": "7"
+      },
+      "baseType": "u4"
+    },
     "EmailChangeError": {
       "kind": "Enum",
       "members": {
@@ -10533,7 +10616,8 @@
         "INVALID_VERIFICATION_CODE": "4",
         "VERIFICATION_CODE_EXPIRED": "5",
         "RATE_LIMITED": "6",
-        "INTERNAL_ERROR": "7"
+        "INTERNAL_ERROR": "7",
+        "VERIFICATION_REQUIRED": "8"
       },
       "baseType": "u4"
     },
@@ -10645,6 +10729,116 @@
         }
       ]
     },
+    "BeginVerificationResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessBeginVerification",
+          "fields": [
+            {
+              "index": 0,
+              "name": "flow",
+              "type": "VerificationFlow"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedBeginVerification",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VerificationError"
+            }
+          ]
+        }
+      ]
+    },
+    "ChallengeVerificationResult": {
+      "kind": "Union",
+      "nextIndex": 3,
+      "cases": [
+        {
+          "index": 0,
+          "name": "VerificationCodeSent",
+          "fields": [
+            {
+              "index": 0,
+              "name": "destination",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "resendAt",
+              "type": "datetime"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "VerificationPasskeyOptions",
+          "fields": [
+            {
+              "index": 0,
+              "name": "optionsJson",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "FailedChallengeVerification",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VerificationError"
+            },
+            {
+              "index": 1,
+              "name": "resendAt",
+              "type": "Maybe\u003Cdatetime\u003E"
+            }
+          ]
+        }
+      ]
+    },
+    "SubmitVerificationResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessSubmitVerification",
+          "fields": [
+            {
+              "index": 0,
+              "name": "flow",
+              "type": "VerificationFlow"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedSubmitVerification",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VerificationError"
+            },
+            {
+              "index": 1,
+              "name": "attemptsLeft",
+              "type": "i4"
+            }
+          ]
+        }
+      ]
+    },
     "RequestEmailChangeResult": {
       "kind": "Union",
       "nextIndex": 2,
@@ -10652,7 +10846,13 @@
         {
           "index": 0,
           "name": "SuccessRequestEmailChange",
-          "fields": []
+          "fields": [
+            {
+              "index": 0,
+              "name": "resendAt",
+              "type": "datetime"
+            }
+          ]
         },
         {
           "index": 1,
@@ -11013,16 +11213,75 @@
     "SecurityInteraction": {
       "kind": "Service",
       "methods": {
+        "BeginVerification": {
+          "args": [
+            {
+              "index": 0,
+              "name": "action",
+              "type": "SensitiveAction"
+            }
+          ],
+          "returns": "BeginVerificationResult",
+          "modifiers": []
+        },
+        "ChallengeVerification": {
+          "args": [
+            {
+              "index": 0,
+              "name": "flowId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "factor",
+              "type": "VerificationFactor"
+            }
+          ],
+          "returns": "ChallengeVerificationResult",
+          "modifiers": []
+        },
+        "SubmitVerification": {
+          "args": [
+            {
+              "index": 0,
+              "name": "flowId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "factor",
+              "type": "VerificationFactor"
+            },
+            {
+              "index": 2,
+              "name": "proof",
+              "type": "string"
+            }
+          ],
+          "returns": "SubmitVerificationResult",
+          "modifiers": []
+        },
+        "CancelVerification": {
+          "args": [
+            {
+              "index": 0,
+              "name": "flowId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
+        },
         "RequestEmailChange": {
           "args": [
             {
               "index": 0,
-              "name": "newEmail",
-              "type": "string"
+              "name": "flowId",
+              "type": "guid"
             },
             {
               "index": 1,
-              "name": "password",
+              "name": "newEmail",
               "type": "string"
             }
           ],
@@ -11033,6 +11292,11 @@
           "args": [
             {
               "index": 0,
+              "name": "flowId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
               "name": "verificationCode",
               "type": "string"
             }
