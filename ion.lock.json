@@ -2600,7 +2600,8 @@
         "Gif": "21",
         "LinkPreview": "22",
         "Sticker": "23",
-        "CustomEmoji": "24"
+        "CustomEmoji": "24",
+        "Video": "25"
       },
       "baseType": "u2"
     },
@@ -2910,7 +2911,7 @@
     },
     "MessageEntity": {
       "kind": "Union",
-      "nextIndex": 25,
+      "nextIndex": 26,
       "cases": [
         {
           "index": 0,
@@ -3335,6 +3336,102 @@
             {
               "index": 10,
               "name": "downloadUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            }
+          ]
+        },
+        {
+          "index": 25,
+          "name": "MessageEntityVideo",
+          "fields": [
+            {
+              "index": 4,
+              "name": "fileId",
+              "type": "guid"
+            },
+            {
+              "index": 5,
+              "name": "fileName",
+              "type": "string"
+            },
+            {
+              "index": 6,
+              "name": "fileSize",
+              "type": "i8"
+            },
+            {
+              "index": 7,
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "index": 8,
+              "name": "width",
+              "type": "i4"
+            },
+            {
+              "index": 9,
+              "name": "height",
+              "type": "i4"
+            },
+            {
+              "index": 10,
+              "name": "durationMs",
+              "type": "i4"
+            },
+            {
+              "index": 11,
+              "name": "hasAudio",
+              "type": "bool"
+            },
+            {
+              "index": 12,
+              "name": "codec",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 13,
+              "name": "thumbHash",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 14,
+              "name": "posterFileId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 15,
+              "name": "storyboardFileId",
+              "type": "Maybe\u003Cguid\u003E"
+            },
+            {
+              "index": 16,
+              "name": "storyboard",
+              "type": "Maybe\u003CVideoStoryboard\u003E"
+            },
+            {
+              "index": 17,
+              "name": "preloadPrefixSize",
+              "type": "Maybe\u003Ci8\u003E"
+            },
+            {
+              "index": 18,
+              "name": "variants",
+              "type": "Array\u003CVideoVariant\u003E"
+            },
+            {
+              "index": 19,
+              "name": "downloadUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 20,
+              "name": "posterUrl",
+              "type": "Maybe\u003Cstring\u003E"
+            },
+            {
+              "index": 21,
+              "name": "storyboardUrl",
               "type": "Maybe\u003Cstring\u003E"
             }
           ]
@@ -6723,6 +6820,74 @@
           ],
           "returns": "PrepareUploadResult",
           "modifiers": []
+        },
+        "PrepareVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "declaration",
+              "type": "VideoUploadDeclaration"
+            }
+          ],
+          "returns": "VideoUploadResult",
+          "modifiers": []
+        },
+        "CompleteVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "ticketId",
+              "type": "guid"
+            },
+            {
+              "index": 3,
+              "name": "parts",
+              "type": "Array\u003CUploadedPart\u003E"
+            }
+          ],
+          "returns": "VideoUploadResult",
+          "modifiers": []
+        },
+        "AbortVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "spaceId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "channelId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "ticketId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
+          "modifiers": []
         }
       }
     },
@@ -8968,6 +9133,59 @@
             }
           ],
           "returns": "PrepareUploadResult",
+          "modifiers": []
+        },
+        "PrepareVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "declaration",
+              "type": "VideoUploadDeclaration"
+            }
+          ],
+          "returns": "VideoUploadResult",
+          "modifiers": []
+        },
+        "CompleteVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "ticketId",
+              "type": "guid"
+            },
+            {
+              "index": 2,
+              "name": "parts",
+              "type": "Array\u003CUploadedPart\u003E"
+            }
+          ],
+          "returns": "VideoUploadResult",
+          "modifiers": []
+        },
+        "AbortVideoUpload": {
+          "args": [
+            {
+              "index": 0,
+              "name": "peerId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "ticketId",
+              "type": "guid"
+            }
+          ],
+          "returns": "void",
           "modifiers": []
         }
       }
@@ -15550,6 +15768,358 @@
           "modifiers": []
         }
       }
+    },
+    "VideoStoryboard": {
+      "kind": "Msg",
+      "nextIndex": 5,
+      "fields": [
+        {
+          "index": 0,
+          "name": "frameWidth",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "frameHeight",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "columns",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "frameCount",
+          "type": "i4"
+        },
+        {
+          "index": 4,
+          "name": "intervalMs",
+          "type": "i4"
+        }
+      ]
+    },
+    "VideoVariant": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "fileSize",
+          "type": "i8"
+        },
+        {
+          "index": 4,
+          "name": "codec",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "bitrate",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "downloadUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "VideoInfo": {
+      "kind": "Msg",
+      "nextIndex": 17,
+      "fields": [
+        {
+          "index": 0,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "fileName",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "fileSize",
+          "type": "i8"
+        },
+        {
+          "index": 3,
+          "name": "contentType",
+          "type": "string"
+        },
+        {
+          "index": 4,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "durationMs",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "hasAudio",
+          "type": "bool"
+        },
+        {
+          "index": 8,
+          "name": "codec",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "thumbHash",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 10,
+          "name": "posterFileId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 11,
+          "name": "storyboardFileId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 12,
+          "name": "storyboard",
+          "type": "Maybe\u003CVideoStoryboard\u003E"
+        },
+        {
+          "index": 13,
+          "name": "preloadPrefixSize",
+          "type": "Maybe\u003Ci8\u003E"
+        },
+        {
+          "index": 14,
+          "name": "downloadUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 15,
+          "name": "posterUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 16,
+          "name": "storyboardUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        }
+      ]
+    },
+    "VideoUploadDeclaration": {
+      "kind": "Msg",
+      "nextIndex": 14,
+      "fields": [
+        {
+          "index": 0,
+          "name": "fileName",
+          "type": "string"
+        },
+        {
+          "index": 1,
+          "name": "contentType",
+          "type": "string"
+        },
+        {
+          "index": 2,
+          "name": "size",
+          "type": "i8"
+        },
+        {
+          "index": 3,
+          "name": "sha256",
+          "type": "Maybe\u003Cbytes\u003E"
+        },
+        {
+          "index": 4,
+          "name": "width",
+          "type": "i4"
+        },
+        {
+          "index": 5,
+          "name": "height",
+          "type": "i4"
+        },
+        {
+          "index": 6,
+          "name": "durationMs",
+          "type": "i4"
+        },
+        {
+          "index": 7,
+          "name": "hasAudio",
+          "type": "bool"
+        },
+        {
+          "index": 8,
+          "name": "codec",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 9,
+          "name": "thumbHash",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 10,
+          "name": "posterFileId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 11,
+          "name": "storyboardFileId",
+          "type": "Maybe\u003Cguid\u003E"
+        },
+        {
+          "index": 12,
+          "name": "storyboard",
+          "type": "Maybe\u003CVideoStoryboard\u003E"
+        },
+        {
+          "index": 13,
+          "name": "preloadPrefixSize",
+          "type": "Maybe\u003Ci8\u003E"
+        }
+      ]
+    },
+    "VideoUploadTicket": {
+      "kind": "Msg",
+      "nextIndex": 7,
+      "fields": [
+        {
+          "index": 0,
+          "name": "ticketId",
+          "type": "guid"
+        },
+        {
+          "index": 1,
+          "name": "fileId",
+          "type": "guid"
+        },
+        {
+          "index": 2,
+          "name": "uploadUrl",
+          "type": "Maybe\u003Cstring\u003E"
+        },
+        {
+          "index": 3,
+          "name": "formFields",
+          "type": "Array\u003CFormField\u003E"
+        },
+        {
+          "index": 4,
+          "name": "partUrls",
+          "type": "Array\u003Cstring\u003E"
+        },
+        {
+          "index": 5,
+          "name": "partSize",
+          "type": "i8"
+        },
+        {
+          "index": 6,
+          "name": "ttlSeconds",
+          "type": "i4"
+        }
+      ]
+    },
+    "UploadedPart": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "partNumber",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "etag",
+          "type": "string"
+        }
+      ]
+    },
+    "VideoUploadError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "NOT_AUTHORIZED": "1",
+        "TOO_LARGE": "2",
+        "TOO_LONG": "3",
+        "CONTENT_TYPE_REJECTED": "4",
+        "NOT_STREAMABLE": "5",
+        "DECLARATION_MISMATCH": "6",
+        "POSTER_REJECTED": "7",
+        "TICKET_EXPIRED": "8",
+        "NOT_FOUND": "9",
+        "INTERNAL_ERROR": "10"
+      },
+      "baseType": "u4"
+    },
+    "VideoUploadResult": {
+      "kind": "Union",
+      "nextIndex": 3,
+      "cases": [
+        {
+          "index": 0,
+          "name": "VideoUploadRequired",
+          "fields": [
+            {
+              "index": 0,
+              "name": "ticket",
+              "type": "VideoUploadTicket"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "VideoStored",
+          "fields": [
+            {
+              "index": 0,
+              "name": "info",
+              "type": "VideoInfo"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "FailedVideoUpload",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "VideoUploadError"
+            }
+          ]
+        }
+      ]
     },
     "RtcEndpoint": {
       "kind": "Msg",

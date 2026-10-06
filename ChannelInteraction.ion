@@ -94,7 +94,15 @@ union MessageEntity(type: EntityType, offset: i4, length: i4, version: i4) {
     // Appended: a sticker or custom emoji of a space (SpaceExpressions.ion). A client that predates these
     // cannot decode a message carrying one.
     MessageEntitySticker(itemId: guid, packId: guid, spaceId: guid, format: ExpressionFormat, fileId: guid, thumbFileId: guid?, width: i4, height: i4, outline: bytes?, downloadUrl: string?, thumbUrl: string?),
-    MessageEntityCustomEmoji(itemId: guid, spaceId: guid, format: ExpressionFormat, fileId: guid, name: string, textColor: bool, downloadUrl: string?)
+    MessageEntityCustomEmoji(itemId: guid, spaceId: guid, format: ExpressionFormat, fileId: guid, name: string, textColor: bool, downloadUrl: string?),
+
+    // Appended: a video the sender's client prepared for playback (VideoUpload.ion): one streamable
+    // MP4 plus the poster and the storyboard it uploaded as ordinary attachments. The client sends the
+    // fileId and whatever it knows for its own optimistic bubble; the server overwrites every field
+    // from the file's media record at send and fills the URLs at read, as it does for attachments.
+    // `variants` is reserved for extra renditions and is empty today. A client that predates this
+    // case cannot decode a message carrying one.
+    MessageEntityVideo(fileId: guid, fileName: string, fileSize: i8, contentType: string, width: i4, height: i4, durationMs: i4, hasAudio: bool, codec: string?, thumbHash: string?, posterFileId: guid?, storyboardFileId: guid?, storyboard: VideoStoryboard?, preloadPrefixSize: i8?, variants: VideoVariant[], downloadUrl: string?, posterUrl: string?, storyboardUrl: string?)
 }
 
 enum EntityType : u2
@@ -129,7 +137,9 @@ enum EntityType : u2
     LinkPreview,
 
     Sticker,
-    CustomEmoji
+    CustomEmoji,
+
+    Video
 }
 
 msg ReactionInfo {
@@ -290,6 +300,20 @@ service ChannelInteraction(spaceId: guid, channelId: guid) {
     // nothing is uploaded); otherwise the ticket, with an over-limit size refused before anything is
     // signed and the real type and name kept on the file. Needs AttachFiles, as an upload does.
     PrepareUploadAttachment(sha256: bytes, size: i8, contentType: string, fileName: string): PrepareUploadResult;
+
+    // Appended: a video prepared for playback (VideoUpload.ion). The declaration describes the MP4 the
+    // client made and names the poster and storyboard it already uploaded as attachments of this
+    // channel. VideoStored when the caller can already see a file with these bytes (a copy is made,
+    // media record included); otherwise a ticket — one PUT, or one PUT per part for a big file — and
+    // the declaration waits for CompleteVideoUpload. Refused over the video size limit before anything
+    // is signed. Needs AttachFiles, as an upload does.
+    PrepareVideoUpload(declaration: VideoUploadDeclaration): VideoUploadResult;
+    // Appended: closes the ticket. `parts` carries the ETag of every part of a multipart upload, in
+    // order, and is empty for a single PUT. The server reads the container header, checks it against
+    // the declaration and keeps the result as the file's media record; the answer is VideoStored.
+    CompleteVideoUpload(ticketId: guid, parts: UploadedPart[]): VideoUploadResult;
+    // Appended: gives up a ticket early so its parts are dropped now rather than at expiry.
+    AbortVideoUpload(ticketId: guid);
 }
 
 msg MessageReactionsEntry {

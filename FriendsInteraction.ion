@@ -98,4 +98,10 @@ service UserChatInteractions() {
 
     // Appended: BeginUploadAttachment with the file described up front (ChannelInteraction.PrepareUploadAttachment).
     PrepareUploadAttachment(peerId: guid, sha256: bytes, size: i8, contentType: string, fileName: string): PrepareUploadResult;
+
+    // Appended: the channel methods' twins for a direct chat (ChannelInteraction.PrepareVideoUpload,
+    // CompleteVideoUpload, AbortVideoUpload). Refused when the peer has blocked the sender.
+    PrepareVideoUpload(peerId: guid, declaration: VideoUploadDeclaration): VideoUploadResult;
+    CompleteVideoUpload(peerId: guid, ticketId: guid, parts: UploadedPart[]): VideoUploadResult;
+    AbortVideoUpload(peerId: guid, ticketId: guid);
 }

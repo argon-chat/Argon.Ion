@@ -1,0 +1,114 @@
+// Video attachments. See docs/internal/architecture/video.md in the server repository.
+//
+// The sending client does the heavy work: it probes the source, transcodes or remuxes it into one
+// streamable MP4 (moov before mdat), takes the poster and the storyboard, and declares the result.
+// The server checks the declaration against the container header, keeps it as the file's media
+// record, and serves the bytes by range. Nothing is decoded on the server.
+
+// One WebP sprite of frames taken every intervalMs, frameWidth × frameHeight each, `columns` per row,
+// row-major, frameCount in total. Frame i stands for [i * intervalMs, (i + 1) * intervalMs).
+msg VideoStoryboard {
+    frameWidth: i4;
+    frameHeight: i4;
+    columns: i4;
+    frameCount: i4;
+    intervalMs: i4;
+}
+
+// An extra rendition of the same video (another resolution or codec). Reserved: no client makes one
+// yet, and a message carries an empty list.
+msg VideoVariant {
+    fileId: guid;
+    width: i4;
+    height: i4;
+    fileSize: i8;
+    codec: string?;
+    bitrate: i4;
+    downloadUrl: string?;
+}
+
+// The media record of a video file, as the server keeps it. width and height are the display size
+// after rotation; codec is the RFC 6381 string of the video track (avc1.64001f, hvc1…, av01…);
+// preloadPrefixSize is how many leading bytes hold the header and the first second of samples, so a
+// client can warm playback with one range request.
+msg VideoInfo {
+    fileId: guid;
+    fileName: string;
+    fileSize: i8;
+    contentType: string;
+    width: i4;
+    height: i4;
+    durationMs: i4;
+    hasAudio: bool;
+    codec: string?;
+    thumbHash: string?;
+    posterFileId: guid?;
+    storyboardFileId: guid?;
+    storyboard: VideoStoryboard?;
+    preloadPrefixSize: i8?;
+    downloadUrl: string?;
+    posterUrl: string?;
+    storyboardUrl: string?;
+}
+
+// What the client knows about the MP4 before it uploads it. sha256 lets the server answer VideoStored
+// without an upload when it already holds these bytes; the poster and the storyboard are attachments
+// the caller uploaded to the same channel or chat first, and are checked to be its finalized images.
+msg VideoUploadDeclaration {
+    fileName: string;
+    contentType: string;
+    size: i8;
+    sha256: bytes?;
+    width: i4;
+    height: i4;
+    durationMs: i4;
+    hasAudio: bool;
+    codec: string?;
+    thumbHash: string?;
+    posterFileId: guid?;
+    storyboardFileId: guid?;
+    storyboard: VideoStoryboard?;
+    preloadPrefixSize: i8?;
+}
+
+enum VideoUploadError {
+    NONE,
+    NOT_AUTHORIZED,
+    TOO_LARGE,
+    TOO_LONG,
+    CONTENT_TYPE_REJECTED,
+    // No readable MP4 header within the first megabytes, or moov after mdat: the file cannot start
+    // playing before it is fully downloaded, and the client was supposed to fix that before uploading.
+    NOT_STREAMABLE,
+    // The container header disagrees with the declaration (size, duration, codec, audio).
+    DECLARATION_MISMATCH,
+    // The poster or the storyboard is not a finalized image the caller uploaded here.
+    POSTER_REJECTED,
+    TICKET_EXPIRED,
+    NOT_FOUND,
+    INTERNAL_ERROR
+}
+
+// Single PUT to uploadUrl with formFields as headers when partUrls is empty. Otherwise one PUT per
+// part: part n carries bytes [(n - 1) * partSize, n * partSize), the last one shorter, each answered
+// with an ETag that goes back in CompleteVideoUpload. Parts may be sent in parallel and retried.
+msg VideoUploadTicket {
+    ticketId: guid;
+    fileId: guid;
+    uploadUrl: string?;
+    formFields: FormField[];
+    partUrls: string[];
+    partSize: i8;
+    ttlSeconds: i4;
+}
+
+msg UploadedPart {
+    partNumber: i4;
+    etag: string;
+}
+
+union VideoUploadResult {
+    VideoUploadRequired(ticket: VideoUploadTicket),
+    VideoStored(info: VideoInfo),
+    FailedVideoUpload(error: VideoUploadError)
+}
