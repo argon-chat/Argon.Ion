@@ -8192,6 +8192,322 @@
         }
       ]
     },
+    "OrbitSprite": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "frames",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "columns",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "fps",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 3,
+          "name": "still",
+          "type": "Maybe\u003Cu2\u003E"
+        }
+      ]
+    },
+    "SceneSheet": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "w",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "h",
+          "type": "u2"
+        }
+      ]
+    },
+    "SceneAtlas": {
+      "kind": "Msg",
+      "nextIndex": 8,
+      "fields": [
+        {
+          "index": 0,
+          "name": "x",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 1,
+          "name": "y",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 2,
+          "name": "w",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "h",
+          "type": "u2"
+        },
+        {
+          "index": 4,
+          "name": "frames",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 5,
+          "name": "columns",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 6,
+          "name": "fps",
+          "type": "Maybe\u003Cu2\u003E"
+        },
+        {
+          "index": 7,
+          "name": "still",
+          "type": "Maybe\u003Cu2\u003E"
+        }
+      ]
+    },
+    "SceneStop": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "at",
+          "type": "f8"
+        },
+        {
+          "index": 1,
+          "name": "v",
+          "type": "f8"
+        }
+      ]
+    },
+    "ScenePoint": {
+      "kind": "Msg",
+      "nextIndex": 3,
+      "fields": [
+        {
+          "index": 0,
+          "name": "anchor",
+          "type": "SceneAnchor"
+        },
+        {
+          "index": 1,
+          "name": "dxPct",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 2,
+          "name": "dyPct",
+          "type": "Maybe\u003Cf8\u003E"
+        }
+      ]
+    },
+    "SceneShadow": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "dxPct",
+          "type": "f8"
+        },
+        {
+          "index": 1,
+          "name": "dyPct",
+          "type": "f8"
+        },
+        {
+          "index": 2,
+          "name": "blurPct",
+          "type": "f8"
+        },
+        {
+          "index": 3,
+          "name": "alpha",
+          "type": "f8"
+        }
+      ]
+    },
+    "SceneRetreat": {
+      "kind": "Msg",
+      "nextIndex": 6,
+      "fields": [
+        {
+          "index": 0,
+          "name": "atMs",
+          "type": "i4"
+        },
+        {
+          "index": 1,
+          "name": "durationMs",
+          "type": "i4"
+        },
+        {
+          "index": 2,
+          "name": "edgePct",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 3,
+          "name": "footPct",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 4,
+          "name": "softPct",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 5,
+          "name": "remain",
+          "type": "Maybe\u003Cf8\u003E"
+        }
+      ]
+    },
+    "SceneGrow": {
+      "kind": "Msg",
+      "nextIndex": 11,
+      "fields": [
+        {
+          "index": 0,
+          "name": "fromPct",
+          "type": "f8"
+        },
+        {
+          "index": 1,
+          "name": "toPct",
+          "type": "f8"
+        },
+        {
+          "index": 2,
+          "name": "durationMs",
+          "type": "i4"
+        },
+        {
+          "index": 3,
+          "name": "holdMs",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 4,
+          "name": "repeat",
+          "type": "Maybe\u003CSceneRepeat\u003E"
+        },
+        {
+          "index": 5,
+          "name": "fromScale",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 6,
+          "name": "leadAxis",
+          "type": "Maybe\u003CSceneLeadAxis\u003E"
+        },
+        {
+          "index": 7,
+          "name": "wobbleDeg",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 8,
+          "name": "softness",
+          "type": "Maybe\u003Cf8\u003E"
+        },
+        {
+          "index": 9,
+          "name": "sway",
+          "type": "Maybe\u003CSceneSway\u003E"
+        },
+        {
+          "index": 10,
+          "name": "from",
+          "type": "Maybe\u003CSceneGrowOrigin\u003E"
+        }
+      ]
+    },
+    "SceneSway": {
+      "kind": "Msg",
+      "nextIndex": 2,
+      "fields": [
+        {
+          "index": 0,
+          "name": "deg",
+          "type": "f8"
+        },
+        {
+          "index": 1,
+          "name": "ms",
+          "type": "i4"
+        }
+      ]
+    },
+    "SceneSlice": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "top",
+          "type": "u2"
+        },
+        {
+          "index": 1,
+          "name": "right",
+          "type": "u2"
+        },
+        {
+          "index": 2,
+          "name": "bottom",
+          "type": "u2"
+        },
+        {
+          "index": 3,
+          "name": "left",
+          "type": "u2"
+        }
+      ]
+    },
+    "SceneWidths": {
+      "kind": "Msg",
+      "nextIndex": 4,
+      "fields": [
+        {
+          "index": 0,
+          "name": "top",
+          "type": "f8"
+        },
+        {
+          "index": 1,
+          "name": "right",
+          "type": "f8"
+        },
+        {
+          "index": 2,
+          "name": "bottom",
+          "type": "f8"
+        },
+        {
+          "index": 3,
+          "name": "left",
+          "type": "f8"
+        }
+      ]
+    },
     "CosmeticError": {
       "kind": "Enum",
       "members": {
@@ -8220,7 +8536,8 @@
         "Primary": "0",
         "Secondary": "1",
         "Tertiary": "2",
-        "Quaternary": "3"
+        "Quaternary": "3",
+        "Poster": "4"
       },
       "baseType": "u4"
     },
@@ -8246,6 +8563,160 @@
         "BottomLeft": "6",
         "Bottom": "7",
         "BottomRight": "8"
+      },
+      "baseType": "u4"
+    },
+    "OrbitTurn": {
+      "kind": "Enum",
+      "members": {
+        "Mirror": "0",
+        "Spin": "1"
+      },
+      "baseType": "u4"
+    },
+    "SceneReach": {
+      "kind": "Enum",
+      "members": {
+        "Content": "0",
+        "Card": "1"
+      },
+      "baseType": "u4"
+    },
+    "SceneReachRule": {
+      "kind": "Enum",
+      "members": {
+        "Content": "0",
+        "Card": "1",
+        "Choice": "2"
+      },
+      "baseType": "u4"
+    },
+    "SceneSource": {
+      "kind": "Enum",
+      "members": {
+        "Atlas": "0",
+        "File": "1"
+      },
+      "baseType": "u4"
+    },
+    "SceneDepth": {
+      "kind": "Enum",
+      "members": {
+        "Deep": "0",
+        "Over": "1",
+        "Front": "2"
+      },
+      "baseType": "u4"
+    },
+    "SceneOccluder": {
+      "kind": "Enum",
+      "members": {
+        "Avatar": "0"
+      },
+      "baseType": "u4"
+    },
+    "SceneFit": {
+      "kind": "Enum",
+      "members": {
+        "Cover": "0",
+        "Contain": "1",
+        "Stretch": "2"
+      },
+      "baseType": "u4"
+    },
+    "SceneRepeat": {
+      "kind": "Enum",
+      "members": {
+        "Loop": "0",
+        "Once": "1",
+        "PingPong": "2"
+      },
+      "baseType": "u4"
+    },
+    "SceneEase": {
+      "kind": "Enum",
+      "members": {
+        "Linear": "0",
+        "In": "1",
+        "Out": "2",
+        "InOut": "3"
+      },
+      "baseType": "u4"
+    },
+    "SceneTurn": {
+      "kind": "Enum",
+      "members": {
+        "None": "0",
+        "Mirror": "1"
+      },
+      "baseType": "u4"
+    },
+    "SceneBowAxis": {
+      "kind": "Enum",
+      "members": {
+        "Auto": "0",
+        "X": "1",
+        "Y": "2"
+      },
+      "baseType": "u4"
+    },
+    "SceneEdge": {
+      "kind": "Enum",
+      "members": {
+        "Top": "0",
+        "Right": "1",
+        "Bottom": "2",
+        "Left": "3"
+      },
+      "baseType": "u4"
+    },
+    "SceneTile": {
+      "kind": "Enum",
+      "members": {
+        "Stretch": "0",
+        "Repeat": "1",
+        "Round": "2",
+        "Space": "3"
+      },
+      "baseType": "u4"
+    },
+    "SceneAnchor": {
+      "kind": "Enum",
+      "members": {
+        "TopLeft": "0",
+        "Top": "1",
+        "TopRight": "2",
+        "Left": "3",
+        "Center": "4",
+        "Right": "5",
+        "BottomLeft": "6",
+        "Bottom": "7",
+        "BottomRight": "8"
+      },
+      "baseType": "u4"
+    },
+    "SceneGrowOrigin": {
+      "kind": "Enum",
+      "members": {
+        "Edge": "0",
+        "TopLeft": "1",
+        "Top": "2",
+        "TopRight": "3",
+        "Left": "4",
+        "Center": "5",
+        "Right": "6",
+        "BottomLeft": "7",
+        "Bottom": "8",
+        "BottomRight": "9"
+      },
+      "baseType": "u4"
+    },
+    "SceneLeadAxis": {
+      "kind": "Enum",
+      "members": {
+        "Y": "0",
+        "X": "1",
+        "Both": "2"
       },
       "baseType": "u4"
     },
@@ -8279,7 +8750,7 @@
     },
     "WornCosmetic": {
       "kind": "Union",
-      "nextIndex": 2,
+      "nextIndex": 4,
       "cases": [
         {
           "index": 0,
@@ -8337,12 +8808,39 @@
               "type": "Maybe\u003Ci4\u003E"
             }
           ]
+        },
+        {
+          "index": 2,
+          "name": "WornItems",
+          "fields": [
+            {
+              "index": 0,
+              "name": "itemIds",
+              "type": "Array\u003Cguid\u003E"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "WornScene",
+          "fields": [
+            {
+              "index": 0,
+              "name": "itemId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "reach",
+              "type": "SceneReach"
+            }
+          ]
         }
       ]
     },
     "CosmeticPayload": {
       "kind": "Union",
-      "nextIndex": 4,
+      "nextIndex": 8,
       "cases": [
         {
           "index": 0,
@@ -8386,6 +8884,85 @@
           "index": 3,
           "name": "PayloadTextEffect",
           "fields": []
+        },
+        {
+          "index": 4,
+          "name": "PayloadProfileBackground",
+          "fields": [
+            {
+              "index": 0,
+              "name": "loop",
+              "type": "bool"
+            },
+            {
+              "index": 1,
+              "name": "tintOpacity",
+              "type": "f8"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "name": "PayloadBadge",
+          "fields": [
+            {
+              "index": 0,
+              "name": "tooltipKey",
+              "type": "string"
+            },
+            {
+              "index": 1,
+              "name": "tint",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "name": "PayloadAvatarOrbit",
+          "fields": [
+            {
+              "index": 0,
+              "name": "satellites",
+              "type": "Array\u003COrbitBody\u003E"
+            },
+            {
+              "index": 1,
+              "name": "minSizePx",
+              "type": "Maybe\u003Cu2\u003E"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "name": "PayloadProfileScene",
+          "fields": [
+            {
+              "index": 0,
+              "name": "reach",
+              "type": "SceneReachRule"
+            },
+            {
+              "index": 1,
+              "name": "defaultReach",
+              "type": "Maybe\u003CSceneReach\u003E"
+            },
+            {
+              "index": 2,
+              "name": "minWidthPx",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 3,
+              "name": "sheet",
+              "type": "Maybe\u003CSceneSheet\u003E"
+            },
+            {
+              "index": 4,
+              "name": "actors",
+              "type": "Array\u003CSceneActor\u003E"
+            }
+          ]
         }
       ]
     },
@@ -8517,6 +9094,486 @@
           "index": 3,
           "name": "motion",
           "type": "Maybe\u003CFrameMotion\u003E"
+        }
+      ]
+    },
+    "OrbitBody": {
+      "kind": "Union",
+      "nextIndex": 1,
+      "cases": [
+        {
+          "index": 0,
+          "name": "OrbitSatellite",
+          "fields": [
+            {
+              "index": 0,
+              "name": "slot",
+              "type": "AssetSlot"
+            },
+            {
+              "index": 1,
+              "name": "sprite",
+              "type": "Maybe\u003COrbitSprite\u003E"
+            },
+            {
+              "index": 2,
+              "name": "radiusPct",
+              "type": "f8"
+            },
+            {
+              "index": 3,
+              "name": "tiltDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 4,
+              "name": "yawDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 5,
+              "name": "yawSwingDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 6,
+              "name": "yawSwingMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 7,
+              "name": "periodMs",
+              "type": "i4"
+            },
+            {
+              "index": 8,
+              "name": "phaseMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 9,
+              "name": "reverse",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 10,
+              "name": "stillDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 11,
+              "name": "widthPct",
+              "type": "f8"
+            },
+            {
+              "index": 12,
+              "name": "heightPct",
+              "type": "f8"
+            },
+            {
+              "index": 13,
+              "name": "opacity",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 14,
+              "name": "leanDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 15,
+              "name": "faceTravel",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 16,
+              "name": "turn",
+              "type": "Maybe\u003COrbitTurn\u003E"
+            },
+            {
+              "index": 17,
+              "name": "nearScale",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 18,
+              "name": "farScale",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 19,
+              "name": "dim",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 20,
+              "name": "haze",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 21,
+              "name": "blurPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 22,
+              "name": "occlude",
+              "type": "Maybe\u003Cbool\u003E"
+            },
+            {
+              "index": 23,
+              "name": "bobPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 24,
+              "name": "bobPeriodMs",
+              "type": "Maybe\u003Ci4\u003E"
+            }
+          ]
+        }
+      ]
+    },
+    "SceneActor": {
+      "kind": "Union",
+      "nextIndex": 5,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SceneWash",
+          "fields": [
+            {
+              "index": 9,
+              "name": "fit",
+              "type": "Maybe\u003CSceneFit\u003E"
+            },
+            {
+              "index": 10,
+              "name": "periodMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 11,
+              "name": "repeat",
+              "type": "Maybe\u003CSceneRepeat\u003E"
+            },
+            {
+              "index": 12,
+              "name": "scale",
+              "type": "Maybe\u003CArray\u003CSceneStop\u003E\u003E"
+            },
+            {
+              "index": 13,
+              "name": "spillPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 14,
+              "name": "grow",
+              "type": "Maybe\u003CSceneGrow\u003E"
+            },
+            {
+              "index": 15,
+              "name": "retreat",
+              "type": "Maybe\u003CSceneRetreat\u003E"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "SceneSprite",
+          "fields": [
+            {
+              "index": 9,
+              "name": "sizePct",
+              "type": "f8"
+            },
+            {
+              "index": 10,
+              "name": "durationMs",
+              "type": "i4"
+            },
+            {
+              "index": 11,
+              "name": "bobPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 12,
+              "name": "repeat",
+              "type": "Maybe\u003CSceneRepeat\u003E"
+            },
+            {
+              "index": 13,
+              "name": "from",
+              "type": "ScenePoint"
+            },
+            {
+              "index": 14,
+              "name": "to",
+              "type": "ScenePoint"
+            },
+            {
+              "index": 15,
+              "name": "ease",
+              "type": "Maybe\u003CSceneEase\u003E"
+            },
+            {
+              "index": 16,
+              "name": "turn",
+              "type": "Maybe\u003CSceneTurn\u003E"
+            },
+            {
+              "index": 17,
+              "name": "rotate",
+              "type": "Maybe\u003CArray\u003CSceneStop\u003E\u003E"
+            },
+            {
+              "index": 18,
+              "name": "bowPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 19,
+              "name": "bowAxis",
+              "type": "Maybe\u003CSceneBowAxis\u003E"
+            },
+            {
+              "index": 20,
+              "name": "bankDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 21,
+              "name": "scale",
+              "type": "Maybe\u003CArray\u003CSceneStop\u003E\u003E"
+            },
+            {
+              "index": 22,
+              "name": "spillPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 23,
+              "name": "retreat",
+              "type": "Maybe\u003CSceneRetreat\u003E"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "name": "SceneBand",
+          "fields": [
+            {
+              "index": 9,
+              "name": "edge",
+              "type": "SceneEdge"
+            },
+            {
+              "index": 10,
+              "name": "slice",
+              "type": "SceneSlice"
+            },
+            {
+              "index": 11,
+              "name": "thicknessPct",
+              "type": "f8"
+            },
+            {
+              "index": 12,
+              "name": "cornerPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 13,
+              "name": "outsetPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 14,
+              "name": "tile",
+              "type": "Maybe\u003CSceneTile\u003E"
+            },
+            {
+              "index": 15,
+              "name": "grow",
+              "type": "Maybe\u003CSceneGrow\u003E"
+            },
+            {
+              "index": 16,
+              "name": "retreat",
+              "type": "Maybe\u003CSceneRetreat\u003E"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "name": "SceneWrap",
+          "fields": [
+            {
+              "index": 9,
+              "name": "slice",
+              "type": "SceneSlice"
+            },
+            {
+              "index": 10,
+              "name": "widthPct",
+              "type": "SceneWidths"
+            },
+            {
+              "index": 11,
+              "name": "outsetPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 12,
+              "name": "tile",
+              "type": "Maybe\u003CSceneTile\u003E"
+            },
+            {
+              "index": 13,
+              "name": "grow",
+              "type": "Maybe\u003CSceneGrow\u003E"
+            },
+            {
+              "index": 14,
+              "name": "retreat",
+              "type": "Maybe\u003CSceneRetreat\u003E"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "name": "SceneEmitter",
+          "fields": [
+            {
+              "index": 9,
+              "name": "edge",
+              "type": "SceneEdge"
+            },
+            {
+              "index": 10,
+              "name": "count",
+              "type": "u2"
+            },
+            {
+              "index": 11,
+              "name": "seed",
+              "type": "Maybe\u003Cu2\u003E"
+            },
+            {
+              "index": 12,
+              "name": "sizePct",
+              "type": "f8"
+            },
+            {
+              "index": 13,
+              "name": "durationMs",
+              "type": "i4"
+            },
+            {
+              "index": 14,
+              "name": "bobPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 15,
+              "name": "repeat",
+              "type": "Maybe\u003CSceneRepeat\u003E"
+            },
+            {
+              "index": 16,
+              "name": "sizeVarPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 17,
+              "name": "durationVarMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 18,
+              "name": "driftPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 19,
+              "name": "swayPct",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 20,
+              "name": "swayPeriodMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 21,
+              "name": "swayVarMs",
+              "type": "Maybe\u003Ci4\u003E"
+            },
+            {
+              "index": 22,
+              "name": "spinDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 23,
+              "name": "flutterDeg",
+              "type": "Maybe\u003Cf8\u003E"
+            },
+            {
+              "index": 24,
+              "name": "depthSpreadPct",
+              "type": "Maybe\u003Cf8\u003E"
+            }
+          ]
+        }
+      ],
+      "sharedFields": [
+        {
+          "index": 0,
+          "name": "slot",
+          "type": "Maybe\u003CAssetSlot\u003E"
+        },
+        {
+          "index": 1,
+          "name": "source",
+          "type": "Maybe\u003CSceneSource\u003E"
+        },
+        {
+          "index": 2,
+          "name": "atlas",
+          "type": "Maybe\u003CSceneAtlas\u003E"
+        },
+        {
+          "index": 3,
+          "name": "replay",
+          "type": "Maybe\u003Cbool\u003E"
+        },
+        {
+          "index": 4,
+          "name": "depth",
+          "type": "Maybe\u003CSceneDepth\u003E"
+        },
+        {
+          "index": 5,
+          "name": "occlude",
+          "type": "Maybe\u003CArray\u003CSceneOccluder\u003E\u003E"
+        },
+        {
+          "index": 6,
+          "name": "delayMs",
+          "type": "Maybe\u003Ci4\u003E"
+        },
+        {
+          "index": 7,
+          "name": "opacity",
+          "type": "Maybe\u003CArray\u003CSceneStop\u003E\u003E"
+        },
+        {
+          "index": 8,
+          "name": "shadow",
+          "type": "Maybe\u003CSceneShadow\u003E"
         }
       ]
     },

@@ -150,7 +150,16 @@ union WornCosmetic {
         weight: u2?,
 
         // Hundredths of an em, -10 to 50.
-        letterSpacing: i4?)
+        letterSpacing: i4?),
+
+    // Rows of a kind worn several at once — badges — in the order they are shown, up to what the
+    // kind allows. Putting them on replaces everything that kind had; the profile carries them back
+    // as one WornItem each, in this order.
+    WornItems(itemIds: guid[]),
+
+    // A scene, and how much of the card the wearer has it play on. Read only for a row that leaves
+    // that to its wearer; a scene worn as a WornItem plays on whatever its row's default is.
+    WornScene(itemId: guid, reach: SceneReach)
 }
 
 enum NicknameGradientShape {
@@ -173,7 +182,13 @@ enum AssetSlot {
     Primary,
     Secondary,
     Tertiary,
-    Quaternary
+    Quaternary,
+
+    // The still drawn in place of a moving file when motion is off: a clip's chosen frame, or the
+    // finished picture of a drawing that animates itself. A role rather than an ordinal because it
+    // means the same on every kind that has one, and no payload can say it instead — a self-animating
+    // file cannot be paused, only replaced.
+    Poster
 }
 
 // What a catalogue row looks like, by kind. A new kind with rows is a new case, appended.
@@ -190,7 +205,30 @@ union CosmeticPayload {
 
     // A treatment a name may be drawn with. It carries nothing: what it does is the client's file
     // for the row's slug.
-    PayloadTextEffect()
+    PayloadTextEffect(),
+
+    // A clip behind the profile card: whether it starts again when it ends, and how strongly the
+    // card's own colour is laid over it, 0 for none to 1 for opaque.
+    PayloadProfileBackground(loop: bool, tintOpacity: f8),
+
+    // An icon beside the name. The tooltip is a translation key; the tint is an ARGB colour laid over
+    // a monochrome icon, and without one the icon is drawn as it was authored.
+    PayloadBadge(tooltipKey: string, tint: i4?),
+
+    // Figures travelling rings around the avatar, hidden by the face on the half of a lap they spend
+    // behind it. At or below minSizePx the whole arrangement stands still.
+    PayloadAvatarOrbit(satellites: OrbitBody[], minSizePx: u2?),
+
+    // Actors moving across the whole profile card, drawn in the order listed within each band of
+    // depth. Every size is a per cent of the card's width: its height is whatever its owner's bio and
+    // board come to. The sheet is the pixel size of the picture in Primary, present exactly when an
+    // actor cuts a rectangle out of it. Below minWidthPx the scene is not drawn.
+    PayloadProfileScene(
+        reach: SceneReachRule,
+        defaultReach: SceneReach?,
+        minWidthPx: u2?,
+        sheet: SceneSheet?,
+        actors: SceneActor[])
 }
 
 // One piece of a frame. What every piece has comes first; what only one shape has is its case.
@@ -267,4 +305,445 @@ enum FrameAnchor {
     BottomLeft,
     Bottom,
     BottomRight
+}
+
+// One body in an orbit. A union of one so that a second sort of thing in the ring is a case appended
+// here rather than a second list with a rule for interleaving the two.
+union OrbitBody {
+    // A figure travelling a ring around the face. The ring is a circle of radiusPct about the face's
+    // centre, its plane tipped out of the screen by tiltDeg and leaned by yawDeg; which half of it
+    // passes behind the head falls out of those three. Every length is a per cent of the face, so the
+    // same row reads at 96 pixels and at 22.
+    OrbitSatellite(
+        slot: AssetSlot,
+        sprite: OrbitSprite?,
+
+        // 50 is the edge of the face; up to 200.
+        radiusPct: f8,
+
+        // 0 lies flat against the screen, 90 is edge-on. Past 60 the figure crosses the face itself.
+        tiltDeg: f8?,
+
+        // -180 to 180.
+        yawDeg: f8?,
+
+        // How far the lean rocks either side of itself, 0 to 180, and how long one rock takes. What
+        // sweeps one ring across the whole face.
+        yawSwingDeg: f8?,
+        yawSwingMs: i4?,
+
+        // One circuit, 240 to 120000.
+        periodMs: i4,
+
+        // How far along the circuit it starts: two figures sharing a period and a phase are one
+        // picture moving.
+        phaseMs: i4?,
+
+        reverse: bool?,
+
+        // Where on the circuit it stands when nothing moves, 0 to 360; 90 is the nearest point.
+        stillDeg: f8?,
+
+        // How big the figure is drawn, 1 to 200 each.
+        widthPct: f8,
+        heightPct: f8,
+
+        // 0.05 to 1.
+        opacity: f8?,
+
+        // A tilt on the spot, -180 to 180.
+        leanDeg: f8?,
+
+        // Whether the picture turns to face the way it is going, and how.
+        faceTravel: bool?,
+        turn: OrbitTurn?,
+
+        // How big it is at the nearest and farthest points of its travel, 0.1 to 4.
+        nearScale: f8?,
+        farScale: f8?,
+
+        // What it loses at the farthest point: brightness and opacity 0 to 1, focus 0 to 12.
+        dim: f8?,
+        haze: f8?,
+        blurPct: f8?,
+
+        // Whether the face hides it while it passes behind. Off for a light rather than an object.
+        occlude: bool?,
+
+        // A rise and fall of up to 50, on a period of its own.
+        bobPct: f8?,
+        bobPeriodMs: i4?)
+}
+
+// A figure whose picture is a strip of frames read as a grid.
+msg OrbitSprite {
+    frames: u2;
+    columns: u2;
+    fps: u2?;
+
+    // The frame to stand on when movement is off, and on every face too small to run an orbit on.
+    still: u2?;
+}
+
+enum OrbitTurn {
+    // Mirrored, for a figure drawn from the side.
+    Mirror,
+
+    // Turned through half a circle, for a figure drawn from above.
+    Spin
+}
+
+// How much of the card a scene plays on: what is above the board, or all of it.
+enum SceneReach {
+    Content,
+    Card
+}
+
+// What a scene's row says about its reach: one of the two, or the wearer's choice of them.
+enum SceneReachRule {
+    Content,
+    Card,
+    Choice
+}
+
+// The pixel size of the sheet every atlas rectangle is cut from.
+msg SceneSheet {
+    w: u2;
+    h: u2;
+}
+
+// One thing on a scene. What every sort has comes first; what only one sort has is its case. The
+// order of a scene's actors is the order they are drawn in within their band of depth.
+union SceneActor(
+    // The file it draws, when it draws a whole one.
+    slot: AssetSlot?,
+
+    // A rectangle of the sheet, or the slot's whole picture. Absent is the sheet.
+    source: SceneSource?,
+    atlas: SceneAtlas?,
+
+    // Whether a self-animating file starts afresh every time the card is shown.
+    replay: bool?,
+
+    depth: SceneDepth?,
+
+    // Parts of the card that hide it.
+    occlude: SceneOccluder[]?,
+
+    // -120000 to 120000.
+    delayMs: i4?,
+
+    // 0 to 1 over the actor's own cycle.
+    opacity: SceneStop[]?,
+
+    shadow: SceneShadow?) {
+
+    // A picture over the whole card.
+    SceneWash(
+        fit: SceneFit?,
+        periodMs: i4?,
+        repeat: SceneRepeat?,
+
+        // 0.1 to 8 over the cycle.
+        scale: SceneStop[]?,
+
+        // How far past the card's edge it may show, 0 to 25. Zero clips at the card.
+        spillPct: f8?,
+
+        grow: SceneGrow?,
+        retreat: SceneRetreat?),
+
+    // A figure travelling from one point of the card to another, along a path bowed off the
+    // straight line between them.
+    SceneSprite(
+        // 1 to 400.
+        sizePct: f8,
+
+        // 240 to 600000.
+        durationMs: i4,
+
+        // A rise and fall riding the strip's own wingbeat, 0 to 25.
+        bobPct: f8?,
+
+        repeat: SceneRepeat?,
+        from: ScenePoint,
+        to: ScenePoint,
+        ease: SceneEase?,
+        turn: SceneTurn?,
+
+        // Degrees over the cycle, -3600 to 3600.
+        rotate: SceneStop[]?,
+
+        // How far the path arcs off its chord, -200 to 200, and which axis that displaces.
+        bowPct: f8?,
+        bowAxis: SceneBowAxis?,
+
+        // A lean into its own arc, -180 to 180.
+        bankDeg: f8?,
+
+        scale: SceneStop[]?,
+        spillPct: f8?,
+        retreat: SceneRetreat?),
+
+    // A nine-slice laid along one edge of the card. Always a file of its own: a border cannot be cut
+    // out of a sheet.
+    SceneBand(
+        edge: SceneEdge,
+        slice: SceneSlice,
+
+        // 1 to 100.
+        thicknessPct: f8,
+
+        // How wide the pieces at the two ends are drawn, 0 to 100. Absent is the thickness.
+        cornerPct: f8?,
+
+        // How far past the stage's own edge it reaches, 0 to 25.
+        outsetPct: f8?,
+
+        tile: SceneTile?,
+        grow: SceneGrow?,
+        retreat: SceneRetreat?),
+
+    // A nine-slice laid round the card. Its shape is which sides have a width.
+    SceneWrap(
+        slice: SceneSlice,
+        widthPct: SceneWidths,
+        outsetPct: f8?,
+        tile: SceneTile?,
+        grow: SceneGrow?,
+        retreat: SceneRetreat?),
+
+    // A scatter of one picture coming in from an edge: snow, petals. Every copy is worked out from
+    // the seed, so everybody sees the same flakes in the same places.
+    SceneEmitter(
+        edge: SceneEdge,
+
+        // 1 to 48.
+        count: u2,
+
+        seed: u2?,
+
+        // The middle of the copies' sizes and how far either side of it they go.
+        sizePct: f8,
+        durationMs: i4,
+
+        // The dip at each edge-on pass of the flutter, 0 to 25.
+        bobPct: f8?,
+
+        repeat: SceneRepeat?,
+        sizeVarPct: f8?,
+        durationVarMs: i4?,
+
+        // How far a copy may wander across its own travel, 0 to 200.
+        driftPct: f8?,
+
+        // A swing of up to 100, its period, and how much that period varies from copy to copy.
+        swayPct: f8?,
+        swayPeriodMs: i4?,
+        swayVarMs: i4?,
+
+        spinDeg: f8?,
+
+        // Pitch of the flutter, 0 to 90. Zero is a flat drift.
+        flutterDeg: f8?,
+
+        // How strongly a copy's size drives its speed and its opacity, 0 to 100.
+        depthSpreadPct: f8?)
+}
+
+enum SceneSource {
+    Atlas,
+    File
+}
+
+// Which band of the card an actor is drawn in: behind its glass, over its text, or in front of a
+// worn frame.
+enum SceneDepth {
+    Deep,
+    Over,
+    Front
+}
+
+enum SceneOccluder {
+    Avatar
+}
+
+enum SceneFit {
+    Cover,
+    Contain,
+    Stretch
+}
+
+// How an actor's own cycle repeats. Once is what makes a scene that ends.
+enum SceneRepeat {
+    Loop,
+    Once,
+    PingPong
+}
+
+enum SceneEase {
+    Linear,
+    In,
+    Out,
+    InOut
+}
+
+// How a figure turns round. None for a figure with no front.
+enum SceneTurn {
+    None,
+    Mirror
+}
+
+enum SceneBowAxis {
+    Auto,
+    X,
+    Y
+}
+
+enum SceneEdge {
+    Top,
+    Right,
+    Bottom,
+    Left
+}
+
+// How the middle of a nine-slice is laid along an edge.
+enum SceneTile {
+    Stretch,
+    Repeat,
+    Round,
+    Space
+}
+
+// The point of the card an actor's centre goes to.
+enum SceneAnchor {
+    TopLeft,
+    Top,
+    TopRight,
+    Left,
+    Center,
+    Right,
+    BottomLeft,
+    Bottom,
+    BottomRight
+}
+
+// Where a reveal starts: the edge the actor lies on, or radially from one point of the card.
+enum SceneGrowOrigin {
+    Edge,
+    TopLeft,
+    Top,
+    TopRight,
+    Left,
+    Center,
+    Right,
+    BottomLeft,
+    Bottom,
+    BottomRight
+}
+
+// Which axis of a growth extends ahead of the other.
+enum SceneLeadAxis {
+    Y,
+    X,
+    Both
+}
+
+// A rectangle of the sheet, and how to walk it when it is a strip. Absent frames is one picture.
+msg SceneAtlas {
+    x: u2?;
+    y: u2?;
+    w: u2;
+    h: u2;
+    frames: u2?;
+    columns: u2?;
+    fps: u2?;
+
+    // The frame to stand on when movement is off.
+    still: u2?;
+}
+
+// One stop of an envelope: where along the actor's own cycle, 0 to 1, and what the channel is worth
+// there. An envelope is two to eight of them, from 0 to 1 in order.
+msg SceneStop {
+    at: f8;
+    v: f8;
+}
+
+// A point of the card plus a nudge, in per cent of the card's width, right and down positive.
+msg ScenePoint {
+    anchor: SceneAnchor;
+    dxPct: f8?;
+    dyPct: f8?;
+}
+
+// A shadow thrown by the drawing itself, so a tree throws a tree-shaped one. Four numbers or none:
+// they are one description of one light.
+msg SceneShadow {
+    dxPct: f8;
+    dyPct: f8;
+    blurPct: f8;
+    alpha: f8;
+}
+
+// The actor withdrawing from the card's reading zone after atMs, over durationMs, and holding there.
+// It keeps the strips along the sides and the foot, softened at their edges, and remain of itself
+// over the rest: less than a whole, or it would not be a retreat.
+msg SceneRetreat {
+    atMs: i4;
+    durationMs: i4;
+    edgePct: f8?;
+    footPct: f8?;
+    softPct: f8?;
+    remain: f8?;
+}
+
+// Growing into place: extended out of fromScale about its root, wobbling as it goes, uncovered from
+// fromPct to toPct, then held and breathing. Equal ends uncover nothing.
+msg SceneGrow {
+    fromPct: f8;
+    toPct: f8;
+    durationMs: i4;
+
+    // How long it stands finished before going round again.
+    holdMs: i4?;
+
+    repeat: SceneRepeat?;
+
+    // 0.01 to 1 of its finished size.
+    fromScale: f8?;
+
+    leadAxis: SceneLeadAxis?;
+
+    // 0 to 45, decaying over the extension.
+    wobbleDeg: f8?;
+
+    // How soft the reveal's edge is, 0 to 1.
+    softness: f8?;
+
+    sway: SceneSway?;
+    from: SceneGrowOrigin?;
+}
+
+// The lean a grown thing keeps for ever afterwards: how far, 0 to 45, and how long a lean takes.
+msg SceneSway {
+    deg: f8;
+    ms: i4;
+}
+
+// Where to cut a nine-slice's picture, in its own pixels.
+msg SceneSlice {
+    top: u2;
+    right: u2;
+    bottom: u2;
+    left: u2;
+}
+
+// How thick a wrap is on each side, in per cent of the card's width: the width on every side, so
+// the top and bottom do not follow the card's height.
+msg SceneWidths {
+    top: f8;
+    right: f8;
+    bottom: f8;
+    left: f8;
 }
