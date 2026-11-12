@@ -956,7 +956,9 @@ union RealtimeCommand() {
     SubscribeToChannel(channelId: guid),
     UnsubscribeFromChannel(channelId: guid),
     Typing(spaceId: guid, channelId: guid),
-    StopTyping(spaceId: guid, channelId: guid)
+    StopTyping(spaceId: guid, channelId: guid),
+    // A space joined or created after connect; the connection only joins spaces it had at connect.
+    SubscribeToSpace(spaceId: guid)
 }
 
 

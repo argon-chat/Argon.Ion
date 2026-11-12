@@ -5650,7 +5650,7 @@
     },
     "RealtimeCommand": {
       "kind": "Union",
-      "nextIndex": 7,
+      "nextIndex": 8,
       "cases": [
         {
           "index": 0,
@@ -5734,6 +5734,17 @@
             {
               "index": 1,
               "name": "channelId",
+              "type": "guid"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "name": "SubscribeToSpace",
+          "fields": [
+            {
+              "index": 0,
+              "name": "spaceId",
               "type": "guid"
             }
           ]
