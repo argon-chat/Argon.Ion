@@ -7676,6 +7676,19 @@
       },
       "baseType": "u2"
     },
+    "CompleteConnectError": {
+      "kind": "Enum",
+      "members": {
+        "NONE": "0",
+        "EXPIRED": "1",
+        "WRONG_USER": "2",
+        "ALREADY_LINKED_ELSEWHERE": "3",
+        "PROVIDER_ALREADY_LINKED": "4",
+        "SUSPENDED": "5",
+        "INTERNAL_ERROR": "6"
+      },
+      "baseType": "u2"
+    },
     "ConnectionError": {
       "kind": "Enum",
       "members": {
@@ -7763,6 +7776,39 @@
               "index": 0,
               "name": "error",
               "type": "BeginConnectError"
+            }
+          ]
+        }
+      ]
+    },
+    "CompleteConnectResult": {
+      "kind": "Union",
+      "nextIndex": 2,
+      "cases": [
+        {
+          "index": 0,
+          "name": "SuccessCompleteConnect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "provider",
+              "type": "ConnectionProvider"
+            },
+            {
+              "index": 1,
+              "name": "name",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "name": "FailedCompleteConnect",
+          "fields": [
+            {
+              "index": 0,
+              "name": "error",
+              "type": "CompleteConnectError"
             }
           ]
         }
@@ -7954,6 +8000,22 @@
         "GetListenAlongState": {
           "args": [],
           "returns": "Maybe\u003CListenAlongState\u003E",
+          "modifiers": []
+        },
+        "CompleteConnect": {
+          "args": [
+            {
+              "index": 0,
+              "name": "handshakeId",
+              "type": "guid"
+            },
+            {
+              "index": 1,
+              "name": "key",
+              "type": "string"
+            }
+          ],
+          "returns": "CompleteConnectResult",
           "modifiers": []
         }
       }

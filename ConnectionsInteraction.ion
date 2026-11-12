@@ -124,6 +124,23 @@ enum BeginConnectError: u2 {
     CONNECTION_SUSPENDED
 }
 
+// The desktop's half of a hand-off: the callback page sent argon://connections/complete with the
+// handshake and its one-time key, and the app finishes it as the account it is signed in to.
+union CompleteConnectResult {
+    SuccessCompleteConnect(provider: ConnectionProvider, name: string),
+    FailedCompleteConnect(error: CompleteConnectError)
+}
+
+enum CompleteConnectError: u2 {
+    NONE,
+    EXPIRED,
+    WRONG_USER,
+    ALREADY_LINKED_ELSEWHERE,
+    PROVIDER_ALREADY_LINKED,
+    SUSPENDED,
+    INTERNAL_ERROR
+}
+
 union UpdateConnectionResult {
     SuccessUpdateConnection(connection: UserConnection),
     FailedUpdateConnection(error: ConnectionError)
@@ -203,4 +220,7 @@ service ConnectionsInteraction() {
     LeaveListenAlong();
     // The party the caller is in — as a listener, or as a host with listeners — or null.
     GetListenAlongState(): ListenAlongState?;
+
+    // Finishes a handshake started from this desktop, from the argon:// link the callback page opened.
+    CompleteConnect(handshakeId: guid, key: string): CompleteConnectResult;
 }
